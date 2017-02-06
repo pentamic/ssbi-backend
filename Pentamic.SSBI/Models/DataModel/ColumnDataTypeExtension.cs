@@ -1,0 +1,58 @@
+﻿using Microsoft.AnalysisServices.Tabular;
+using System;
+using System.Data.OleDb;
+
+namespace Pentamic.SSBI.Models.DataModel
+{
+    public static class ColumnDataTypeExtension
+    {
+        public static DataType ToDataType(this ColumnDataType dataType)
+        {
+            return (DataType)Enum.Parse(typeof(DataType), dataType.ToString());
+        }
+
+        public static ColumnDataType ToDataType(this OleDbType dataType)
+        {
+            switch (dataType)
+            {
+                case OleDbType.BigInt:
+                case OleDbType.Integer:
+                case OleDbType.SmallInt:
+                case OleDbType.UnsignedTinyInt:
+                case OleDbType.UnsignedSmallInt:
+                case OleDbType.UnsignedInt:
+                case OleDbType.UnsignedBigInt:
+                    return ColumnDataType.Int64;
+                case OleDbType.Binary:
+                case OleDbType.VarBinary:
+                    return ColumnDataType.Binary;
+                case OleDbType.Boolean:
+                    return ColumnDataType.Boolean;
+                case OleDbType.BSTR:
+                case OleDbType.Char:
+                case OleDbType.Guid:
+                case OleDbType.VarWChar:
+                case OleDbType.WChar:
+                case OleDbType.VarChar:
+                    return ColumnDataType.String;
+                case OleDbType.Currency:
+                case OleDbType.Decimal:
+                case OleDbType.Numeric:
+                case OleDbType.VarNumeric:
+                    return ColumnDataType.Decimal;
+                case OleDbType.Double:
+                    return ColumnDataType.Double;
+                case OleDbType.Date:
+                case OleDbType.DBDate:
+                case OleDbType.DBTime:
+                case OleDbType.DBTimeStamp:
+                case OleDbType.Filetime:
+                    return ColumnDataType.DateTime;
+                case OleDbType.Variant:
+                    return ColumnDataType.Variant;
+                default:
+                    throw new Exception("Type not found");
+            }
+        }
+    }
+}
