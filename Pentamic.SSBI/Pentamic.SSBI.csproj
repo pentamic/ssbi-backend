@@ -254,6 +254,9 @@
     <Compile Include="Models\PivotDataSourceExtensions.cs" />
     <Compile Include="Models\PivotDataSourceRequest.cs" />
     <Compile Include="Models\PivotDataSourceRequestModelBinder.cs" />
+    <Compile Include="Models\Reporting\Report.cs" />
+    <Compile Include="Models\Reporting\ReportPage.cs" />
+    <Compile Include="Models\Reporting\ReportTile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DataModelService.cs" />
     <Compile Include="Services\DiscoverService.cs" />

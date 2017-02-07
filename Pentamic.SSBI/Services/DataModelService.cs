@@ -3,6 +3,7 @@ using Breeze.ContextProvider.EF6;
 using Newtonsoft.Json.Linq;
 using Pentamic.SSBI.Models.DataModel;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.OleDb;
 using System.IO;
@@ -36,31 +37,31 @@ namespace Pentamic.SSBI.Services
 
         public IQueryable<Model> Models
         {
-            get { return Context.Models; }
+            get { return Context.Models.Where(x => x.State != DataModelObjectState.Deleted && x.State != DataModelObjectState.Obsolete); }
         }
         public IQueryable<DataSource> DataSources
         {
-            get { return Context.DataSources; }
+            get { return Context.DataSources.Where(x => x.State != DataModelObjectState.Deleted && x.State != DataModelObjectState.Obsolete); }
         }
         public IQueryable<Table> Tables
         {
-            get { return Context.Tables; }
+            get { return Context.Tables.Where(x => x.State != DataModelObjectState.Deleted && x.State != DataModelObjectState.Obsolete); }
         }
         public IQueryable<Column> Columns
         {
-            get { return Context.Columns; }
+            get { return Context.Columns.Where(x => x.State != DataModelObjectState.Deleted && x.State != DataModelObjectState.Obsolete); }
         }
         public IQueryable<Partition> Partitions
         {
-            get { return Context.Partitions; }
+            get { return Context.Partitions.Where(x => x.State != DataModelObjectState.Deleted && x.State != DataModelObjectState.Obsolete); }
         }
         public IQueryable<Measure> Measures
         {
-            get { return Context.Measures; }
+            get { return Context.Measures.Where(x => x.State != DataModelObjectState.Deleted && x.State != DataModelObjectState.Obsolete); }
         }
         public IQueryable<Relationship> Relationships
         {
-            get { return Context.Relationships; }
+            get { return Context.Relationships.Where(x => x.State != DataModelObjectState.Deleted && x.State != DataModelObjectState.Obsolete); }
         }
 
         public async Task<DataSource> ImportDataSource(MultipartFormDataStreamProvider provider)
@@ -95,6 +96,7 @@ namespace Pentamic.SSBI.Services
                 if (mo.State == DataModelObjectState.Deleted)
                 {
                     server.Databases.Remove(mo.DatabaseName);
+                    mo.State = DataModelObjectState.Obsolete;
                     return;
                 }
                 AS.Database database = null;
@@ -140,6 +142,7 @@ namespace Pentamic.SSBI.Services
                     if (ds.State == DataModelObjectState.Deleted)
                     {
                         database.Model.DataSources.Remove(ds.OriginalName);
+                        ds.State = DataModelObjectState.Obsolete;
                     }
                     AS.ProviderDataSource dataSource = null;
                     if (ds.State == DataModelObjectState.Added)
@@ -182,10 +185,6 @@ namespace Pentamic.SSBI.Services
                     Context.Entry(ds).Collection(x => x.Tables).Load();
                     foreach (var tb in ds.Tables)
                     {
-                        if (tb.State == DataModelObjectState.Deleted)
-                        {
-                            database.Model.Tables.Remove(tb.OriginalName);
-                        }
                         AS.Table table = null;
                         if (tb.State == DataModelObjectState.Added)
                         {
@@ -200,6 +199,11 @@ namespace Pentamic.SSBI.Services
                         else
                         {
                             table = database.Model.Tables.Find(tb.OriginalName);
+                            if (ds.State == DataModelObjectState.Obsolete || tb.State == DataModelObjectState.Deleted)
+                            {
+                                database.Model.Tables.Remove(table);
+                                tb.State = DataModelObjectState.Obsolete;
+                            }
                             if (tb.State == DataModelObjectState.Modified)
                             {
                                 if (tb.Name != table.Name)
@@ -218,9 +222,13 @@ namespace Pentamic.SSBI.Services
                         Context.Entry(tb).Collection(x => x.Partitions).Load();
                         foreach (var pa in tb.Partitions)
                         {
-                            if (pa.State == DataModelObjectState.Deleted)
+                            if (tb.State == DataModelObjectState.Obsolete || pa.State == DataModelObjectState.Deleted)
                             {
-                                table.Partitions.Remove(pa.OriginalName);
+                                if (tb.State != DataModelObjectState.Obsolete)
+                                {
+                                    table.Partitions.Remove(pa.OriginalName);
+                                }
+                                pa.State = DataModelObjectState.Obsolete;
                             }
                             AS.Partition partition = null;
                             if (pa.State == DataModelObjectState.Added)
@@ -255,9 +263,13 @@ namespace Pentamic.SSBI.Services
                         Context.Entry(tb).Collection<Column>(x => x.Columns).Load();
                         foreach (var co in tb.Columns)
                         {
-                            if (co.State == DataModelObjectState.Deleted)
+                            if (tb.State == DataModelObjectState.Obsolete || co.State == DataModelObjectState.Deleted)
                             {
-                                table.Columns.Remove(co.OriginalName);
+                                if (tb.State != DataModelObjectState.Obsolete)
+                                {
+                                    table.Columns.Remove(co.OriginalName);
+                                }
+                                co.State = DataModelObjectState.Obsolete;
                             }
                             if (co.State == DataModelObjectState.Added)
                             {
@@ -283,9 +295,13 @@ namespace Pentamic.SSBI.Services
                         Context.Entry(tb).Collection<Measure>(x => x.Measures).Load();
                         foreach (var me in tb.Measures)
                         {
-                            if (me.State == DataModelObjectState.Deleted)
+                            if (tb.State == DataModelObjectState.Obsolete || me.State == DataModelObjectState.Deleted)
                             {
-                                table.Measures.Remove(me.OriginalName);
+                                if (tb.State != DataModelObjectState.Obsolete)
+                                {
+                                    table.Measures.Remove(me.OriginalName);
+                                }
+                                me.State = DataModelObjectState.Obsolete;
                             }
                             if (me.State == DataModelObjectState.Added)
                             {
@@ -312,19 +328,25 @@ namespace Pentamic.SSBI.Services
                                 {
                                     measure.Description = me.Description;
                                 }
+                                me.State = DataModelObjectState.Unchanged;
                             }
                         }
                     }
                 }
 
                 //Relationships
-                var relationships = Context.Relationships.Where(x => x.ModelId == modelId)
+                var relationships = Context.Relationships.Where(x => x.ModelId == modelId && x.State != DataModelObjectState.Obsolete)
                     .Include(x => x.FromColumn.Table).Include(x => x.ToColumn.Table).ToList();
                 foreach (var re in relationships)
                 {
-                    if (re.State == DataModelObjectState.Deleted)
+                    if (re.ToColumn.State == DataModelObjectState.Obsolete ||
+                        re.ToColumn.Table.State == DataModelObjectState.Obsolete ||
+                        re.FromColumn.State == DataModelObjectState.Obsolete ||
+                        re.FromColumn.Table.State == DataModelObjectState.Obsolete ||
+                        re.State == DataModelObjectState.Deleted)
                     {
                         database.Model.Relationships.Remove(re.OriginalName);
+                        re.State = DataModelObjectState.Obsolete;
                     }
                     if (re.State == DataModelObjectState.Added)
                     {
@@ -344,13 +366,14 @@ namespace Pentamic.SSBI.Services
                             relationship.RequestRename(re.Name);
                             re.OriginalName = re.Name;
                         }
+                        re.State = DataModelObjectState.Unchanged;
                     }
                 }
 
                 //Commit changes
                 database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
-                Context.SaveChanges();
                 server.Disconnect();
+                Context.SaveChanges();
             }
         }
 
@@ -370,10 +393,12 @@ namespace Pentamic.SSBI.Services
         {
             var txSettings = new TransactionSettings { TransactionType = TransactionType.TransactionScope };
             _contextProvider.BeforeSaveEntityDelegate += BeforeSaveEntity;
+            //_contextProvider.BeforeSaveEntitiesDelegate += BeforeSaveEntities;
+            //_contextProvider.AfterSaveEntitiesDelegate += AfterSaveEntities;
             return _contextProvider.SaveChanges(saveBundle, txSettings);
         }
 
-        public bool BeforeSaveEntity(EntityInfo info)
+        protected bool BeforeSaveEntity(EntityInfo info)
         {
             if (info.Entity is IDataModelObject)
             {
@@ -397,22 +422,76 @@ namespace Pentamic.SSBI.Services
                         entity.OriginalName = entity.Name;
                         break;
                     case Breeze.ContextProvider.EntityState.Modified:
-                        if (info.OriginalValuesMap.Keys.Count > 0)
+                        if (entity.State == DataModelObjectState.Modified ||
+                            entity.State == DataModelObjectState.Unchanged)
                         {
-                            entity.UpdatedProperties = string.Join(",", info.OriginalValuesMap.Keys).ToUpper();
-                            info.OriginalValuesMap["UpdatedProperties"] = null;
+                            entity.State = DataModelObjectState.Modified;
+                            info.OriginalValuesMap["State"] = null;
                         }
-                        entity.State = DataModelObjectState.Modified;
-                        info.OriginalValuesMap["State"] = null;
                         break;
                     case Breeze.ContextProvider.EntityState.Deleted:
-                        return false;
+                        info.EntityState = Breeze.ContextProvider.EntityState.Modified;
+                        if (entity.State != DataModelObjectState.Added)
+                        {
+                            entity.State = DataModelObjectState.Deleted;
+                        }
+                        else
+                        {
+                            entity.State = DataModelObjectState.Obsolete;
+                        }
+                        info.OriginalValuesMap["State"] = null;
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
             return true;
         }
+
+        //protected Dictionary<Type, List<EntityInfo>> BeforeSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap)
+        //{
+        //    List<EntityInfo> dsInfo = null;
+        //    List<EntityInfo> tbInfo = null;
+        //    List<int> deletedDataSources = null;
+        //    List<int> deletedTables = null;
+
+        //    if (saveMap.TryGetValue(typeof(DataSource), out dsInfo))
+        //    {
+        //        deletedDataSources = dsInfo.Select(x => x.Entity as DataSource)
+        //            .Where(x => x.State == DataModelObjectState.Deleted).Select(x => x.Id).ToList();
+        //    }
+        //    if (saveMap.TryGetValue(typeof(Table), out tbInfo))
+        //    {
+        //        if (deletedDataSources != null)
+        //        {
+        //            tbInfo.Where(x => deletedDataSources.Contains((x.Entity as Table).DataSourceId)).ToList()
+        //                .ForEach(x =>
+        //                {
+        //                    x.EntityState = Breeze.ContextProvider.EntityState.Modified;
+        //                    (x.Entity as Table).State = DataModelObjectState.Deleted;
+        //                });
+        //        }
+        //        deletedTables = tbInfo.Select(x => x.Entity as Table)
+        //                .Where(x => x.State == DataModelObjectState.Deleted).Select(x => x.Id).ToList();
+        //    }
+
+        //    return saveMap;
+        //}
+
+        //protected void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings)
+        //{
+        //    List<EntityInfo> info;
+        //    if (saveMap.TryGetValue(typeof(DataSource), out info))
+        //    {
+        //        var deletedDataSource = info.Select(x => x.Entity as DataSource)
+        //            .Where(x => x.State == DataModelObjectState.Deleted).Select(x => x.Id)
+        //            .ToList();
+        //        if (deletedDataSource.Count > 0)
+        //        {
+
+        //        }
+        //    }
+        //}
 
         public string GetDataSourceConnectionString(DataSource ds)
         {
