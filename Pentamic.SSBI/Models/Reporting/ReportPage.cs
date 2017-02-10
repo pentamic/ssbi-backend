@@ -11,5 +11,8 @@ namespace Pentamic.SSBI.Models.Reporting
         public int ReportId { get; set; }
         public string Name { get; set; }
         public int Ordinal { get; set; }
+
+        public Report Report { get; set; }
+        public List<ReportTile> ReportTiles { get; set; }
     }
 }

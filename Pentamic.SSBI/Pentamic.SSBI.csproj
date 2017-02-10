@@ -219,6 +219,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ReportingController.cs" />
     <Compile Include="Controllers\DataModelController.cs" />
     <Compile Include="Controllers\DiscoverController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -230,7 +231,24 @@
     <Compile Include="Migrations\DataModelContext\201702060359376_InitDataModel.Designer.cs">
       <DependentUpon>201702060359376_InitDataModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\DataModelContext\201702081108321_UpdateModel.cs" />
+    <Compile Include="Migrations\DataModelContext\201702081108321_UpdateModel.Designer.cs">
+      <DependentUpon>201702081108321_UpdateModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DataModelContext\Configuration.cs" />
+    <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.cs" />
+    <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.Designer.cs">
+      <DependentUpon>201702080147015_InitReporting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ReportingContext\201702080251226_UpdateReporting.cs" />
+    <Compile Include="Migrations\ReportingContext\201702080251226_UpdateReporting.Designer.cs">
+      <DependentUpon>201702080251226_UpdateReporting.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ReportingContext\201702100353510_UpdateReporting1.cs" />
+    <Compile Include="Migrations\ReportingContext\201702100353510_UpdateReporting1.Designer.cs">
+      <DependentUpon>201702100353510_UpdateReporting1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ReportingContext\Configuration.cs" />
     <Compile Include="Models\DataModel\AggregateType.cs" />
     <Compile Include="Models\DataModel\ColumnDataType.cs" />
     <Compile Include="Models\DataModel\ColumnDataTypeExtension.cs" />
@@ -254,12 +272,14 @@
     <Compile Include="Models\PivotDataSourceExtensions.cs" />
     <Compile Include="Models\PivotDataSourceRequest.cs" />
     <Compile Include="Models\PivotDataSourceRequestModelBinder.cs" />
+    <Compile Include="Models\Reporting\ReportingContext.cs" />
     <Compile Include="Models\Reporting\Report.cs" />
     <Compile Include="Models\Reporting\ReportPage.cs" />
     <Compile Include="Models\Reporting\ReportTile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DataModelService.cs" />
     <Compile Include="Services\DiscoverService.cs" />
+    <Compile Include="Services\ReportingService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
@@ -287,6 +307,18 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\DataModelContext\201702060359376_InitDataModel.resx">
       <DependentUpon>201702060359376_InitDataModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201702081108321_UpdateModel.resx">
+      <DependentUpon>201702081108321_UpdateModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201702080147015_InitReporting.resx">
+      <DependentUpon>201702080147015_InitReporting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201702080251226_UpdateReporting.resx">
+      <DependentUpon>201702080251226_UpdateReporting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201702100353510_UpdateReporting1.resx">
+      <DependentUpon>201702100353510_UpdateReporting1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

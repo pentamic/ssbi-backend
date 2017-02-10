@@ -126,7 +126,6 @@ namespace Pentamic.SSBI.Services
                         {
                             database.Model.RequestRename(mo.Name);
                         }
-                        var updatedProps = mo.UpdatedProperties.Split(',');
                         if (database.Model.Description != mo.Description)
                         {
                             database.Model.Description = mo.Description;
@@ -380,12 +379,24 @@ namespace Pentamic.SSBI.Services
         public void RefreshModel(int modelId)
         {
             var mo = Context.Models.Find(modelId);
-            using (var server = new AS.Server())
+            AS.Server server = null;
+            try
             {
-                server.Connect(@".\astab16");
-                var database = server.Databases[mo.DatabaseName];
-                database.Model.RequestRefresh(AS.RefreshType.Full);
-                database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
+                using (server = new AS.Server())
+                {
+                    server.Connect(@".\astab16");
+                    var database = server.Databases[mo.DatabaseName];
+                    database.Model.RequestRefresh(AS.RefreshType.Full);
+                    database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
+                    server.Disconnect();
+                }
+            }
+            finally
+            {
+                if (server != null && server.Connected)
+                {
+                    server.Disconnect();
+                }
             }
         }
 

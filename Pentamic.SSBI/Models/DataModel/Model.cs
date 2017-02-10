@@ -8,7 +8,6 @@ namespace Pentamic.SSBI.Models.DataModel
         public string Name { get; set; }
         public string Description { get; set; }
         public string OriginalName { get; set; }
-        public string UpdatedProperties { get; set; }
         public string DatabaseName { get; set; }
 
         public DataModelObjectState State { get; set; }
