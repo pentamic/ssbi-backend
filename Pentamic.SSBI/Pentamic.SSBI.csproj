@@ -272,6 +272,11 @@
     <Compile Include="Models\PivotDataSourceExtensions.cs" />
     <Compile Include="Models\PivotDataSourceRequest.cs" />
     <Compile Include="Models\PivotDataSourceRequestModelBinder.cs" />
+    <Compile Include="Models\Reporting\Query\FilterField.cs" />
+    <Compile Include="Models\Reporting\Query\QueryFieldType.cs" />
+    <Compile Include="Models\Reporting\Query\FilterOperator.cs" />
+    <Compile Include="Models\Reporting\Query\OrderField.cs" />
+    <Compile Include="Models\Reporting\Query\QueryField.cs" />
     <Compile Include="Models\Reporting\ReportingContext.cs" />
     <Compile Include="Models\Reporting\Report.cs" />
     <Compile Include="Models\Reporting\ReportPage.cs" />
