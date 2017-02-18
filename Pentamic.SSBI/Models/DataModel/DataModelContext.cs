@@ -16,6 +16,10 @@ namespace Pentamic.SSBI.Models.DataModel
         public DbSet<Relationship> Relationships { get; set; }
         public DbSet<Measure> Measures { get; set; }
         public DbSet<Partition> Partitions { get; set; }
+        public DbSet<Perspective> Perspectives { get; set; }
+        public DbSet<PerspectiveColumn> PerspectiveColumns { get; set; }
+        public DbSet<Hierarchy> Hierarchies { get; set; }
+        public DbSet<Level> Levels { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

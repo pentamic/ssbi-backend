@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Pentamic.SSBI.Models.Reporting
+﻿namespace Pentamic.SSBI.Models.Reporting
 {
     public class ReportTile
     {
@@ -15,6 +10,8 @@ namespace Pentamic.SSBI.Models.Reporting
         public int Row { get; set; }
         public int SizeX { get; set; }
         public int SizeY { get; set; }
+        public string DisplayConfig { get; set; }
+        public string DataConfig { get; set; }
         public string ColumnFields { get; set; }
         public string RowFields { get; set; }
         public string ValueFields { get; set; }

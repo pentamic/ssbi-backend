@@ -1,8 +1,7 @@
 namespace Pentamic.SSBI.Migrations.ReportingContext
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class InitReporting : DbMigration
     {
         public override void Up()

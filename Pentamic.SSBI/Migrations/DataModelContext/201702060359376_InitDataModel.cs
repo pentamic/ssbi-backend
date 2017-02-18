@@ -1,6 +1,5 @@
 namespace Pentamic.SSBI.Migrations.DataModelContext
 {
-    using System;
     using System.Data.Entity.Migrations;
 
     public partial class InitDataModel : DbMigration

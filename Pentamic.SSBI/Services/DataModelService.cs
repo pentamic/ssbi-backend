@@ -3,7 +3,6 @@ using Breeze.ContextProvider.EF6;
 using Newtonsoft.Json.Linq;
 using Pentamic.SSBI.Models.DataModel;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.OleDb;
 using System.IO;
@@ -63,7 +62,18 @@ namespace Pentamic.SSBI.Services
         {
             get { return Context.Relationships.Where(x => x.State != DataModelObjectState.Deleted && x.State != DataModelObjectState.Obsolete); }
         }
-
+        public IQueryable<Perspective> Perspectives
+        {
+            get { return Context.Perspectives; }
+        }
+        public IQueryable<Hierarchy> Hierarchies
+        {
+            get { return Context.Hierarchies; }
+        }
+        public IQueryable<Level> Levels
+        {
+            get { return Context.Levels; }
+        }
         public async Task<DataSource> ImportDataSource(MultipartFormDataStreamProvider provider)
         {
             var file = provider.FileData[0];
@@ -276,7 +286,10 @@ namespace Pentamic.SSBI.Services
                                 {
                                     Name = co.Name,
                                     DataType = co.DataType.ToDataType(),
-                                    SourceColumn = co.SourceColumn
+                                    SourceColumn = co.SourceColumn,
+                                    IsHidden = co.IsHidden,
+                                    DisplayFolder = co.DisplayFolder,
+                                    FormatString = co.FormatString
                                 });
                                 co.State = DataModelObjectState.Unchanged;
                             }
@@ -287,6 +300,18 @@ namespace Pentamic.SSBI.Services
                                 {
                                     column.RequestRename(co.Name);
                                     co.OriginalName = co.Name;
+                                }
+                                if (co.IsHidden != column.IsHidden)
+                                {
+                                    column.IsHidden = co.IsHidden;
+                                }
+                                if (co.DisplayFolder != column.DisplayFolder)
+                                {
+                                    column.DisplayFolder = co.DisplayFolder;
+                                }
+                                if (co.FormatString != column.FormatString)
+                                {
+                                    column.FormatString = co.FormatString;
                                 }
                                 co.State = DataModelObjectState.Unchanged;
                             }

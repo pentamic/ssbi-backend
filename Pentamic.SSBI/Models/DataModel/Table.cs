@@ -15,6 +15,7 @@ namespace Pentamic.SSBI.Models.DataModel
         public List<Column> Columns { get; set; }
         public List<Partition> Partitions { get; set; }
         public List<Measure> Measures { get; set; }
+        public List<Hierarchy> Hierarchies { get; set; }
         public DataSource DataSource { get; set; }
     }
 }

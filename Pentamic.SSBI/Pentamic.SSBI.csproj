@@ -235,6 +235,18 @@
     <Compile Include="Migrations\DataModelContext\201702081108321_UpdateModel.Designer.cs">
       <DependentUpon>201702081108321_UpdateModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\DataModelContext\201702150257298_UpdateModel1.cs" />
+    <Compile Include="Migrations\DataModelContext\201702150257298_UpdateModel1.Designer.cs">
+      <DependentUpon>201702150257298_UpdateModel1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\DataModelContext\201702150309192_UpdateModel2.cs" />
+    <Compile Include="Migrations\DataModelContext\201702150309192_UpdateModel2.Designer.cs">
+      <DependentUpon>201702150309192_UpdateModel2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\DataModelContext\201702170159092_UpdateModel3.cs" />
+    <Compile Include="Migrations\DataModelContext\201702170159092_UpdateModel3.Designer.cs">
+      <DependentUpon>201702170159092_UpdateModel3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DataModelContext\Configuration.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.Designer.cs">
@@ -248,11 +260,17 @@
     <Compile Include="Migrations\ReportingContext\201702100353510_UpdateReporting1.Designer.cs">
       <DependentUpon>201702100353510_UpdateReporting1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\ReportingContext\201702170752229_UpdateReporting2.cs" />
+    <Compile Include="Migrations\ReportingContext\201702170752229_UpdateReporting2.Designer.cs">
+      <DependentUpon>201702170752229_UpdateReporting2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ReportingContext\Configuration.cs" />
     <Compile Include="Models\DataModel\AggregateType.cs" />
     <Compile Include="Models\DataModel\ColumnDataType.cs" />
     <Compile Include="Models\DataModel\ColumnDataTypeExtension.cs" />
     <Compile Include="Models\DataModel\Column.cs" />
+    <Compile Include="Models\DataModel\Hierarchy.cs" />
+    <Compile Include="Models\DataModel\Level.cs" />
     <Compile Include="Models\DataModel\Model.cs" />
     <Compile Include="Models\DataModel\DataModelContext.cs" />
     <Compile Include="Models\DataModel\DataSource.cs" />
@@ -261,12 +279,19 @@
     <Compile Include="Models\DataModel\Measure.cs" />
     <Compile Include="Models\DataModel\DataModelObjectState.cs" />
     <Compile Include="Models\DataModel\Partition.cs" />
+    <Compile Include="Models\DataModel\Perspective.cs" />
+    <Compile Include="Models\DataModel\PerspectiveColumn.cs" />
     <Compile Include="Models\DataModel\Relationship.cs" />
     <Compile Include="Models\DataModel\Table.cs" />
     <Compile Include="Models\DataModel\TableType.cs" />
+    <Compile Include="Models\Discover\CatalogDiscoverResult.cs" />
     <Compile Include="Models\Discover\ColumnDiscoverResult.cs" />
+    <Compile Include="Models\Discover\CatalogSchemaRestriction.cs" />
     <Compile Include="Models\Discover\ColumnSchemaRestriction.cs" />
     <Compile Include="Models\Discover\ForeignKeySchemaRestriction.cs" />
+    <Compile Include="Models\Discover\ModelColumn.cs" />
+    <Compile Include="Models\Discover\ModelDiscoverRestriction.cs" />
+    <Compile Include="Models\Discover\ModelTable.cs" />
     <Compile Include="Models\Discover\TableDiscoverResult.cs" />
     <Compile Include="Models\Discover\TableSchemaRestriction.cs" />
     <Compile Include="Models\PivotDataSourceExtensions.cs" />
@@ -277,6 +302,7 @@
     <Compile Include="Models\Reporting\Query\FilterOperator.cs" />
     <Compile Include="Models\Reporting\Query\OrderField.cs" />
     <Compile Include="Models\Reporting\Query\QueryField.cs" />
+    <Compile Include="Models\Reporting\Query\QueryModel.cs" />
     <Compile Include="Models\Reporting\ReportingContext.cs" />
     <Compile Include="Models\Reporting\Report.cs" />
     <Compile Include="Models\Reporting\ReportPage.cs" />
@@ -316,6 +342,15 @@
     <EmbeddedResource Include="Migrations\DataModelContext\201702081108321_UpdateModel.resx">
       <DependentUpon>201702081108321_UpdateModel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201702150257298_UpdateModel1.resx">
+      <DependentUpon>201702150257298_UpdateModel1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201702150309192_UpdateModel2.resx">
+      <DependentUpon>201702150309192_UpdateModel2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201702170159092_UpdateModel3.resx">
+      <DependentUpon>201702170159092_UpdateModel3.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201702080147015_InitReporting.resx">
       <DependentUpon>201702080147015_InitReporting.cs</DependentUpon>
     </EmbeddedResource>
@@ -324,6 +359,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201702100353510_UpdateReporting1.resx">
       <DependentUpon>201702100353510_UpdateReporting1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201702170752229_UpdateReporting2.resx">
+      <DependentUpon>201702170752229_UpdateReporting2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

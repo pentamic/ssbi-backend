@@ -5,11 +5,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Pentamic.SSBI.Models.Reporting;
 using Pentamic.SSBI.Models.Reporting.Query;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Web;
 
 namespace Pentamic.SSBI.Services
 {
@@ -318,6 +316,60 @@ namespace Pentamic.SSBI.Services
 
         //    return query;
         //}
+
+
+        public List<Dictionary<string, object>> Query(QueryModel queryModel)
+        {
+            var query = "";
+            if (queryModel.Filters2.Count > 0)
+            {
+                query = string.Format("EVALUATE ( FILTER (  SUMMARIZECOLUMNS ( {0} ), {1} ) ) ",
+                    string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values)),
+                    string.Join(" && ", queryModel.Filters2));
+            }
+            else
+            {
+                query = string.Format("EVALUATE ( SUMMARIZECOLUMNS ( {0} ) ) ",
+                    string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values)));
+            }
+
+            var conStr = @"DataSource=.\astab16;Catalog=" + queryModel.DatabaseName;
+            using (var conn = new AdomdConnection(conStr))
+            {
+                try
+                {
+                    conn.Open();
+                    var command = conn.CreateCommand();
+                    command.CommandText = query;
+                    using (var reader = command.ExecuteReader())
+                    {
+                        var result = new List<Dictionary<string, object>>();
+                        while (reader.Read())
+                        {
+                            var row = new Dictionary<string, object>();
+                            var columns = new List<string>();
+                            for (var i = 0; i < reader.FieldCount; ++i)
+                            {
+                                columns.Add(reader.GetName(i));
+                            }
+                            for (var i = 0; i < reader.FieldCount; ++i)
+                            {
+                                row[columns[i]] = reader.GetValue(i);
+                            }
+                            result.Add(row);
+                        }
+                        return result;
+                    }
+                }
+                finally
+                {
+                    if (conn != null)
+                    {
+                        conn.Close();
+                    }
+                }
+            }
+        }
 
         public SaveResult SaveChanges(JObject saveBundle)
         {

@@ -16,6 +16,22 @@ namespace Pentamic.SSBI.Controllers
         }
 
         [HttpPost]
+        [Route("model")]
+        public IHttpActionResult Model(ModelDiscoverRestriction restrictions)
+        {
+            var result = _discoverService.DiscoverModel(restrictions);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("catalogs")]
+        public async Task<IHttpActionResult> Catalogs([FromBody]CatalogSchemaRestriction restrictions)
+        {
+            var result = await _discoverService.DiscoverCatalogs(restrictions);
+            return Ok(result);
+        }
+
+        [HttpPost]
         [Route("tables")]
         public async Task<IHttpActionResult> Tables([FromBody]TableSchemaRestriction restrictions)
         {

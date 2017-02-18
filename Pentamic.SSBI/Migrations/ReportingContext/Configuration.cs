@@ -1,9 +1,6 @@
 namespace Pentamic.SSBI.Migrations.ReportingContext
 {
-    using System;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
-    using System.Linq;
 
     internal sealed class Configuration : DbMigrationsConfiguration<Pentamic.SSBI.Models.Reporting.ReportingContext>
     {

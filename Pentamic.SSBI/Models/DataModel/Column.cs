@@ -8,8 +8,12 @@ namespace Pentamic.SSBI.Models.DataModel
         public int Id { get; set; }
         public int TableId { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public string OriginalName { get; set; }
         public string SourceColumn { get; set; }
+        public string DisplayFolder { get; set; }
+        public string FormatString { get; set; }
+        public bool IsHidden { get; set; }
         public ColumnDataType DataType { get; set; }
         public DataModelObjectState State { get; set; }
         public Table Table { get; set; }

@@ -1,14 +1,10 @@
 ﻿using Breeze.ContextProvider;
 using Breeze.WebApi2;
 using Newtonsoft.Json.Linq;
-using Pentamic.SSBI.Models.DataModel;
 using Pentamic.SSBI.Models.Reporting;
+using Pentamic.SSBI.Models.Reporting.Query;
 using Pentamic.SSBI.Services;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Http;
 
 namespace Pentamic.SSBI.Controllers
@@ -46,10 +42,9 @@ namespace Pentamic.SSBI.Controllers
         }
 
         [HttpPost]
-        [Route("breeze/reporting/data/{id}")]
-        public IHttpActionResult Data(int id)
+        public IHttpActionResult Data(QueryModel queryModel)
         {
-            var result = _reportingService.GetReportTileData(id);
+            var result = _reportingService.Query(queryModel);
             return Ok(result);
         }
 

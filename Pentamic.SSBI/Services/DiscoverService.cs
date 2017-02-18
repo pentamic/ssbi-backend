@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using Pentamic.SSBI.Models.DataModel;
 using Pentamic.SSBI.Models.Discover;
 using System.IO;
+using AS = Microsoft.AnalysisServices.Tabular;
+using Newtonsoft.Json.Linq;
 
 namespace Pentamic.SSBI.Services
 {
@@ -18,12 +20,145 @@ namespace Pentamic.SSBI.Services
             _dataModelContext = new DataModelContext();
         }
 
+        public JArray DiscoverModel(ModelDiscoverRestriction restrictions)
+        {
+            var model = _dataModelContext.Models.Find(restrictions.ModelId);
+            using (var server = new AS.Server())
+            {
+                server.Connect(@".\astab16");
+                var db = server.Databases.FindByName(model.DatabaseName);
+                if (string.IsNullOrEmpty(restrictions.Perspective))
+                {
+                    var tables = new JArray();
+                    foreach (var tb in db.Model.Tables)
+                    {
+                        if (tb.IsHidden) continue;
+                        var table = new JObject();
+                        table["Name"] = tb.Name;
+                        var columns = new JArray();
+                        var measures = new JArray();
+                        var hierarchies = new JArray();
+                        foreach (var co in tb.Columns)
+                        {
+                            if (co.IsHidden) continue;
+                            dynamic column = new JObject();
+                            column.Name = co.Name;
+                            column.DataType = co.DataType;
+                            column.DisplayFolder = co.DisplayFolder;
+                            columns.Add(column);
+                        }
+                        table["Columns"] = columns;
+                        foreach (var me in tb.Measures)
+                        {
+                            if (me.IsHidden) continue;
+                            dynamic measure = new JObject();
+                            measure.Name = me.Name;
+                            measure.DisplayFolder = me.DisplayFolder;
+                            measure.IsMeasure = true;
+                            measures.Add(measure);
+                        }
+                        table["Measures"] = measures;
+                        foreach (var hi in tb.Hierarchies)
+                        {
+                            if (hi.IsHidden) continue;
+                            var hierarchy = new JObject();
+                            hierarchy["Name"] = hi.Name;
+                            hierarchy["DisplayFolder"] = hi.DisplayFolder;
+                            hierarchy["Levels"] = new JArray();
+                            foreach (var le in hi.Levels)
+                            {
+                                var level = new JObject();
+                                level["Name"] = le.Name;
+                                level["Ordinal"] = le.Ordinal;
+                            }
+                            hierarchies.Add(hierarchy);
+                        }
+                        table["Hierarchies"] = hierarchies;
+                        tables.Add(table);
+                    }
+                    return tables;
+                }
+                else
+                {
+                    var per = db.Model.Perspectives.Find(restrictions.Perspective);
+                    var tables = new JArray();
+                    foreach (var tb in per.PerspectiveTables)
+                    {
+                        if (tb.Table.IsHidden) continue;
+                        var table = new JObject();
+                        table["Name"] = tb.Name;
+                        var columns = new JArray();
+                        var measures = new JArray();
+                        var hierarchies = new JArray();
+                        foreach (var co in tb.PerspectiveColumns)
+                        {
+                            if (co.Column.IsHidden) continue;
+                            dynamic column = new JObject();
+                            column.Name = co.Name;
+                            column.DataType = co.Column.DataType;
+                            column.DisplayFolder = co.Column.DisplayFolder;
+                            columns.Add(column);
+                        }
+                        table["Columns"] = columns;
+                        foreach (var me in tb.PerspectiveMeasures)
+                        {
+                            if (me.Measure.IsHidden) continue;
+                            dynamic measure = new JObject();
+                            measure.Name = me.Name;
+                            measure.DisplayFolder = me.Measure.DisplayFolder;
+                            measures.Add(measure);
+                        }
+                        table["Measures"] = measures;
+                        foreach (var hi in tb.PerspectiveHierarchies)
+                        {
+                            if (hi.Hierarchy.IsHidden) continue;
+                            var hierarchy = new JObject();
+                            hierarchy["Name"] = hi.Name;
+                            hierarchy["DisplayFolder"] = hi.Hierarchy.DisplayFolder;
+                            hierarchy["Levels"] = new JArray();
+                            foreach (var le in hi.Hierarchy.Levels)
+                            {
+                                var level = new JObject();
+                                level["Name"] = le.Name;
+                                level["Ordinal"] = le.Ordinal;
+                            }
+                            hierarchies.Add(hierarchy);
+                        }
+                        table["Hierarchies"] = hierarchies;
+                        tables.Add(table);
+                    }
+                    return tables;
+                }
+
+            }
+        }
+
         public DataTable Discover(string conStr, Guid collection, object[] restrictionValues)
         {
             using (var con = new OleDbConnection(conStr))
             {
                 con.Open();
                 return con.GetOleDbSchemaTable(collection, restrictionValues);
+            }
+        }
+
+        public async Task<List<CatalogDiscoverResult>> DiscoverCatalogs(CatalogSchemaRestriction restrictions)
+        {
+            var ds = _dataModelContext.DataSources.Find(restrictions.DataSourceId);
+            var conStr = GetDataSourceConnectionString(ds);
+            using (var con = new OleDbConnection(conStr))
+            {
+                var result = new List<CatalogDiscoverResult>();
+                await con.OpenAsync();
+                var dt = con.GetOleDbSchemaTable(OleDbSchemaGuid.Catalogs, restrictions.Restrictions);
+                foreach (DataRow row in dt.Rows)
+                {
+                    result.Add(new CatalogDiscoverResult
+                    {
+                        CatalogName = row["CATALOG_NAME"].ToString(),
+                    });
+                }
+                return result;
             }
         }
 
@@ -98,25 +233,32 @@ namespace Pentamic.SSBI.Services
         public string GetDataSourceConnectionString(DataSource ds)
         {
             string cs;
+            var builder = new OleDbConnectionStringBuilder();
             switch (ds.Type)
             {
                 case DataSourceType.SqlServer:
+                    builder.Provider = "SQLNCLI11";
+                    builder.DataSource = ds.Source;
+                    builder.PersistSecurityInfo = false;
+                    if (!string.IsNullOrEmpty(ds.Catalog))
+                    {
+                        builder["Initial Catalog"] = ds.Catalog;
+                    }
                     if (ds.IntegratedSecurity)
                     {
-                        cs = $"Provider=SQLNCLI11;Data Source={ds.Source};Initial Catalog={ds.Catalog};Integrated Security=SSPI;Persist Security Info=false";
+                        builder["Integrated Security"] = "SSPI";
                     }
                     else
                     {
-                        cs = $"Provider=SQLNCLI11;Data Source={ds.Source};Initial Catalog={ds.Catalog};User ID={ds.User};Password={ds.Password};Persist Security Info=true";
+                        builder["User ID"] = ds.User;
+                        builder["Password"] = ds.Password;
                     }
+                    cs = builder.ToString();
                     break;
                 case DataSourceType.Excel:
-                    var builder = new OleDbConnectionStringBuilder()
-                    {
-                        Provider = "Microsoft.ACE.OLEDB.12.0",
-                        DataSource = ds.FilePath,
-                        PersistSecurityInfo = false
-                    };
+                    builder.Provider = "Microsoft.ACE.OLEDB.12.0";
+                    builder.DataSource = ds.FilePath;
+                    builder.PersistSecurityInfo = false;
                     builder["Mode"] = "Read";
                     var extension = Path.GetExtension(ds.FileName).ToUpper();
                     switch (extension)
