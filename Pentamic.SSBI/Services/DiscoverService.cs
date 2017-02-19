@@ -34,46 +34,49 @@ namespace Pentamic.SSBI.Services
                     {
                         if (tb.IsHidden) continue;
                         var table = new JObject();
-                        table["Name"] = tb.Name;
-                        var columns = new JArray();
-                        var measures = new JArray();
-                        var hierarchies = new JArray();
+                        table["name"] = tb.Name;
+                        var fields = new JArray();
                         foreach (var co in tb.Columns)
                         {
                             if (co.IsHidden) continue;
-                            dynamic column = new JObject();
-                            column.Name = co.Name;
-                            column.DataType = co.DataType;
-                            column.DisplayFolder = co.DisplayFolder;
-                            columns.Add(column);
+                            var field = new JObject();
+                            field["tableName"] = tb.Name;
+                            field["name"] = co.Name;
+                            field["dataType"] = (int)co.DataType;
+                            field["displayFolder"] = co.DisplayFolder;
+                            fields.Add(field);
                         }
-                        table["Columns"] = columns;
                         foreach (var me in tb.Measures)
                         {
                             if (me.IsHidden) continue;
-                            dynamic measure = new JObject();
-                            measure.Name = me.Name;
-                            measure.DisplayFolder = me.DisplayFolder;
-                            measure.IsMeasure = true;
-                            measures.Add(measure);
+                            var field = new JObject();
+                            field["tableName"] = tb.Name;
+                            field["name"] = me.Name;
+                            field["dataType"] = (int)me.DataType;
+                            field["displayFolder"] = me.DisplayFolder;
+                            field["isMeasure"] = true;
+                            fields.Add(field);
                         }
-                        table["Measures"] = measures;
                         foreach (var hi in tb.Hierarchies)
                         {
                             if (hi.IsHidden) continue;
-                            var hierarchy = new JObject();
-                            hierarchy["Name"] = hi.Name;
-                            hierarchy["DisplayFolder"] = hi.DisplayFolder;
-                            hierarchy["Levels"] = new JArray();
+                            var field = new JObject();
+                            field["tableName"] = tb.Name;
+                            field["name"] = hi.Name;
+                            field["displayFolder"] = hi.DisplayFolder;
+                            field["isHierarchy"] = true;
+                            var levels = new JArray();
                             foreach (var le in hi.Levels)
                             {
                                 var level = new JObject();
-                                level["Name"] = le.Name;
-                                level["Ordinal"] = le.Ordinal;
+                                level["name"] = le.Name;
+                                level["ordinal"] = le.Ordinal;
+                                levels.Add(level);
                             }
-                            hierarchies.Add(hierarchy);
+                            field["levels"] = levels;
+                            fields.Add(field);
                         }
-                        table["Hierarchies"] = hierarchies;
+                        table["fields"] = fields;
                         tables.Add(table);
                     }
                     return tables;
@@ -86,45 +89,49 @@ namespace Pentamic.SSBI.Services
                     {
                         if (tb.Table.IsHidden) continue;
                         var table = new JObject();
-                        table["Name"] = tb.Name;
-                        var columns = new JArray();
-                        var measures = new JArray();
-                        var hierarchies = new JArray();
+                        table["name"] = tb.Name;
+                        var fields = new JArray();
                         foreach (var co in tb.PerspectiveColumns)
                         {
                             if (co.Column.IsHidden) continue;
-                            dynamic column = new JObject();
-                            column.Name = co.Name;
-                            column.DataType = co.Column.DataType;
-                            column.DisplayFolder = co.Column.DisplayFolder;
-                            columns.Add(column);
+                            var field = new JObject();
+                            field["tableName"] = tb.Name;
+                            field["name"] = co.Name;
+                            field["dataType"] = (int)co.Column.DataType;
+                            field["displayFolder"] = co.Column.DisplayFolder;
+                            fields.Add(field);
                         }
-                        table["Columns"] = columns;
                         foreach (var me in tb.PerspectiveMeasures)
                         {
                             if (me.Measure.IsHidden) continue;
-                            dynamic measure = new JObject();
-                            measure.Name = me.Name;
-                            measure.DisplayFolder = me.Measure.DisplayFolder;
-                            measures.Add(measure);
+                            var field = new JObject();
+                            field["tableName"] = tb.Name;
+                            field["name"] = me.Name;
+                            field["dataType"] = (int)me.Measure.DataType;
+                            field["displayFolder"] = me.Measure.DisplayFolder;
+                            field["isMeasure"] = true;
+                            fields.Add(field);
                         }
-                        table["Measures"] = measures;
                         foreach (var hi in tb.PerspectiveHierarchies)
                         {
                             if (hi.Hierarchy.IsHidden) continue;
-                            var hierarchy = new JObject();
-                            hierarchy["Name"] = hi.Name;
-                            hierarchy["DisplayFolder"] = hi.Hierarchy.DisplayFolder;
-                            hierarchy["Levels"] = new JArray();
+                            var field = new JObject();
+                            field["tableName"] = tb.Name;
+                            field["name"] = hi.Name;
+                            field["displayFolder"] = hi.Hierarchy.DisplayFolder;
+                            field["isHierarchy"] = true;
+                            var levels = new JArray();
                             foreach (var le in hi.Hierarchy.Levels)
                             {
                                 var level = new JObject();
-                                level["Name"] = le.Name;
-                                level["Ordinal"] = le.Ordinal;
+                                level["name"] = le.Name;
+                                level["ordinal"] = le.Ordinal;
+                                levels.Add(level);
                             }
-                            hierarchies.Add(hierarchy);
+                            field["levels"] = levels;
+                            fields.Add(field);
                         }
-                        table["Hierarchies"] = hierarchies;
+                        table["fields"] = fields;
                         tables.Add(table);
                     }
                     return tables;

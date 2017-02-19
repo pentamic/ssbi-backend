@@ -12,10 +12,6 @@
         public int SizeY { get; set; }
         public string DisplayConfig { get; set; }
         public string DataConfig { get; set; }
-        public string ColumnFields { get; set; }
-        public string RowFields { get; set; }
-        public string ValueFields { get; set; }
-        public string FilterFields { get; set; }
 
         public ReportPage ReportPage { get; set; }
     }

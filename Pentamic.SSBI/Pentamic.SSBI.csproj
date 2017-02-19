@@ -264,6 +264,10 @@
     <Compile Include="Migrations\ReportingContext\201702170752229_UpdateReporting2.Designer.cs">
       <DependentUpon>201702170752229_UpdateReporting2.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\ReportingContext\201702180621412_UpdateReporting3.cs" />
+    <Compile Include="Migrations\ReportingContext\201702180621412_UpdateReporting3.Designer.cs">
+      <DependentUpon>201702180621412_UpdateReporting3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ReportingContext\Configuration.cs" />
     <Compile Include="Models\DataModel\AggregateType.cs" />
     <Compile Include="Models\DataModel\ColumnDataType.cs" />
@@ -362,6 +366,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201702170752229_UpdateReporting2.resx">
       <DependentUpon>201702170752229_UpdateReporting2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201702180621412_UpdateReporting3.resx">
+      <DependentUpon>201702180621412_UpdateReporting3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
