@@ -247,6 +247,10 @@
     <Compile Include="Migrations\DataModelContext\201702170159092_UpdateModel3.Designer.cs">
       <DependentUpon>201702170159092_UpdateModel3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\DataModelContext\201702200413416_UpdateModel4.cs" />
+    <Compile Include="Migrations\DataModelContext\201702200413416_UpdateModel4.Designer.cs">
+      <DependentUpon>201702200413416_UpdateModel4.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DataModelContext\Configuration.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.Designer.cs">
@@ -298,6 +302,7 @@
     <Compile Include="Models\Discover\ModelTable.cs" />
     <Compile Include="Models\Discover\TableDiscoverResult.cs" />
     <Compile Include="Models\Discover\TableSchemaRestriction.cs" />
+    <Compile Include="Models\DataModel\SourceFile.cs" />
     <Compile Include="Models\PivotDataSourceExtensions.cs" />
     <Compile Include="Models\PivotDataSourceRequest.cs" />
     <Compile Include="Models\PivotDataSourceRequestModelBinder.cs" />
@@ -354,6 +359,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\DataModelContext\201702170159092_UpdateModel3.resx">
       <DependentUpon>201702170159092_UpdateModel3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201702200413416_UpdateModel4.resx">
+      <DependentUpon>201702200413416_UpdateModel4.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201702080147015_InitReporting.resx">
       <DependentUpon>201702080147015_InitReporting.cs</DependentUpon>

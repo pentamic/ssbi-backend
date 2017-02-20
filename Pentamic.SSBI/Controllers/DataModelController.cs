@@ -80,8 +80,8 @@ namespace Pentamic.SSBI.Controllers
             string root = HttpContext.Current.Server.MapPath("~/Uploads");
             var provider = new MultipartFormDataStreamProvider(root);
             await Request.Content.ReadAsMultipartAsync(provider);
-            var dataSource = await _dataModelService.ImportDataSource(provider);
-            return Ok(dataSource);
+            var sourceFileId = await _dataModelService.HandleFileUpload(provider);
+            return Ok(sourceFileId);
         }
 
         [HttpPost]

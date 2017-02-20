@@ -203,6 +203,35 @@ namespace Pentamic.SSBI.Services
             }
         }
 
+        public async Task<JArray> DiscoverTables(DataSource ds)
+        {
+            var conStr = GetDataSourceConnectionString(ds);
+            using (var con = new OleDbConnection(conStr))
+            {
+                var result = new JArray();
+                await con.OpenAsync();
+                var dt1 = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new[] { null, null, null, "TABLE" });
+                var dt2 = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new[] { null, null, null, "VIEW" });
+                foreach (DataRow row in dt1.Rows)
+                {
+                    var obj = new JObject();
+                    obj["TableName"] = row["TABLE_NAME"].ToString();
+                    obj["TableSchema"] = row["TABLE_SCHEMA"].ToString();
+                    obj["TableType"] = row["TABLE_TYPE"].ToString();
+                    result.Add(obj);
+                }
+                foreach (DataRow row in dt2.Rows)
+                {
+                    var obj = new JObject();
+                    obj["TableName"] = row["TABLE_NAME"].ToString();
+                    obj["TableSchema"] = row["TABLE_SCHEMA"].ToString();
+                    obj["TableType"] = row["TABLE_TYPE"].ToString();
+                    result.Add(obj);
+                }
+                return result;
+            }
+        }
+
         public async Task<List<ColumnDiscoverResult>> DiscoverColumns(ColumnSchemaRestriction restrictions)
         {
             var ds = _dataModelContext.DataSources.Find(restrictions.DataSourceId);
@@ -240,34 +269,31 @@ namespace Pentamic.SSBI.Services
         public string GetDataSourceConnectionString(DataSource ds)
         {
             string cs;
-            var builder = new OleDbConnectionStringBuilder();
             switch (ds.Type)
             {
                 case DataSourceType.SqlServer:
-                    builder.Provider = "SQLNCLI11";
-                    builder.DataSource = ds.Source;
-                    builder.PersistSecurityInfo = false;
-                    if (!string.IsNullOrEmpty(ds.Catalog))
-                    {
-                        builder["Initial Catalog"] = ds.Catalog;
-                    }
                     if (ds.IntegratedSecurity)
                     {
-                        builder["Integrated Security"] = "SSPI";
+                        cs = $"Provider=SQLNCLI11;Data Source={ds.Source};Initial Catalog={ds.Catalog};Integrated Security=SSPI;Persist Security Info=false";
                     }
                     else
                     {
-                        builder["User ID"] = ds.User;
-                        builder["Password"] = ds.Password;
+                        cs = $"Provider=SQLNCLI11;Data Source={ds.Source};Initial Catalog={ds.Catalog};User ID={ds.User};Password={ds.Password};Persist Security Info=true";
                     }
-                    cs = builder.ToString();
                     break;
                 case DataSourceType.Excel:
-                    builder.Provider = "Microsoft.ACE.OLEDB.12.0";
-                    builder.DataSource = ds.FilePath;
-                    builder.PersistSecurityInfo = false;
+                    if (ds.SourceFileId != null && ds.SourceFile == null)
+                    {
+                        ds.SourceFile = _dataModelContext.SourceFiles.Find(ds.SourceFileId);
+                    }
+                    var builder = new OleDbConnectionStringBuilder()
+                    {
+                        Provider = "Microsoft.ACE.OLEDB.12.0",
+                        DataSource = ds.SourceFile.FilePath,
+                        PersistSecurityInfo = false
+                    };
                     builder["Mode"] = "Read";
-                    var extension = Path.GetExtension(ds.FileName).ToUpper();
+                    var extension = Path.GetExtension(ds.SourceFile.FileName).ToUpper();
                     switch (extension)
                     {
                         case ".XLS":

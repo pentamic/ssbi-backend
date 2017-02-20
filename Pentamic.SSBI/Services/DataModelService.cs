@@ -74,27 +74,40 @@ namespace Pentamic.SSBI.Services
         {
             get { return Context.Levels; }
         }
-        public async Task<DataSource> ImportDataSource(MultipartFormDataStreamProvider provider)
+        //public async Task<DataSource> ImportDataSource(MultipartFormDataStreamProvider provider)
+        //{
+        //    var file = provider.FileData[0];
+        //    var formData = provider.FormData;
+        //    var modelId = Convert.ToInt32(formData["modelId"]);
+        //    var name = formData["name"];
+        //    var description = formData["description"];
+        //    var dataSource = new DataSource
+        //    {
+        //        ModelId = modelId,
+        //        Type = DataSourceType.Excel,
+        //        Name = name,
+        //        OriginalName = name,
+        //        Description = description,
+        //        FileName = file.Headers.ContentDisposition.FileName.Replace("\"", ""),
+        //        FilePath = file.LocalFileName,
+        //        State = DataModelObjectState.Added
+        //    };
+        //    Context.DataSources.Add(dataSource);
+        //    await Context.SaveChangesAsync();
+        //    return dataSource;
+        //}
+
+        public async Task<int> HandleFileUpload(MultipartFormDataStreamProvider provider)
         {
             var file = provider.FileData[0];
-            var formData = provider.FormData;
-            var modelId = Convert.ToInt32(formData["modelId"]);
-            var name = formData["name"];
-            var description = formData["description"];
-            var dataSource = new DataSource
+            var sourceFile = new SourceFile
             {
-                ModelId = modelId,
-                Type = DataSourceType.Excel,
-                Name = name,
-                OriginalName = name,
-                Description = description,
                 FileName = file.Headers.ContentDisposition.FileName.Replace("\"", ""),
-                FilePath = file.LocalFileName,
-                State = DataModelObjectState.Added
+                FilePath = file.LocalFileName
             };
-            Context.DataSources.Add(dataSource);
+            Context.SourceFiles.Add(sourceFile);
             await Context.SaveChangesAsync();
-            return dataSource;
+            return sourceFile.Id;
         }
 
         public void DeployModel(int modelId)
@@ -545,14 +558,18 @@ namespace Pentamic.SSBI.Services
                     }
                     break;
                 case DataSourceType.Excel:
+                    if (ds.SourceFileId != null && ds.SourceFile == null)
+                    {
+                        ds.SourceFile = Context.SourceFiles.Find(ds.SourceFileId);
+                    }
                     var builder = new OleDbConnectionStringBuilder()
                     {
                         Provider = "Microsoft.ACE.OLEDB.12.0",
-                        DataSource = ds.FilePath,
+                        DataSource = ds.SourceFile.FilePath,
                         PersistSecurityInfo = false
                     };
                     builder["Mode"] = "Read";
-                    var extension = Path.GetExtension(ds.FileName).ToUpper();
+                    var extension = Path.GetExtension(ds.SourceFile.FileName).ToUpper();
                     switch (extension)
                     {
                         case ".XLS":

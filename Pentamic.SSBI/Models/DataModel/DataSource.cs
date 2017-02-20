@@ -15,10 +15,10 @@ namespace Pentamic.SSBI.Models.DataModel
         public string User { get; set; }
         public string Password { get; set; }
         public bool IntegratedSecurity { get; set; }
-        public string FileName { get; set; }
-        public string FilePath { get; set; }
+        public int? SourceFileId { get; set; }
         public DataModelObjectState State { get; set; }
         public Model Model { get; set; }
         public List<Table> Tables { get; set; }
+        public SourceFile SourceFile { get; set; }
     }
 }

@@ -20,6 +20,7 @@ namespace Pentamic.SSBI.Models.DataModel
         public DbSet<PerspectiveColumn> PerspectiveColumns { get; set; }
         public DbSet<Hierarchy> Hierarchies { get; set; }
         public DbSet<Level> Levels { get; set; }
+        public DbSet<SourceFile> SourceFiles { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

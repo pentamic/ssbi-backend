@@ -2,6 +2,7 @@
 using Pentamic.SSBI.Services;
 using System.Web.Http;
 using Pentamic.SSBI.Models.Discover;
+using Pentamic.SSBI.Models.DataModel;
 
 namespace Pentamic.SSBI.Controllers
 {
@@ -31,13 +32,22 @@ namespace Pentamic.SSBI.Controllers
             return Ok(result);
         }
 
+        //[HttpPost]
+        //[Route("tables")]
+        //public async Task<IHttpActionResult> Tables([FromBody]TableSchemaRestriction restrictions)
+        //{
+        //    var result = await _discoverService.DiscoverTables(restrictions);
+        //    return Ok(result);
+        //}
+
         [HttpPost]
         [Route("tables")]
-        public async Task<IHttpActionResult> Tables([FromBody]TableSchemaRestriction restrictions)
+        public async Task<IHttpActionResult> Tables([FromBody]DataSource ds)
         {
-            var result = await _discoverService.DiscoverTables(restrictions);
+            var result = await _discoverService.DiscoverTables(ds);
             return Ok(result);
         }
+
 
         [HttpPost]
         [Route("columns")]
