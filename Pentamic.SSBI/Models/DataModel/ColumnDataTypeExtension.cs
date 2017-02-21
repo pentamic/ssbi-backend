@@ -13,6 +13,10 @@ namespace Pentamic.SSBI.Models.DataModel
 
         public static ColumnDataType ToDataType(this OleDbType dataType)
         {
+            if ((int)dataType == 146)
+            {
+                return ColumnDataType.DateTime;
+            }
             switch (dataType)
             {
                 case OleDbType.BigInt:

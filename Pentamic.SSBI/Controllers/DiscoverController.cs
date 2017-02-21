@@ -26,19 +26,11 @@ namespace Pentamic.SSBI.Controllers
 
         [HttpPost]
         [Route("catalogs")]
-        public async Task<IHttpActionResult> Catalogs([FromBody]CatalogSchemaRestriction restrictions)
+        public async Task<IHttpActionResult> Catalogs([FromBody]DataSource ds)
         {
-            var result = await _discoverService.DiscoverCatalogs(restrictions);
+            var result = await _discoverService.DiscoverCatalogs(ds);
             return Ok(result);
         }
-
-        //[HttpPost]
-        //[Route("tables")]
-        //public async Task<IHttpActionResult> Tables([FromBody]TableSchemaRestriction restrictions)
-        //{
-        //    var result = await _discoverService.DiscoverTables(restrictions);
-        //    return Ok(result);
-        //}
 
         [HttpPost]
         [Route("tables")]
@@ -51,17 +43,17 @@ namespace Pentamic.SSBI.Controllers
 
         [HttpPost]
         [Route("columns")]
-        public async Task<IHttpActionResult> Columns([FromBody]ColumnSchemaRestriction restrictions)
+        public async Task<IHttpActionResult> Columns([FromBody]ColumnDiscoverModel model)
         {
-            var result = await _discoverService.DiscoverColumns(restrictions);
+            var result = await _discoverService.DiscoverColumns(model.DataSource, model.TableSchema, model.TableName);
             return Ok(result);
         }
 
         [HttpPost]
         [Route("relationships")]
-        public async Task<IHttpActionResult> Relationships([FromBody]ForeignKeySchemaRestriction restrictions)
+        public async Task<IHttpActionResult> Relationships([FromBody]RelationshipDiscoverModel model)
         {
-            var result = await _discoverService.DiscoverRelationships(restrictions);
+            var result = await _discoverService.DiscoverRelationships(model.DataSource, model.FkTableSchema, model.FkTableName);
             return Ok(result);
         }
     }

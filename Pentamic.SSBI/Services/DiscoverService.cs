@@ -140,24 +140,14 @@ namespace Pentamic.SSBI.Services
             }
         }
 
-        public DataTable Discover(string conStr, Guid collection, object[] restrictionValues)
+        public async Task<List<CatalogDiscoverResult>> DiscoverCatalogs(DataSource ds)
         {
-            using (var con = new OleDbConnection(conStr))
-            {
-                con.Open();
-                return con.GetOleDbSchemaTable(collection, restrictionValues);
-            }
-        }
-
-        public async Task<List<CatalogDiscoverResult>> DiscoverCatalogs(CatalogSchemaRestriction restrictions)
-        {
-            var ds = _dataModelContext.DataSources.Find(restrictions.DataSourceId);
             var conStr = GetDataSourceConnectionString(ds);
             using (var con = new OleDbConnection(conStr))
             {
                 var result = new List<CatalogDiscoverResult>();
                 await con.OpenAsync();
-                var dt = con.GetOleDbSchemaTable(OleDbSchemaGuid.Catalogs, restrictions.Restrictions);
+                var dt = con.GetOleDbSchemaTable(OleDbSchemaGuid.Catalogs, null);
                 foreach (DataRow row in dt.Rows)
                 {
                     result.Add(new CatalogDiscoverResult
@@ -169,83 +159,56 @@ namespace Pentamic.SSBI.Services
             }
         }
 
-        public async Task<List<TableDiscoverResult>> DiscoverTables(TableSchemaRestriction restrictions)
+        public async Task<List<TableDiscoverResult>> DiscoverTables(DataSource ds)
         {
-            var ds = _dataModelContext.DataSources.Find(restrictions.DataSourceId);
             var conStr = GetDataSourceConnectionString(ds);
             using (var con = new OleDbConnection(conStr))
             {
                 var result = new List<TableDiscoverResult>();
                 await con.OpenAsync();
-                restrictions.TableType = "TABLE";
-                var dt1 = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, restrictions.Restrictions);
-                restrictions.TableType = "VIEW";
-                var dt2 = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, restrictions.Restrictions);
-                foreach (DataRow row in dt1.Rows)
-                {
-                    result.Add(new TableDiscoverResult
-                    {
-                        Name = row["TABLE_NAME"].ToString(),
-                        Schema = row["TABLE_SCHEMA"].ToString(),
-                        Type = row["TABLE_TYPE"].ToString()
-                    });
-                }
-                foreach (DataRow row in dt2.Rows)
-                {
-                    result.Add(new TableDiscoverResult
-                    {
-                        Name = row["TABLE_NAME"].ToString(),
-                        Schema = row["TABLE_SCHEMA"].ToString(),
-                        Type = row["TABLE_TYPE"].ToString()
-                    });
-                }
-                return result;
-            }
-        }
-
-        public async Task<JArray> DiscoverTables(DataSource ds)
-        {
-            var conStr = GetDataSourceConnectionString(ds);
-            using (var con = new OleDbConnection(conStr))
-            {
-                var result = new JArray();
-                await con.OpenAsync();
                 var dt1 = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new[] { null, null, null, "TABLE" });
                 var dt2 = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new[] { null, null, null, "VIEW" });
                 foreach (DataRow row in dt1.Rows)
                 {
-                    var obj = new JObject();
-                    obj["TableName"] = row["TABLE_NAME"].ToString();
-                    obj["TableSchema"] = row["TABLE_SCHEMA"].ToString();
-                    obj["TableType"] = row["TABLE_TYPE"].ToString();
+                    var obj = new TableDiscoverResult
+                    {
+                        TableName = row["TABLE_NAME"].ToString(),
+                        TableSchema = row["TABLE_SCHEMA"].ToString(),
+                        TableType = row["TABLE_TYPE"].ToString()
+                    };
                     result.Add(obj);
                 }
                 foreach (DataRow row in dt2.Rows)
                 {
-                    var obj = new JObject();
-                    obj["TableName"] = row["TABLE_NAME"].ToString();
-                    obj["TableSchema"] = row["TABLE_SCHEMA"].ToString();
-                    obj["TableType"] = row["TABLE_TYPE"].ToString();
+                    var obj = new TableDiscoverResult
+                    {
+                        TableName = row["TABLE_NAME"].ToString(),
+                        TableSchema = row["TABLE_SCHEMA"].ToString(),
+                        TableType = row["TABLE_TYPE"].ToString()
+                    };
                     result.Add(obj);
                 }
                 return result;
             }
         }
 
-        public async Task<List<ColumnDiscoverResult>> DiscoverColumns(ColumnSchemaRestriction restrictions)
+        public async Task<List<ColumnDiscoverResult>> DiscoverColumns(DataSource ds, string tableSchema, string tableName)
         {
-            var ds = _dataModelContext.DataSources.Find(restrictions.DataSourceId);
             var conStr = GetDataSourceConnectionString(ds);
+            if (ds.Type == DataSourceType.Excel)
+            {
+                tableSchema = null;
+            }
             using (var con = new OleDbConnection(conStr))
             {
                 var result = new List<ColumnDiscoverResult>();
                 await con.OpenAsync();
-                var dt = con.GetOleDbSchemaTable(OleDbSchemaGuid.Columns, restrictions.Restrictions);
+                var dt = con.GetOleDbSchemaTable(OleDbSchemaGuid.Columns, new[] { null, tableSchema, tableName, null });
                 foreach (DataRow row in dt.Rows)
                 {
                     result.Add(new ColumnDiscoverResult
                     {
-                        Name = row["COLUMN_NAME"].ToString(),
+                        ColumnName = row["COLUMN_NAME"].ToString(),
                         DataType = ((OleDbType)Convert.ToInt32(row["DATA_TYPE"])).ToDataType(),
                         TableName = row["TABLE_NAME"].ToString(),
                         TableSchema = row["TABLE_SCHEMA"].ToString()
@@ -255,14 +218,25 @@ namespace Pentamic.SSBI.Services
             }
         }
 
-        public async Task<DataTable> DiscoverRelationships(ForeignKeySchemaRestriction restrictions)
+        public async Task<List<RelationshipDiscoverResult>> DiscoverRelationships(DataSource ds, string fkTableSchema, string fkTableName)
         {
-            var ds = _dataModelContext.DataSources.Find(restrictions.DataSourceId);
             var conStr = GetDataSourceConnectionString(ds);
             using (var con = new OleDbConnection(conStr))
             {
+                var result = new List<RelationshipDiscoverResult>();
                 await con.OpenAsync();
-                return con.GetOleDbSchemaTable(OleDbSchemaGuid.Foreign_Keys, restrictions.Restrictions);
+                var dt = con.GetOleDbSchemaTable(OleDbSchemaGuid.Foreign_Keys, new[] { null, null, null, null, fkTableSchema, fkTableName });
+                foreach (DataRow row in dt.Rows)
+                {
+                    result.Add(new RelationshipDiscoverResult
+                    {
+                        PkTableSchema = row["PK_TABLE_SCHEMA"].ToString(),
+                        PkTableName = row["PK_TABLE_NAME"].ToString(),
+                        FkTableSchema = row["FK_TABLE_SCHEMA"].ToString(),
+                        FkTableName = row["FK_TABLE_NAME"].ToString()
+                    });
+                }
+                return result;
             }
         }
 

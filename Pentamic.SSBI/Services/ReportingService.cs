@@ -7,6 +7,7 @@ using Pentamic.SSBI.Models.Reporting;
 using Pentamic.SSBI.Models.Reporting.Query;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.OleDb;
 using System.Linq;
 
 namespace Pentamic.SSBI.Services
@@ -14,7 +15,9 @@ namespace Pentamic.SSBI.Services
     public class ReportingService
     {
         private EFContextProvider<ReportingContext> _contextProvider;
-
+        private string _asConnectionString = System.Configuration.ConfigurationManager
+                .ConnectionStrings["AnalysisServiceConnection"]
+                .ConnectionString;
         public ReportingService()
         {
             _contextProvider = new EFContextProvider<ReportingContext>();
@@ -332,9 +335,9 @@ namespace Pentamic.SSBI.Services
                 query = string.Format("EVALUATE ( SUMMARIZECOLUMNS ( {0} ) ) ",
                     string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values)));
             }
-
-            var conStr = @"DataSource=.\astab16;Catalog=" + queryModel.DatabaseName;
-            using (var conn = new AdomdConnection(conStr))
+            var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString);
+            conStrBuilder["Catalog"] = queryModel.DatabaseName;
+            using (var conn = new AdomdConnection(conStrBuilder.ToString()))
             {
                 try
                 {
