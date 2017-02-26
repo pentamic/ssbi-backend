@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using System.Data.OleDb;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Pentamic.SSBI.Models.DataModel;
@@ -8,12 +7,16 @@ using Pentamic.SSBI.Models.Discover;
 using System.IO;
 using AS = Microsoft.AnalysisServices.Tabular;
 using Newtonsoft.Json.Linq;
+using System.Data.OleDb;
 
 namespace Pentamic.SSBI.Services
 {
     public class DiscoverService
     {
         private DataModelContext _dataModelContext;
+        private string _asConnectionString = System.Configuration.ConfigurationManager
+                .ConnectionStrings["AnalysisServiceConnection"]
+                .ConnectionString;
 
         public DiscoverService()
         {
@@ -25,7 +28,7 @@ namespace Pentamic.SSBI.Services
             var model = _dataModelContext.Models.Find(restrictions.ModelId);
             using (var server = new AS.Server())
             {
-                server.Connect(@".\astab16");
+                server.Connect(_asConnectionString);
                 var db = server.Databases.FindByName(model.DatabaseName);
                 if (string.IsNullOrEmpty(restrictions.Perspective))
                 {

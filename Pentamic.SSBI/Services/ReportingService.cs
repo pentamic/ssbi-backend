@@ -320,7 +320,6 @@ namespace Pentamic.SSBI.Services
         //    return query;
         //}
 
-
         public List<Dictionary<string, object>> Query(QueryModel queryModel)
         {
             var query = "";

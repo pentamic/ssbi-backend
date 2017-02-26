@@ -15,6 +15,9 @@ namespace Pentamic.SSBI.Services
     public class DataModelService
     {
         private EFContextProvider<DataModelContext> _contextProvider;
+        private string _asConnectionString = System.Configuration.ConfigurationManager
+                .ConnectionStrings["AnalysisServiceConnection"]
+                .ConnectionString;
 
         public DataModelService()
         {
@@ -115,7 +118,7 @@ namespace Pentamic.SSBI.Services
             var mo = Context.Models.Find(modelId);
             using (var server = new AS.Server())
             {
-                server.Connect(@".\astab16");
+                server.Connect(_asConnectionString);
                 if (mo.State == DataModelObjectState.Deleted)
                 {
                     server.Databases.Remove(mo.DatabaseName);
@@ -422,7 +425,7 @@ namespace Pentamic.SSBI.Services
             {
                 using (server = new AS.Server())
                 {
-                    server.Connect(@".\astab16");
+                    server.Connect(_asConnectionString);
                     var database = server.Databases[mo.DatabaseName];
                     database.Model.RequestRefresh(AS.RefreshType.Full);
                     database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
