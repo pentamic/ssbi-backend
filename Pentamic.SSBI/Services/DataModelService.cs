@@ -2,6 +2,7 @@
 using Breeze.ContextProvider.EF6;
 using Newtonsoft.Json.Linq;
 using Pentamic.SSBI.Models.DataModel;
+using Pentamic.SSBI.Models.DataModel.Objects;
 using System;
 using System.Data.Entity;
 using System.Data.OleDb;
@@ -10,6 +11,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AS = Microsoft.AnalysisServices.Tabular;
+
 namespace Pentamic.SSBI.Services
 {
     public class DataModelService
@@ -447,12 +449,65 @@ namespace Pentamic.SSBI.Services
             }
         }
 
+        public void RefreshTable(int tableId)
+        {
+            var tb = Context.Tables.Where(x => x.Id == tableId)
+                .Include(x => x.DataSource.Model)
+                .FirstOrDefault();
+            AS.Server server = null;
+            try
+            {
+                using (server = new AS.Server())
+                {
+                    server.Connect(_asConnectionString);
+                    var database = server.Databases[tb.DataSource.Model.DatabaseName];
+                    var table = database.Model.Tables[tb.Name];
+                    table.RequestRefresh(AS.RefreshType.Full);
+                    database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
+                    server.Disconnect();
+                }
+            }
+            finally
+            {
+                if (server != null && server.Connected)
+                {
+                    server.Disconnect();
+                }
+            }
+        }
+
+        public void RefreshPartition(int partitionId)
+        {
+            var pa = Context.Partitions.Where(x => x.Id == partitionId)
+                .Include(x => x.Table.DataSource.Model)
+                .FirstOrDefault();
+            AS.Server server = null;
+            try
+            {
+                using (server = new AS.Server())
+                {
+                    server.Connect(_asConnectionString);
+                    var database = server.Databases[pa.Table.DataSource.Model.DatabaseName];
+                    var partition = database.Model.Tables[pa.Table.Name].Partitions[pa.Name];
+                    partition.RequestRefresh(AS.RefreshType.Full);
+                    database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
+                    server.Disconnect();
+                }
+            }
+            finally
+            {
+                if (server != null && server.Connected)
+                {
+                    server.Disconnect();
+                }
+            }
+        }
+
+
         public SaveResult SaveChanges(JObject saveBundle)
         {
             var txSettings = new TransactionSettings { TransactionType = TransactionType.TransactionScope };
             _contextProvider.BeforeSaveEntityDelegate += BeforeSaveEntity;
-            //_contextProvider.BeforeSaveEntitiesDelegate += BeforeSaveEntities;
-            //_contextProvider.AfterSaveEntitiesDelegate += AfterSaveEntities;
             return _contextProvider.SaveChanges(saveBundle, txSettings);
         }
 

@@ -251,6 +251,10 @@
     <Compile Include="Migrations\DataModelContext\201702200413416_UpdateModel4.Designer.cs">
       <DependentUpon>201702200413416_UpdateModel4.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\DataModelContext\201703020130022_UpdateDataModel.cs" />
+    <Compile Include="Migrations\DataModelContext\201703020130022_UpdateDataModel.Designer.cs">
+      <DependentUpon>201703020130022_UpdateDataModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DataModelContext\Configuration.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.Designer.cs">
@@ -273,25 +277,25 @@
       <DependentUpon>201702180621412_UpdateReporting3.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\ReportingContext\Configuration.cs" />
-    <Compile Include="Models\DataModel\AggregateType.cs" />
-    <Compile Include="Models\DataModel\ColumnDataType.cs" />
-    <Compile Include="Models\DataModel\ColumnDataTypeExtension.cs" />
-    <Compile Include="Models\DataModel\Column.cs" />
-    <Compile Include="Models\DataModel\Hierarchy.cs" />
-    <Compile Include="Models\DataModel\Level.cs" />
-    <Compile Include="Models\DataModel\Model.cs" />
+    <Compile Include="Models\DataModel\Enums\AggregateType.cs" />
+    <Compile Include="Models\DataModel\Enums\ColumnDataType.cs" />
+    <Compile Include="Models\DataModel\Enums\ColumnDataTypeExtension.cs" />
+    <Compile Include="Models\DataModel\Objects\Column.cs" />
+    <Compile Include="Models\DataModel\Objects\Hierarchy.cs" />
+    <Compile Include="Models\DataModel\Objects\Level.cs" />
+    <Compile Include="Models\DataModel\Objects\Model.cs" />
     <Compile Include="Models\DataModel\DataModelContext.cs" />
-    <Compile Include="Models\DataModel\DataSource.cs" />
-    <Compile Include="Models\DataModel\DataSourceType.cs" />
+    <Compile Include="Models\DataModel\Objects\DataSource.cs" />
+    <Compile Include="Models\DataModel\Enums\DataSourceType.cs" />
     <Compile Include="Models\DataModel\IDataModelObject.cs" />
-    <Compile Include="Models\DataModel\Measure.cs" />
-    <Compile Include="Models\DataModel\DataModelObjectState.cs" />
-    <Compile Include="Models\DataModel\Partition.cs" />
-    <Compile Include="Models\DataModel\Perspective.cs" />
-    <Compile Include="Models\DataModel\PerspectiveColumn.cs" />
-    <Compile Include="Models\DataModel\Relationship.cs" />
-    <Compile Include="Models\DataModel\Table.cs" />
-    <Compile Include="Models\DataModel\TableType.cs" />
+    <Compile Include="Models\DataModel\Objects\Measure.cs" />
+    <Compile Include="Models\DataModel\Enums\DataModelObjectState.cs" />
+    <Compile Include="Models\DataModel\Objects\Partition.cs" />
+    <Compile Include="Models\DataModel\Objects\Perspective.cs" />
+    <Compile Include="Models\DataModel\Objects\PerspectiveColumn.cs" />
+    <Compile Include="Models\DataModel\Objects\Relationship.cs" />
+    <Compile Include="Models\DataModel\Objects\Table.cs" />
+    <Compile Include="Models\DataModel\Enums\TableType.cs" />
     <Compile Include="Models\Discover\CatalogDiscoverResult.cs" />
     <Compile Include="Models\Discover\ColumnDiscoverModel.cs" />
     <Compile Include="Models\Discover\ColumnDiscoverResult.cs" />
@@ -300,6 +304,7 @@
     <Compile Include="Models\Discover\RelationshipDiscoverResult.cs" />
     <Compile Include="Models\Discover\TableDiscoverResult.cs" />
     <Compile Include="Models\DataModel\SourceFile.cs" />
+    <Compile Include="Models\IAuditable.cs" />
     <Compile Include="Models\PivotDataSourceExtensions.cs" />
     <Compile Include="Models\PivotDataSourceRequest.cs" />
     <Compile Include="Models\PivotDataSourceRequestModelBinder.cs" />
@@ -342,6 +347,7 @@
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+    <None Include="Properties\PublishProfiles\Pentamic.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\DataModelContext\201702060359376_InitDataModel.resx">
@@ -361,6 +367,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\DataModelContext\201702200413416_UpdateModel4.resx">
       <DependentUpon>201702200413416_UpdateModel4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201703020130022_UpdateDataModel.resx">
+      <DependentUpon>201703020130022_UpdateDataModel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201702080147015_InitReporting.resx">
       <DependentUpon>201702080147015_InitReporting.cs</DependentUpon>

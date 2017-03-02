@@ -1,7 +1,7 @@
 ﻿using Breeze.ContextProvider;
 using Breeze.WebApi2;
 using Newtonsoft.Json.Linq;
-using Pentamic.SSBI.Models.DataModel;
+using Pentamic.SSBI.Models.DataModel.Objects;
 using Pentamic.SSBI.Services;
 using System.Linq;
 using System.Net;

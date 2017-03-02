@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using Pentamic.SSBI.Models.DataModel.Objects;
+using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace Pentamic.SSBI.Models.DataModel

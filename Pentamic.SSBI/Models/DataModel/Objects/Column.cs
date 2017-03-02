@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Pentamic.SSBI.Models.DataModel
+namespace Pentamic.SSBI.Models.DataModel.Objects
 {
-    public class Column : IDataModelObject
+    public class Column : IDataModelObject, IAuditable
     {
         public int Id { get; set; }
         public int TableId { get; set; }
@@ -21,5 +22,9 @@ namespace Pentamic.SSBI.Models.DataModel
         public List<Relationship> RelationshipFrom { get; set; }
         [InverseProperty("ToColumn")]
         public List<Relationship> RelationshipTo { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+        public string ModifiedBy { get; set; }
+        public DateTimeOffset ModifiedAt { get; set; }
     }
 }

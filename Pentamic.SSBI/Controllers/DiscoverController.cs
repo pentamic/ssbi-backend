@@ -2,7 +2,7 @@
 using Pentamic.SSBI.Services;
 using System.Web.Http;
 using Pentamic.SSBI.Models.Discover;
-using Pentamic.SSBI.Models.DataModel;
+using Pentamic.SSBI.Models.DataModel.Objects;
 
 namespace Pentamic.SSBI.Controllers
 {

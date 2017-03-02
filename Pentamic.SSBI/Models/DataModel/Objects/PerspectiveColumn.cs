@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace Pentamic.SSBI.Models.DataModel
+namespace Pentamic.SSBI.Models.DataModel.Objects
 {
     public class PerspectiveColumn
     {

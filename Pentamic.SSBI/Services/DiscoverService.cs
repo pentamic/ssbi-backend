@@ -8,6 +8,7 @@ using System.IO;
 using AS = Microsoft.AnalysisServices.Tabular;
 using Newtonsoft.Json.Linq;
 using System.Data.OleDb;
+using Pentamic.SSBI.Models.DataModel.Objects;
 
 namespace Pentamic.SSBI.Services
 {

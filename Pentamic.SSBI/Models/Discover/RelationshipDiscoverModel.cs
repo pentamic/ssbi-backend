@@ -1,4 +1,4 @@
-﻿using Pentamic.SSBI.Models.DataModel;
+﻿using Pentamic.SSBI.Models.DataModel.Objects;
 
 namespace Pentamic.SSBI.Models.Discover
 {

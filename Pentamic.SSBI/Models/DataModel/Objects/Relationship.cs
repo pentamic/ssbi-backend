@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Pentamic.SSBI.Models.DataModel
+namespace Pentamic.SSBI.Models.DataModel.Objects
 {
-    public class Relationship : IDataModelObject
+    public class Relationship : IDataModelObject, IAuditable
     {
         public int Id { get; set; }
         public int ModelId { get; set; }
@@ -17,5 +18,9 @@ namespace Pentamic.SSBI.Models.DataModel
         [ForeignKey("ToColumnId")]
         public Column ToColumn { get; set; }
         public Model Model { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+        public string ModifiedBy { get; set; }
+        public DateTimeOffset ModifiedAt { get; set; }
     }
 }

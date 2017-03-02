@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-namespace Pentamic.SSBI.Models.DataModel
+namespace Pentamic.SSBI.Models.DataModel.Objects
 {
-    public class Table : IDataModelObject
+    public class Table : IDataModelObject, IAuditable
     {
         public int Id { get; set; }
         public int DataSourceId { get; set; }
@@ -17,5 +18,11 @@ namespace Pentamic.SSBI.Models.DataModel
         public List<Measure> Measures { get; set; }
         public List<Hierarchy> Hierarchies { get; set; }
         public DataSource DataSource { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+        public string ModifiedBy { get; set; }
+        public DateTimeOffset ModifiedAt { get; set; }
+        public DateTimeOffset RefreshedAt { get; set; }
+        public string RefreshedBy { get; set; }
     }
 }

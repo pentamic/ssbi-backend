@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Pentamic.SSBI.Models.DataModel
+namespace Pentamic.SSBI.Models.DataModel.Objects
 {
-    public class SourceFile : IAuditable
+    public class Perspective : IDataModelObject, IAuditable
     {
         public int Id { get; set; }
-        public string FileName { get; set; }
-        public string FilePath { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string OriginalName { get; set; }
+        public DataModelObjectState State { get; set; }
         public string CreatedBy { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public string ModifiedBy { get; set; }
