@@ -16,11 +16,11 @@ namespace Pentamic.SSBI.Controllers
             _discoverService = new DiscoverService();
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("model")]
-        public IHttpActionResult Model(ModelDiscoverRestriction restrictions)
+        public IHttpActionResult Model(int modelId, string perspective = null)
         {
-            var result = _discoverService.DiscoverModel(restrictions);
+            var result = _discoverService.DiscoverModel(modelId, perspective);
             return Ok(result);
         }
 

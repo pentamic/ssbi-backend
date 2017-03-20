@@ -24,14 +24,14 @@ namespace Pentamic.SSBI.Services
             _dataModelContext = new DataModelContext();
         }
 
-        public JArray DiscoverModel(ModelDiscoverRestriction restrictions)
+        public JArray DiscoverModel(int modelId, string perspective)
         {
-            var model = _dataModelContext.Models.Find(restrictions.ModelId);
+            var model = _dataModelContext.Models.Find(modelId);
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
                 var db = server.Databases.FindByName(model.DatabaseName);
-                if (string.IsNullOrEmpty(restrictions.Perspective))
+                if (string.IsNullOrEmpty(perspective))
                 {
                     var tables = new JArray();
                     foreach (var tb in db.Model.Tables)
@@ -87,7 +87,7 @@ namespace Pentamic.SSBI.Services
                 }
                 else
                 {
-                    var per = db.Model.Perspectives.Find(restrictions.Perspective);
+                    var per = db.Model.Perspectives.Find(perspective);
                     var tables = new JArray();
                     foreach (var tb in per.PerspectiveTables)
                     {
