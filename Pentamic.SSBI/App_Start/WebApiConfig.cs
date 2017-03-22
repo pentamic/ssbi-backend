@@ -1,5 +1,4 @@
 ﻿using System.Web.Http;
-using System.Web.Http.Cors;
 
 namespace Pentamic.SSBI
 {
@@ -8,8 +7,6 @@ namespace Pentamic.SSBI
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-            var cors = new EnableCorsAttribute("*", "*", "*");
-            config.EnableCors(cors);
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(

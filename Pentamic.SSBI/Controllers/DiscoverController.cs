@@ -6,6 +6,7 @@ using Pentamic.SSBI.Models.DataModel.Objects;
 
 namespace Pentamic.SSBI.Controllers
 {
+    [Authorize]
     [RoutePrefix("api/discover")]
     public class DiscoverController : ApiController
     {
