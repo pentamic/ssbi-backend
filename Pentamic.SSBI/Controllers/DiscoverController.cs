@@ -3,6 +3,7 @@ using Pentamic.SSBI.Services;
 using System.Web.Http;
 using Pentamic.SSBI.Models.Discover;
 using Pentamic.SSBI.Models.DataModel.Objects;
+using System;
 
 namespace Pentamic.SSBI.Controllers
 {
@@ -21,8 +22,16 @@ namespace Pentamic.SSBI.Controllers
         [Route("model")]
         public IHttpActionResult Model(int modelId, string perspective = null)
         {
-            var result = _discoverService.DiscoverModel(modelId, perspective);
-            return Ok(result);
+            try
+            {
+                var result = _discoverService.DiscoverModel(modelId, perspective);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
         }
 
         [HttpPost]

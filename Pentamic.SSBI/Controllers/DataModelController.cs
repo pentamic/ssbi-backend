@@ -3,6 +3,7 @@ using Breeze.WebApi2;
 using Newtonsoft.Json.Linq;
 using Pentamic.SSBI.Models.DataModel.Objects;
 using Pentamic.SSBI.Services;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -89,16 +90,33 @@ namespace Pentamic.SSBI.Controllers
         [Route("breeze/datamodel/deploy/{id}")]
         public IHttpActionResult Deploy(int id)
         {
-            _dataModelService.DeployModel(id);
-            return Ok();
+            try
+            {
+                _dataModelService.DeployModel(id);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Serilog.Log.Logger.Error(e, e.Message);
+                return BadRequest(e.Message);
+            }
+
         }
 
         [HttpPost]
         [Route("breeze/datamodel/refresh/{id}")]
         public IHttpActionResult Refresh(int id)
         {
-            _dataModelService.RefreshModel(id);
-            return Ok();
+            try
+            {
+                _dataModelService.RefreshModel(id);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Serilog.Log.Logger.Error(e, e.Message);
+                return BadRequest(e.Message);
+            }
         }
     }
 }

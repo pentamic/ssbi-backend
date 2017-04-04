@@ -179,10 +179,10 @@ namespace Pentamic.SSBI.Services
                             Name = ds.Name,
                             Description = ds.Description,
                             ConnectionString = GetDataSourceConnectionString(ds),
-                            //ImpersonationMode = Microsoft.AnalysisServices.Tabular.ImpersonationMode.ImpersonateServiceAccount
-                            ImpersonationMode = Microsoft.AnalysisServices.Tabular.ImpersonationMode.ImpersonateAccount,
-                            Account = "datht.it@live.com",
-                            Password = "20111988Gi@ng"
+                            ImpersonationMode = Microsoft.AnalysisServices.Tabular.ImpersonationMode.ImpersonateServiceAccount
+                            //ImpersonationMode = Microsoft.AnalysisServices.Tabular.ImpersonationMode.ImpersonateAccount,
+                            //Account = "datht.it@live.com",
+                            //Password = "20111988Gi@ng"
                         };
                         database.Model.DataSources.Add(dataSource);
                         ds.State = DataModelObjectState.Unchanged;
