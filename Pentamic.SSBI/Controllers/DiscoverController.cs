@@ -50,6 +50,13 @@ namespace Pentamic.SSBI.Controllers
             return Ok(result);
         }
 
+        [HttpPost]
+        [Route("data")]
+        public async Task<IHttpActionResult> Data([FromBody]DataDiscoverModel model)
+        {
+            var result = await _discoverService.DiscoverTableData(model.DataSource, model.TableSchema, model.TableName);
+            return Ok(result);
+        }
 
         [HttpPost]
         [Route("columns")]

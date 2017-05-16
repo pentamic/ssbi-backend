@@ -30,13 +30,13 @@ namespace Pentamic.SSBI
                 .WriteTo.RollingFile("Logs/log-{Date}.txt")
                 .CreateLogger();
 
-            var c1 = new Migrations.ReportingContext.Configuration();
-            var c2 = new Migrations.DataModelContext.Configuration();
+            //var c1 = new Migrations.ReportingContext.Configuration();
+            //var c2 = new Migrations.DataModelContext.Configuration();
 
-            var dbMigrator = new DbMigrator(c1);
-            dbMigrator.Update();
-            dbMigrator = new DbMigrator(c2);
-            dbMigrator.Update();
+            //var dbMigrator = new DbMigrator(c1);
+            //dbMigrator.Update();
+            //dbMigrator = new DbMigrator(c2);
+            //dbMigrator.Update();
         }
     }
 }

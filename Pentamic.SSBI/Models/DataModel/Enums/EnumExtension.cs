@@ -1,14 +1,14 @@
-﻿using Microsoft.AnalysisServices.Tabular;
+﻿using AS = Microsoft.AnalysisServices.Tabular;
 using System;
 using System.Data.OleDb;
 
 namespace Pentamic.SSBI.Models.DataModel
 {
-    public static class ColumnDataTypeExtension
+    public static class EnumExtension
     {
-        public static DataType ToDataType(this ColumnDataType dataType)
+        public static AS.DataType ToDataType(this ColumnDataType dataType)
         {
-            return (DataType)Enum.Parse(typeof(DataType), dataType.ToString());
+            return (AS.DataType)Enum.Parse(typeof(AS.DataType), dataType.ToString());
         }
 
         public static ColumnDataType ToDataType(this OleDbType dataType)
@@ -57,6 +57,11 @@ namespace Pentamic.SSBI.Models.DataModel
                 default:
                     throw new Exception("Type not found");
             }
+        }
+
+        public static AS.ModeType ToModeType(this ModeType modeType)
+        {
+            return (AS.ModeType)Enum.Parse(typeof(AS.ModeType), modeType.ToString());
         }
     }
 }

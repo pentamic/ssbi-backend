@@ -19,7 +19,6 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public int? SourceFileId { get; set; }
         public DataModelObjectState State { get; set; }
         public Model Model { get; set; }
-        public List<Table> Tables { get; set; }
         public SourceFile SourceFile { get; set; }
         public string CreatedBy { get; set; }
         public DateTimeOffset CreatedAt { get; set; }

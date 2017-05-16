@@ -6,7 +6,7 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
     public class Table : IDataModelObject, IAuditable
     {
         public int Id { get; set; }
-        public int DataSourceId { get; set; }
+        public int ModelId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string OriginalName { get; set; }
@@ -17,7 +17,7 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public List<Partition> Partitions { get; set; }
         public List<Measure> Measures { get; set; }
         public List<Hierarchy> Hierarchies { get; set; }
-        public DataSource DataSource { get; set; }
+        public Model Model { get; set; }
         public string CreatedBy { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public string ModifiedBy { get; set; }

@@ -5,10 +5,13 @@ using System.Collections.Generic;
 using Pentamic.SSBI.Models.DataModel;
 using Pentamic.SSBI.Models.Discover;
 using System.IO;
-using AS = Microsoft.AnalysisServices.Tabular;
 using Newtonsoft.Json.Linq;
 using System.Data.OleDb;
 using Pentamic.SSBI.Models.DataModel.Objects;
+using System.Dynamic;
+using System.Data.Common;
+using AS = Microsoft.AnalysisServices.Tabular;
+
 
 namespace Pentamic.SSBI.Services
 {
@@ -144,6 +147,30 @@ namespace Pentamic.SSBI.Services
             }
         }
 
+        public async Task<List<CatalogDiscoverResult>> DiscoverCatalogs(int dsId)
+        {
+            var ds = _dataModelContext.DataSources.Find(dsId);
+            if (ds == null)
+            {
+                throw new ArgumentException("Data Source not found");
+            }
+            var conStr = GetDataSourceConnectionString(ds);
+            using (var con = new OleDbConnection(conStr))
+            {
+                var result = new List<CatalogDiscoverResult>();
+                await con.OpenAsync();
+                var dt = con.GetOleDbSchemaTable(OleDbSchemaGuid.Catalogs, null);
+                foreach (DataRow row in dt.Rows)
+                {
+                    result.Add(new CatalogDiscoverResult
+                    {
+                        CatalogName = row["CATALOG_NAME"].ToString(),
+                    });
+                }
+                return result;
+            }
+        }
+
         public async Task<List<CatalogDiscoverResult>> DiscoverCatalogs(DataSource ds)
         {
             var conStr = GetDataSourceConnectionString(ds);
@@ -163,8 +190,13 @@ namespace Pentamic.SSBI.Services
             }
         }
 
-        public async Task<List<TableDiscoverResult>> DiscoverTables(DataSource ds)
+        public async Task<List<TableDiscoverResult>> DiscoverTables(int dsId)
         {
+            var ds = _dataModelContext.DataSources.Find(dsId);
+            if (ds == null)
+            {
+                throw new ArgumentException("Data Source not found");
+            }
             var conStr = GetDataSourceConnectionString(ds);
             using (var con = new OleDbConnection(conStr))
             {
@@ -191,6 +223,71 @@ namespace Pentamic.SSBI.Services
                         TableType = row["TABLE_TYPE"].ToString()
                     };
                     result.Add(obj);
+                }
+                return result;
+            }
+        }
+
+        public async Task<List<TableDiscoverResult>> DiscoverTables(DataSource ds)
+        {
+            var providers = GetProviderFactoryClasses();
+            var conStr = GetDataSourceConnectionString(ds);
+            using (var con = new OleDbConnection(conStr))
+            {
+                var result = new List<TableDiscoverResult>();
+                await con.OpenAsync();
+                var dt1 = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new[] { null, null, null, "TABLE" });
+                var dt2 = con.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, new[] { null, null, null, "VIEW" });
+                foreach (DataRow row in dt1.Rows)
+                {
+                    var obj = new TableDiscoverResult
+                    {
+                        TableName = row["TABLE_NAME"].ToString(),
+                        TableSchema = row["TABLE_SCHEMA"].ToString(),
+                        TableType = row["TABLE_TYPE"].ToString()
+                    };
+                    result.Add(obj);
+                }
+                foreach (DataRow row in dt2.Rows)
+                {
+                    var obj = new TableDiscoverResult
+                    {
+                        TableName = row["TABLE_NAME"].ToString(),
+                        TableSchema = row["TABLE_SCHEMA"].ToString(),
+                        TableType = row["TABLE_TYPE"].ToString()
+                    };
+                    result.Add(obj);
+                }
+                return result;
+            }
+        }
+
+        public async Task<List<ColumnDiscoverResult>> DiscoverColumns(int dsId, string tableSchema, string tableName)
+        {
+            var ds = _dataModelContext.DataSources.Find(dsId);
+            if (ds == null)
+            {
+                throw new ArgumentException("Data Source not found");
+            }
+            var conStr = GetDataSourceConnectionString(ds);
+            if (ds.Type == DataSourceType.Excel)
+            {
+                tableSchema = null;
+            }
+            using (var con = new OleDbConnection(conStr))
+            {
+                var result = new List<ColumnDiscoverResult>();
+                await con.OpenAsync();
+                var dt = con.GetOleDbSchemaTable(OleDbSchemaGuid.Columns, new[] { null, tableSchema, tableName, null });
+                foreach (DataRow row in dt.Rows)
+                {
+                    result.Add(new ColumnDiscoverResult
+                    {
+                        ColumnName = row["COLUMN_NAME"].ToString(),
+                        DataType = ((OleDbType)Convert.ToInt32(row["DATA_TYPE"])).ToDataType(),
+                        TableName = row["TABLE_NAME"].ToString(),
+                        TableSchema = row["TABLE_SCHEMA"].ToString()
+                    });
                 }
                 return result;
             }
@@ -244,6 +341,52 @@ namespace Pentamic.SSBI.Services
             }
         }
 
+        public async Task<List<dynamic>> DiscoverTableData(DataSource ds, string tableSchema, string tableName)
+        {
+            var conStr = GetDataSourceConnectionString(ds);
+            if (ds.Type == DataSourceType.Excel)
+            {
+                tableSchema = null;
+            }
+            OleDbConnection con = null;
+            DbDataReader reader = null;
+            try
+            {
+                using (con = new OleDbConnection(conStr))
+                {
+                    using (var cmd = con.CreateCommand())
+                    {
+                        cmd.CommandText = string.IsNullOrEmpty(tableSchema) ? $"SELECT TOP 100 * FROM [{tableName}]"
+                        : $"SELECT TOP 100 * FROM [{tableSchema}].[{tableName}]";
+                        await con.OpenAsync();
+                        var result = new List<dynamic>();
+                        reader = await cmd.ExecuteReaderAsync();
+                        while (reader.Read())
+                        {
+                            var row = new ExpandoObject() as IDictionary<string, object>;
+                            for (var i = 0; i < reader.FieldCount; ++i)
+                            {
+                                row.Add(reader.GetName(i), reader.GetValue(i));
+                            }
+                            result.Add(row);
+                        }
+                        return result;
+                    }
+                }
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+            }
+        }
+
         public string GetDataSourceConnectionString(DataSource ds)
         {
             string cs;
@@ -252,11 +395,11 @@ namespace Pentamic.SSBI.Services
                 case DataSourceType.SqlServer:
                     if (ds.IntegratedSecurity)
                     {
-                        cs = $"Provider=SQLNCLI11;Data Source={ds.Source};Initial Catalog={ds.Catalog};Integrated Security=SSPI;Persist Security Info=false";
+                        cs = $"Provider=SQLOLEDB;Data Source={ds.Source};Initial Catalog={ds.Catalog};Integrated Security=SSPI;Persist Security Info=false";
                     }
                     else
                     {
-                        cs = $"Provider=SQLNCLI11;Data Source={ds.Source};Initial Catalog={ds.Catalog};User ID={ds.User};Password={ds.Password};Persist Security Info=true";
+                        cs = $"Provider=SQLOLEDB;Data Source={ds.Source};Initial Catalog={ds.Catalog};User ID={ds.User};Password={ds.Password};Persist Security Info=true";
                     }
                     break;
                 case DataSourceType.Excel:
@@ -295,6 +438,12 @@ namespace Pentamic.SSBI.Services
                 default: return null;
             }
             return cs;
+        }
+
+        public DataTable GetProviderFactoryClasses()
+        {
+            var table = DbProviderFactories.GetFactoryClasses();
+            return table;
         }
 
     }

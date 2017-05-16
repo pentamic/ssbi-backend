@@ -140,7 +140,8 @@ namespace Pentamic.SSBI.Services
                     database.Model = new AS.Model
                     {
                         Name = mo.Name,
-                        Description = mo.Description
+                        Description = mo.Description,
+                        DefaultMode = mo.DefaultMode.ToModeType()
                     };
                     server.Databases.Add(database);
                     mo.State = DataModelObjectState.Unchanged;
@@ -211,14 +212,13 @@ namespace Pentamic.SSBI.Services
                     }
                 }
 
-                var tables = Context.Tables.Where(x => x.DataSource.ModelId == modelId)
+                var tables = Context.Tables.Where(x => x.ModelId == modelId)
                     .Include(x => x.Partitions)
                     .Include(x => x.Columns)
                     .Include(x => x.Measures).ToList();
                 foreach (var tb in tables)
                 {
                     AS.Table table = null;
-                    var ds = tb.DataSource;
                     if (tb.State == DataModelObjectState.Added)
                     {
                         table = new AS.Table
@@ -232,11 +232,6 @@ namespace Pentamic.SSBI.Services
                     else
                     {
                         table = database.Model.Tables.Find(tb.OriginalName);
-                        if (ds.State == DataModelObjectState.Obsolete || tb.State == DataModelObjectState.Deleted)
-                        {
-                            database.Model.Tables.Remove(table);
-                            tb.State = DataModelObjectState.Obsolete;
-                        }
                         if (tb.State == DataModelObjectState.Modified)
                         {
                             if (tb.Name != table.Name)
@@ -254,7 +249,8 @@ namespace Pentamic.SSBI.Services
 
                     foreach (var pa in tb.Partitions)
                     {
-                        if (tb.State == DataModelObjectState.Obsolete || pa.State == DataModelObjectState.Deleted)
+                        var ds = pa.DataSource;
+                        if (ds.State == DataModelObjectState.Obsolete || tb.State == DataModelObjectState.Obsolete || pa.State == DataModelObjectState.Deleted)
                         {
                             if (tb.State != DataModelObjectState.Obsolete)
                             {
@@ -452,7 +448,7 @@ namespace Pentamic.SSBI.Services
         public void RefreshTable(int tableId)
         {
             var tb = Context.Tables.Where(x => x.Id == tableId)
-                .Include(x => x.DataSource.Model)
+                .Include(x => x.Model)
                 .FirstOrDefault();
             AS.Server server = null;
             try
@@ -460,7 +456,7 @@ namespace Pentamic.SSBI.Services
                 using (server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases[tb.DataSource.Model.DatabaseName];
+                    var database = server.Databases[tb.Model.DatabaseName];
                     var table = database.Model.Tables[tb.Name];
                     table.RequestRefresh(AS.RefreshType.Full);
                     database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
@@ -479,7 +475,7 @@ namespace Pentamic.SSBI.Services
         public void RefreshPartition(int partitionId)
         {
             var pa = Context.Partitions.Where(x => x.Id == partitionId)
-                .Include(x => x.Table.DataSource.Model)
+                .Include(x => x.Table.Model)
                 .FirstOrDefault();
             AS.Server server = null;
             try
@@ -487,7 +483,7 @@ namespace Pentamic.SSBI.Services
                 using (server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases[pa.Table.DataSource.Model.DatabaseName];
+                    var database = server.Databases[pa.Table.Model.DatabaseName];
                     var partition = database.Model.Tables[pa.Table.Name].Partitions[pa.Name];
                     partition.RequestRefresh(AS.RefreshType.Full);
                     database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);

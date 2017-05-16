@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Pentamic.SSBI.Models.DataModel.Objects;
+using System.Collections.Generic;
 
 namespace Pentamic.SSBI.Models.Reporting
 {

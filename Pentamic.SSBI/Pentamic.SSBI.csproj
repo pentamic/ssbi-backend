@@ -86,17 +86,21 @@
     <Reference Include="Microsoft.AI.WindowsServer, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.WindowsServer.2.3.0\lib\net45\Microsoft.AI.WindowsServer.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AnalysisServices.AdomdClient, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AnalysisServices.1.0.0\lib\Microsoft.AnalysisServices.AdomdClient.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.AnalysisServices, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files\Microsoft SQL Server\130\SDK\Assemblies\Microsoft.AnalysisServices.DLL</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AnalysisServices.AdomdClient, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Windows\assembly\GAC_MSIL\Microsoft.AnalysisServices.AdomdClient\12.0.0.0__89845dcd8080cc91\Microsoft.AnalysisServices.AdomdClient.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AnalysisServices.Core, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AnalysisServices.1.0.0\lib\Microsoft.AnalysisServices.Core.DLL</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files\Microsoft SQL Server\130\SDK\Assemblies\Microsoft.AnalysisServices.Core.DLL</HintPath>
     </Reference>
     <Reference Include="Microsoft.AnalysisServices.Tabular, Version=13.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AnalysisServices.1.0.0\lib\Microsoft.AnalysisServices.Tabular.DLL</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Program Files\Microsoft SQL Server\130\SDK\Assemblies\Microsoft.AnalysisServices.Tabular.DLL</HintPath>
     </Reference>
     <Reference Include="Microsoft.ApplicationInsights, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.3.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
@@ -248,6 +252,14 @@
     <Compile Include="Migrations\DataModelContext\201703020130022_UpdateDataModel.Designer.cs">
       <DependentUpon>201703020130022_UpdateDataModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\DataModelContext\201705030315023_UpdateModel5.cs" />
+    <Compile Include="Migrations\DataModelContext\201705030315023_UpdateModel5.Designer.cs">
+      <DependentUpon>201705030315023_UpdateModel5.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\DataModelContext\201705040139205_UpdateModel6.cs" />
+    <Compile Include="Migrations\DataModelContext\201705040139205_UpdateModel6.Designer.cs">
+      <DependentUpon>201705040139205_UpdateModel6.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DataModelContext\Configuration.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.Designer.cs">
@@ -272,7 +284,8 @@
     <Compile Include="Migrations\ReportingContext\Configuration.cs" />
     <Compile Include="Models\DataModel\Enums\AggregateType.cs" />
     <Compile Include="Models\DataModel\Enums\ColumnDataType.cs" />
-    <Compile Include="Models\DataModel\Enums\ColumnDataTypeExtension.cs" />
+    <Compile Include="Models\DataModel\Enums\EnumExtension.cs" />
+    <Compile Include="Models\DataModel\Enums\ModeType.cs" />
     <Compile Include="Models\DataModel\Objects\Column.cs" />
     <Compile Include="Models\DataModel\Objects\Hierarchy.cs" />
     <Compile Include="Models\DataModel\Objects\Level.cs" />
@@ -290,6 +303,7 @@
     <Compile Include="Models\DataModel\Objects\Table.cs" />
     <Compile Include="Models\DataModel\Enums\TableType.cs" />
     <Compile Include="Models\Discover\CatalogDiscoverResult.cs" />
+    <Compile Include="Models\Discover\DataDiscoverModel.cs" />
     <Compile Include="Models\Discover\ColumnDiscoverModel.cs" />
     <Compile Include="Models\Discover\ColumnDiscoverResult.cs" />
     <Compile Include="Models\Discover\RelationshipDiscoverModel.cs" />
@@ -329,6 +343,7 @@
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -357,6 +372,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\DataModelContext\201703020130022_UpdateDataModel.resx">
       <DependentUpon>201703020130022_UpdateDataModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201705030315023_UpdateModel5.resx">
+      <DependentUpon>201705030315023_UpdateModel5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201705040139205_UpdateModel6.resx">
+      <DependentUpon>201705040139205_UpdateModel6.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201702080147015_InitReporting.resx">
       <DependentUpon>201702080147015_InitReporting.cs</DependentUpon>
