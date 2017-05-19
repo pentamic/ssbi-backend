@@ -281,6 +281,10 @@
     <Compile Include="Migrations\ReportingContext\201702180621412_UpdateReporting3.Designer.cs">
       <DependentUpon>201702180621412_UpdateReporting3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\ReportingContext\201705170729392_UpdateReporting4.cs" />
+    <Compile Include="Migrations\ReportingContext\201705170729392_UpdateReporting4.Designer.cs">
+      <DependentUpon>201705170729392_UpdateReporting4.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ReportingContext\Configuration.cs" />
     <Compile Include="Models\DataModel\Enums\AggregateType.cs" />
     <Compile Include="Models\DataModel\Enums\ColumnDataType.cs" />
@@ -393,6 +397,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201702180621412_UpdateReporting3.resx">
       <DependentUpon>201702180621412_UpdateReporting3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201705170729392_UpdateReporting4.resx">
+      <DependentUpon>201705170729392_UpdateReporting4.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

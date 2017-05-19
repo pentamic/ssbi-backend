@@ -9,7 +9,7 @@ using System.Web.Http;
 
 namespace Pentamic.SSBI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [BreezeController]
     public class ReportingController : ApiController
     {

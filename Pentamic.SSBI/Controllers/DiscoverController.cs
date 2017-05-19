@@ -7,7 +7,7 @@ using System;
 
 namespace Pentamic.SSBI.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [RoutePrefix("api/discover")]
     public class DiscoverController : ApiController
     {

@@ -118,6 +118,10 @@ namespace Pentamic.SSBI.Services
         public void DeployModel(int modelId)
         {
             var mo = Context.Models.Find(modelId);
+            if(mo == null)
+            {
+                throw new Exception("Model is null");
+            }
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
