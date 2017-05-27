@@ -173,7 +173,8 @@ namespace Pentamic.SSBI.Services
 
         public async Task<List<CatalogDiscoverResult>> DiscoverCatalogs(DataSource ds)
         {
-            var conStr = GetDataSourceConnectionString(ds);
+            // var conStr = GetDataSourceConnectionString(ds);
+            var conStr = $"Provider=SQLOLEDB;Data Source={ds.Source};Integrated Security=SSPI;Persist Security Info=false";
             using (var con = new OleDbConnection(conStr))
             {
                 var result = new List<CatalogDiscoverResult>();
