@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using Pentamic.SSBI.Models.DataModel;
 using Pentamic.SSBI.Models.DataModel.Objects;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.OleDb;
 using System.IO;
@@ -11,6 +12,8 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using AS = Microsoft.AnalysisServices.Tabular;
+using AC = Microsoft.AnalysisServices.AdomdClient;
+
 
 namespace Pentamic.SSBI.Services
 {
@@ -79,6 +82,10 @@ namespace Pentamic.SSBI.Services
         {
             get { return Context.Levels; }
         }
+        public IQueryable<SourceFile> SourceFiles
+        {
+            get { return Context.SourceFiles; }
+        }
         //public async Task<DataSource> ImportDataSource(MultipartFormDataStreamProvider provider)
         //{
         //    var file = provider.FileData[0];
@@ -118,7 +125,7 @@ namespace Pentamic.SSBI.Services
         public void DeployModel(int modelId)
         {
             var mo = Context.Models.Find(modelId);
-            if(mo == null)
+            if (mo == null)
             {
                 throw new Exception("Model is null");
             }
@@ -503,6 +510,69 @@ namespace Pentamic.SSBI.Services
             }
         }
 
+        public List<Dictionary<string, object>> GetTableData(TableQueryModel queryModel)
+        {
+            var model = Context.Models.Find(queryModel.ModelId);
+            if (model == null) { throw new Exception("Model not found"); }
+            var query = $" EVALUATE TOPN(1000,'{queryModel.TableName}' ";
+            if (!string.IsNullOrEmpty(queryModel.OrderBy))
+            {
+                query += $",[{queryModel.OrderBy}]";
+                if (queryModel.OrderDesc)
+                {
+                    query += ", 0";
+                }
+                else
+                {
+                    query += ", 1";
+                }
+            }
+            query += ")";
+
+            var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
+            {
+                ["Catalog"] = model.DatabaseName
+            };
+            using (var conn = new AC.AdomdConnection(conStrBuilder.ToString()))
+            {
+                try
+                {
+                    conn.Open();
+                    var command = conn.CreateCommand();
+                    command.CommandText = query;
+                    using (var reader = command.ExecuteReader())
+                    {
+                        var result = new List<Dictionary<string, object>>();
+                        while (reader.Read())
+                        {
+                            var row = new Dictionary<string, object>();
+                            var columns = new List<string>();
+                            for (var i = 0; i < reader.FieldCount; ++i)
+                            {
+                                var name = reader.GetName(i);
+                                var si = name.IndexOf("[") + 1;
+                                var ei = name.IndexOf("]");
+                                columns.Add(name.Substring(si, ei - si));
+                            }
+                            for (var i = 0; i < reader.FieldCount; ++i)
+                            {
+                                row[columns[i]] = reader.GetValue(i);
+                            }
+                            result.Add(row);
+                        }
+                        return result;
+                    }
+                }
+                finally
+                {
+                    if (conn != null)
+                    {
+                        conn.Close();
+                    }
+                }
+            }
+
+        }
 
         public SaveResult SaveChanges(JObject saveBundle)
         {
@@ -555,7 +625,7 @@ namespace Pentamic.SSBI.Services
                         info.OriginalValuesMap["State"] = null;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        break;
                 }
             }
             return true;

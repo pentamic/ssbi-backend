@@ -40,44 +40,54 @@ namespace Pentamic.SSBI.Services
                     foreach (var tb in db.Model.Tables)
                     {
                         if (tb.IsHidden) continue;
-                        var table = new JObject();
-                        table["name"] = tb.Name;
+                        var table = new JObject
+                        {
+                            ["name"] = tb.Name
+                        };
                         var fields = new JArray();
                         foreach (var co in tb.Columns)
                         {
                             if (co.IsHidden) continue;
-                            var field = new JObject();
-                            field["tableName"] = tb.Name;
-                            field["name"] = co.Name;
-                            field["dataType"] = (int)co.DataType;
-                            field["displayFolder"] = co.DisplayFolder;
+                            var field = new JObject
+                            {
+                                ["tableName"] = tb.Name,
+                                ["name"] = co.Name,
+                                ["dataType"] = (int)co.DataType,
+                                ["displayFolder"] = co.DisplayFolder
+                            };
                             fields.Add(field);
                         }
                         foreach (var me in tb.Measures)
                         {
                             if (me.IsHidden) continue;
-                            var field = new JObject();
-                            field["tableName"] = tb.Name;
-                            field["name"] = me.Name;
-                            field["dataType"] = (int)me.DataType;
-                            field["displayFolder"] = me.DisplayFolder;
-                            field["isMeasure"] = true;
+                            var field = new JObject
+                            {
+                                ["tableName"] = tb.Name,
+                                ["name"] = me.Name,
+                                ["dataType"] = (int)me.DataType,
+                                ["displayFolder"] = me.DisplayFolder,
+                                ["isMeasure"] = true
+                            };
                             fields.Add(field);
                         }
                         foreach (var hi in tb.Hierarchies)
                         {
                             if (hi.IsHidden) continue;
-                            var field = new JObject();
-                            field["tableName"] = tb.Name;
-                            field["name"] = hi.Name;
-                            field["displayFolder"] = hi.DisplayFolder;
-                            field["isHierarchy"] = true;
+                            var field = new JObject
+                            {
+                                ["tableName"] = tb.Name,
+                                ["name"] = hi.Name,
+                                ["displayFolder"] = hi.DisplayFolder,
+                                ["isHierarchy"] = true
+                            };
                             var levels = new JArray();
                             foreach (var le in hi.Levels)
                             {
-                                var level = new JObject();
-                                level["name"] = le.Name;
-                                level["ordinal"] = le.Ordinal;
+                                var level = new JObject
+                                {
+                                    ["name"] = le.Name,
+                                    ["ordinal"] = le.Ordinal
+                                };
                                 levels.Add(level);
                             }
                             field["levels"] = levels;

@@ -1,6 +1,7 @@
 ﻿using Breeze.ContextProvider;
 using Breeze.WebApi2;
 using Newtonsoft.Json.Linq;
+using Pentamic.SSBI.Models.DataModel;
 using Pentamic.SSBI.Models.DataModel.Objects;
 using Pentamic.SSBI.Services;
 using System;
@@ -64,6 +65,25 @@ namespace Pentamic.SSBI.Controllers
         public IQueryable<Relationship> Relationships()
         {
             return _dataModelService.Relationships;
+        }
+        [HttpGet]
+        public IQueryable<SourceFile> SourceFiles()
+        {
+            return _dataModelService.SourceFiles;
+        }
+
+        [HttpPost]
+        public IHttpActionResult TableData(TableQueryModel queryModel)
+        {
+            try
+            {
+                var res = _dataModelService.GetTableData(queryModel);
+                return Ok(res);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost]

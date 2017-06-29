@@ -325,13 +325,13 @@ namespace Pentamic.SSBI.Services
             var query = "";
             if (queryModel.Filters2.Count > 0)
             {
-                query = string.Format("EVALUATE ( FILTER (  SUMMARIZECOLUMNS ( {0} ), {1} ) ) ",
+                query = string.Format(" EVALUATE ( FILTER (  SUMMARIZECOLUMNS ( {0} ), {1} ) ) ",
                     string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values)),
                     string.Join(" && ", queryModel.Filters2));
             }
             else
             {
-                query = string.Format("EVALUATE ( SUMMARIZECOLUMNS ( {0} ) ) ",
+                query = string.Format(" EVALUATE ( SUMMARIZECOLUMNS ( {0} ) ) ",
                     string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values)));
             }
             var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString);
