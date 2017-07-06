@@ -7,6 +7,7 @@ namespace Pentamic.SSBI.Migrations.ReportingContext
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            //AutomaticMigrationDataLossAllowed = true;
             MigrationsDirectory = @"Migrations\ReportingContext";
         }
 

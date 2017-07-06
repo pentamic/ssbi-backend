@@ -290,6 +290,10 @@
     <Compile Include="Migrations\ReportingContext\201705170729392_UpdateReporting4.Designer.cs">
       <DependentUpon>201705170729392_UpdateReporting4.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\ReportingContext\201707040430387_UpdateReporting5.cs" />
+    <Compile Include="Migrations\ReportingContext\201707040430387_UpdateReporting5.Designer.cs">
+      <DependentUpon>201707040430387_UpdateReporting5.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ReportingContext\Configuration.cs" />
     <Compile Include="Models\DataModel\Enums\AggregateType.cs" />
     <Compile Include="Models\DataModel\Enums\ColumnDataType.cs" />
@@ -319,9 +323,14 @@
     <Compile Include="Models\Discover\RelationshipDiscoverModel.cs" />
     <Compile Include="Models\Discover\ModelDiscoverRestriction.cs" />
     <Compile Include="Models\Discover\RelationshipDiscoverResult.cs" />
+    <Compile Include="Models\Discover\TableDetailResult.cs" />
+    <Compile Include="Models\Discover\TableDiscoverModel.cs" />
     <Compile Include="Models\Discover\TableDiscoverResult.cs" />
     <Compile Include="Models\DataModel\SourceFile.cs" />
     <Compile Include="Models\IAuditable.cs" />
+    <Compile Include="Models\Reporting\Dashboard.cs" />
+    <Compile Include="Models\Reporting\DashboardTile.cs" />
+    <Compile Include="Models\Reporting\DisplayType.cs" />
     <Compile Include="Models\Reporting\Query\FilterField.cs" />
     <Compile Include="Models\Reporting\Query\QueryFieldType.cs" />
     <Compile Include="Models\Reporting\Query\FilterOperator.cs" />
@@ -403,6 +412,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201705170729392_UpdateReporting4.resx">
       <DependentUpon>201705170729392_UpdateReporting4.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201707040430387_UpdateReporting5.resx">
+      <DependentUpon>201707040430387_UpdateReporting5.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

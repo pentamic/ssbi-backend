@@ -8,7 +8,7 @@ namespace Pentamic.SSBI.Models.Discover
 {
     public class ColumnDiscoverModel
     {
-        public DataSource DataSource { get; set; }
+        public int DataSourceId { get; set; }
         public string TableSchema { get; set; }
         public string TableName { get; set; }
     }

@@ -162,15 +162,26 @@ namespace Pentamic.SSBI.Services
                     database = server.Databases.Find(mo.DatabaseName);
                     if (mo.State == DataModelObjectState.Modified)
                     {
+                        
                         if (database.Model.Name != mo.Name)
                         {
                             database.Model.RequestRename(mo.Name);
+                            database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
+                            if (database.Model.Description != mo.Description)
+                            {
+                                database.Model.Description = mo.Description;
+                            }
+                            mo.State = DataModelObjectState.Unchanged;
+                            Context.SaveChanges();
                         }
-                        if (database.Model.Description != mo.Description)
+                        else
                         {
-                            database.Model.Description = mo.Description;
+                            if (database.Model.Description != mo.Description)
+                            {
+                                database.Model.Description = mo.Description;
+                            }
+                            mo.State = DataModelObjectState.Unchanged;
                         }
-                        mo.State = DataModelObjectState.Unchanged;
                     }
                 }
 

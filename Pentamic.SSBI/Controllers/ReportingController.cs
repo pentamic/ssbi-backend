@@ -25,7 +25,16 @@ namespace Pentamic.SSBI.Controllers
         {
             return _reportingService.Metadata;
         }
-
+        [HttpGet]
+        public IQueryable<Dashboard> Dashboards()
+        {
+            return _reportingService.Dashboards;
+        }
+        [HttpGet]
+        public IQueryable<DashboardTile> DashboardTiles()
+        {
+            return _reportingService.DashboardTiles;
+        }
         [HttpGet]
         public IQueryable<Report> Reports()
         {
@@ -40,6 +49,11 @@ namespace Pentamic.SSBI.Controllers
         public IQueryable<ReportTile> ReportTiles()
         {
             return _reportingService.ReportTiles;
+        }
+        [HttpGet]
+        public IQueryable<DisplayType> DisplayTypes()
+        {
+            return _reportingService.DisplayTypes;
         }
 
         [HttpPost]

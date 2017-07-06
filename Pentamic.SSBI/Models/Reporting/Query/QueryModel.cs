@@ -7,7 +7,7 @@ namespace Pentamic.SSBI.Models.Reporting.Query
 {
     public class QueryModel
     {
-        public string DatabaseName { get; set; }
+        public int ModelId { get; set; }
         public List<string> Columns { get; set; }
         public List<string> Filters1 { get; set; }
         public List<string> Filters2 { get; set; }

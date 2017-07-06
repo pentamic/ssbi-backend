@@ -35,26 +35,18 @@ namespace Pentamic.SSBI.Controllers
         }
 
         [HttpPost]
-        [Route("catalogs")]
-        public async Task<IHttpActionResult> Catalogs([FromBody]DataSource ds)
+        [Route("catalogs/")]
+        public async Task<IHttpActionResult> Catalogs([FromBody]TableDiscoverModel model)
         {
-            var result = await _discoverService.DiscoverCatalogs(ds);
+            var result = await _discoverService.DiscoverCatalogs(model.DataSourceId);
             return Ok(result);
         }
 
         [HttpPost]
         [Route("tables")]
-        public async Task<IHttpActionResult> Tables([FromBody]DataSource ds)
+        public async Task<IHttpActionResult> Tables([FromBody]TableDiscoverModel model)
         {
-            var result = await _discoverService.DiscoverTables(ds);
-            return Ok(result);
-        }
-
-        [HttpPost]
-        [Route("data")]
-        public async Task<IHttpActionResult> Data([FromBody]DataDiscoverModel model)
-        {
-            var result = await _discoverService.DiscoverTableData(model.DataSource, model.TableSchema, model.TableName);
+            var result = await _discoverService.DiscoverTables(model.DataSourceId);
             return Ok(result);
         }
 
@@ -62,7 +54,15 @@ namespace Pentamic.SSBI.Controllers
         [Route("columns")]
         public async Task<IHttpActionResult> Columns([FromBody]ColumnDiscoverModel model)
         {
-            var result = await _discoverService.DiscoverColumns(model.DataSource, model.TableSchema, model.TableName);
+            var result = await _discoverService.DiscoverColumns(model.DataSourceId, model.TableSchema, model.TableName);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("data")]
+        public async Task<IHttpActionResult> Data([FromBody]DataDiscoverModel model)
+        {
+            var result = await _discoverService.DiscoverTable(model.DataSourceId, model.TableSchema, model.TableName);
             return Ok(result);
         }
 

@@ -19,11 +19,11 @@ namespace Pentamic.SSBI
             var httpConfiguration = new HttpConfiguration();
             WebApiConfig.Register(httpConfiguration);
             app.UseCors(CorsOptions.AllowAll);
-            app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
-            {
-                Authority = System.Configuration.ConfigurationManager.AppSettings["OidcProviderUrl"],
-                RequiredScopes = new[] { "ssbi-api" }
-            });
+            //app.UseIdentityServerBearerTokenAuthentication(new IdentityServerBearerTokenAuthenticationOptions
+            //{
+            //    Authority = System.Configuration.ConfigurationManager.AppSettings["OidcProviderUrl"],
+            //    RequiredScopes = new[] { "ssbi-api" }
+            //});
             app.UseWebApi(httpConfiguration);
 
             Log.Logger = new LoggerConfiguration()

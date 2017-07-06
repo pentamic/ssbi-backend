@@ -3,8 +3,10 @@ using Breeze.ContextProvider.EF6;
 using Microsoft.AnalysisServices.AdomdClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Pentamic.SSBI.Models.DataModel;
 using Pentamic.SSBI.Models.Reporting;
 using Pentamic.SSBI.Models.Reporting.Query;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.OleDb;
@@ -36,6 +38,15 @@ namespace Pentamic.SSBI.Services
             get { return _contextProvider.Metadata(); }
         }
 
+        public IQueryable<Dashboard> Dashboards
+        {
+            get { return Context.Dashboards; }
+        }
+
+        public IQueryable<DashboardTile> DashboardTiles
+        {
+            get { return Context.DashboardTiles; }
+        }
         public IQueryable<Report> Reports
         {
             get { return Context.Reports; }
@@ -47,6 +58,10 @@ namespace Pentamic.SSBI.Services
         public IQueryable<ReportTile> ReportTiles
         {
             get { return Context.ReportTiles; }
+        }
+        public IQueryable<DisplayType> DisplayTypes
+        {
+            get { return Context.DisplayTypes; }
         }
 
         //public List<Dictionary<string, object>> GetReportTileData(int reportTileId)
@@ -322,6 +337,12 @@ namespace Pentamic.SSBI.Services
 
         public List<Dictionary<string, object>> Query(QueryModel queryModel)
         {
+            var dmContext = new DataModelContext();
+            var model = dmContext.Models.Find(queryModel.ModelId);
+            if(model == null)
+            {
+                throw new Exception("Model not found");
+            }
             var query = "";
             if (queryModel.Filters2.Count > 0)
             {
@@ -334,8 +355,10 @@ namespace Pentamic.SSBI.Services
                 query = string.Format(" EVALUATE ( SUMMARIZECOLUMNS ( {0} ) ) ",
                     string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values)));
             }
-            var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString);
-            conStrBuilder["Catalog"] = queryModel.DatabaseName;
+            var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
+            {
+                ["Catalog"] = model.DatabaseName
+            };
             using (var conn = new AdomdConnection(conStrBuilder.ToString()))
             {
                 try

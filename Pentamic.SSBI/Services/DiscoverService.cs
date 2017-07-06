@@ -11,7 +11,7 @@ using Pentamic.SSBI.Models.DataModel.Objects;
 using System.Dynamic;
 using System.Data.Common;
 using AS = Microsoft.AnalysisServices.Tabular;
-
+using System.Diagnostics;
 
 namespace Pentamic.SSBI.Services
 {
@@ -30,6 +30,10 @@ namespace Pentamic.SSBI.Services
         public JArray DiscoverModel(int modelId, string perspective)
         {
             var model = _dataModelContext.Models.Find(modelId);
+            if (model == null)
+            {
+                throw new ArgumentException("Model not found");
+            }
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
@@ -105,44 +109,54 @@ namespace Pentamic.SSBI.Services
                     foreach (var tb in per.PerspectiveTables)
                     {
                         if (tb.Table.IsHidden) continue;
-                        var table = new JObject();
-                        table["name"] = tb.Name;
+                        var table = new JObject
+                        {
+                            ["name"] = tb.Name
+                        };
                         var fields = new JArray();
                         foreach (var co in tb.PerspectiveColumns)
                         {
                             if (co.Column.IsHidden) continue;
-                            var field = new JObject();
-                            field["tableName"] = tb.Name;
-                            field["name"] = co.Name;
-                            field["dataType"] = (int)co.Column.DataType;
-                            field["displayFolder"] = co.Column.DisplayFolder;
+                            var field = new JObject
+                            {
+                                ["tableName"] = tb.Name,
+                                ["name"] = co.Name,
+                                ["dataType"] = (int)co.Column.DataType,
+                                ["displayFolder"] = co.Column.DisplayFolder
+                            };
                             fields.Add(field);
                         }
                         foreach (var me in tb.PerspectiveMeasures)
                         {
                             if (me.Measure.IsHidden) continue;
-                            var field = new JObject();
-                            field["tableName"] = tb.Name;
-                            field["name"] = me.Name;
-                            field["dataType"] = (int)me.Measure.DataType;
-                            field["displayFolder"] = me.Measure.DisplayFolder;
-                            field["isMeasure"] = true;
+                            var field = new JObject
+                            {
+                                ["tableName"] = tb.Name,
+                                ["name"] = me.Name,
+                                ["dataType"] = (int)me.Measure.DataType,
+                                ["displayFolder"] = me.Measure.DisplayFolder,
+                                ["isMeasure"] = true
+                            };
                             fields.Add(field);
                         }
                         foreach (var hi in tb.PerspectiveHierarchies)
                         {
                             if (hi.Hierarchy.IsHidden) continue;
-                            var field = new JObject();
-                            field["tableName"] = tb.Name;
-                            field["name"] = hi.Name;
-                            field["displayFolder"] = hi.Hierarchy.DisplayFolder;
-                            field["isHierarchy"] = true;
+                            var field = new JObject
+                            {
+                                ["tableName"] = tb.Name,
+                                ["name"] = hi.Name,
+                                ["displayFolder"] = hi.Hierarchy.DisplayFolder,
+                                ["isHierarchy"] = true
+                            };
                             var levels = new JArray();
                             foreach (var le in hi.Hierarchy.Levels)
                             {
-                                var level = new JObject();
-                                level["name"] = le.Name;
-                                level["ordinal"] = le.Ordinal;
+                                var level = new JObject
+                                {
+                                    ["name"] = le.Name,
+                                    ["ordinal"] = le.Ordinal
+                                };
                                 levels.Add(level);
                             }
                             field["levels"] = levels;
@@ -294,7 +308,7 @@ namespace Pentamic.SSBI.Services
                     result.Add(new ColumnDiscoverResult
                     {
                         ColumnName = row["COLUMN_NAME"].ToString(),
-                        DataType = ((OleDbType)Convert.ToInt32(row["DATA_TYPE"])).ToDataType(),
+                        DataType = ((OleDbType)Convert.ToInt32(row["DATA_TYPE"])).ToDataType().ToString(),
                         TableName = row["TABLE_NAME"].ToString(),
                         TableSchema = row["TABLE_SCHEMA"].ToString()
                     });
@@ -320,7 +334,7 @@ namespace Pentamic.SSBI.Services
                     result.Add(new ColumnDiscoverResult
                     {
                         ColumnName = row["COLUMN_NAME"].ToString(),
-                        DataType = ((OleDbType)Convert.ToInt32(row["DATA_TYPE"])).ToDataType(),
+                        DataType = ((OleDbType)Convert.ToInt32(row["DATA_TYPE"])).ToDataType().ToString(),
                         TableName = row["TABLE_NAME"].ToString(),
                         TableSchema = row["TABLE_SCHEMA"].ToString()
                     });
@@ -351,7 +365,101 @@ namespace Pentamic.SSBI.Services
             }
         }
 
-        public async Task<List<dynamic>> DiscoverTableData(DataSource ds, string tableSchema, string tableName)
+        public async Task<TableDetailResult> DiscoverTable(int dsId, string tableSchema, string tableName)
+        {
+            var ds = _dataModelContext.DataSources.Find(dsId);
+            if (ds == null)
+            {
+                throw new ArgumentException("Data Source not found");
+            }
+            var conStr = GetDataSourceConnectionString(ds);
+            if (ds.Type == DataSourceType.Excel)
+            {
+                tableSchema = null;
+            }
+            OleDbConnection con = null;
+            DbDataReader reader = null;
+            try
+            {
+                using (con = new OleDbConnection(conStr))
+                {
+                    using (var cmd = con.CreateCommand())
+                    {
+                        cmd.CommandText = string.IsNullOrEmpty(tableSchema) ? $"SELECT TOP 100 * FROM [{tableName}]"
+                        : $"SELECT TOP 100 * FROM [{tableSchema}].[{tableName}]";
+                        await con.OpenAsync();
+                        var data = new List<dynamic>();
+                        reader = await cmd.ExecuteReaderAsync();
+                        while (reader.Read())
+                        {
+                            var row = new ExpandoObject() as IDictionary<string, object>;
+                            for (var i = 0; i < reader.FieldCount; ++i)
+                            {
+                                row.Add(reader.GetName(i), reader.GetValue(i));
+                            }
+                            data.Add(row);
+                        }
+                        var columns = new List<ColumnDiscoverResult>();
+                        var schema = reader.GetSchemaTable();
+
+                        foreach (DataRow sr in schema.Rows)
+                        {
+                            columns.Add(new ColumnDiscoverResult
+                            {
+                                ColumnName = sr.Field<string>("ColumnName"),
+                                DataType = GetDataType(sr.Field<Type>("DataType").Name).ToString()
+                            });
+                        }
+
+                        return new TableDetailResult
+                        {
+                            Data = data,
+                            Columns = columns
+                        };
+                    }
+                }
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+                if (reader != null)
+                {
+                    reader.Close();
+                }
+            }
+        }
+
+        public ColumnDataType GetDataType(string typeName)
+        {
+            switch (typeName)
+            {
+                case "Int16":
+                case "Int32":
+                case "Int64":
+                    return ColumnDataType.Int64;
+                case "String":
+                    return ColumnDataType.String;
+                case "DateTime":
+                    return ColumnDataType.DateTime;
+                case "Byte":
+                case "Byte[]":
+                    return ColumnDataType.Binary;
+                case "Decimal":
+                    return ColumnDataType.Decimal;
+                case "Double":
+                case "Single":
+                    return ColumnDataType.Double;
+                case "Boolean":
+                    return ColumnDataType.Boolean;
+                default:
+                    return ColumnDataType.Unknown;
+            }
+        }
+
+        public async Task<List<dynamic>> DiscoverTable(DataSource ds, string tableSchema, string tableName)
         {
             var conStr = GetDataSourceConnectionString(ds);
             if (ds.Type == DataSourceType.Excel)

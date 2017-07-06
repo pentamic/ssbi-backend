@@ -9,9 +9,13 @@ namespace Pentamic.SSBI.Models.Reporting
         {
             System.Data.Entity.Database.SetInitializer<ReportingContext>(null);
         }
+
+        public DbSet<Dashboard> Dashboards { get; set; }
+        public DbSet<DashboardTile> DashboardTiles { get; set; }
         public DbSet<Report> Reports { get; set; }
         public DbSet<ReportPage> ReportPages { get; set; }
         public DbSet<ReportTile> ReportTiles { get; set; }
+        public DbSet<DisplayType> DisplayTypes { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
