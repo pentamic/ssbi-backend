@@ -294,6 +294,18 @@
     <Compile Include="Migrations\ReportingContext\201707040430387_UpdateReporting5.Designer.cs">
       <DependentUpon>201707040430387_UpdateReporting5.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\ReportingContext\201707091247336_UpdateReporting6.cs" />
+    <Compile Include="Migrations\ReportingContext\201707091247336_UpdateReporting6.Designer.cs">
+      <DependentUpon>201707091247336_UpdateReporting6.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ReportingContext\201707091306524_UpdateReporting7.cs" />
+    <Compile Include="Migrations\ReportingContext\201707091306524_UpdateReporting7.Designer.cs">
+      <DependentUpon>201707091306524_UpdateReporting7.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ReportingContext\201707200718255_UpdateReporting8.cs" />
+    <Compile Include="Migrations\ReportingContext\201707200718255_UpdateReporting8.Designer.cs">
+      <DependentUpon>201707200718255_UpdateReporting8.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ReportingContext\Configuration.cs" />
     <Compile Include="Models\DataModel\Enums\AggregateType.cs" />
     <Compile Include="Models\DataModel\Enums\ColumnDataType.cs" />
@@ -415,6 +427,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201707040430387_UpdateReporting5.resx">
       <DependentUpon>201707040430387_UpdateReporting5.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201707091247336_UpdateReporting6.resx">
+      <DependentUpon>201707091247336_UpdateReporting6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201707091306524_UpdateReporting7.resx">
+      <DependentUpon>201707091306524_UpdateReporting7.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201707200718255_UpdateReporting8.resx">
+      <DependentUpon>201707200718255_UpdateReporting8.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

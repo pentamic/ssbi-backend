@@ -4,7 +4,9 @@ using Newtonsoft.Json.Linq;
 using Pentamic.SSBI.Models.Reporting;
 using Pentamic.SSBI.Models.Reporting.Query;
 using Pentamic.SSBI.Services;
+using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Web.Http;
 
 namespace Pentamic.SSBI.Controllers
@@ -38,6 +40,9 @@ namespace Pentamic.SSBI.Controllers
         [HttpGet]
         public IQueryable<Report> Reports()
         {
+            //var userId = (User.Identity as ClaimsIdentity).Claims
+            //    .First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
+            //    .Value;
             return _reportingService.Reports;
         }
         [HttpGet]

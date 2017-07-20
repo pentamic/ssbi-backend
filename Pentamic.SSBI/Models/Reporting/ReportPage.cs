@@ -9,6 +9,7 @@ namespace Pentamic.SSBI.Models.Reporting
         public int ReportId { get; set; }
         public string Name { get; set; }
         public int Ordinal { get; set; }
+        public string GridConfig { get; set; }
 
         public string CreatedBy { get; set; }
         public DateTimeOffset CreatedAt { get; set; }

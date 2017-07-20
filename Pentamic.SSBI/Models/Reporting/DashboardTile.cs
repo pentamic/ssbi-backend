@@ -15,6 +15,7 @@ namespace Pentamic.SSBI.Models.Reporting
         [Key]
         [Column(Order = 2)]
         public int ReportTileId { get; set; }
+        public string PositionConfig { get; set; }
 
         public Dashboard Dashboard { get; set; }
         public ReportTile ReportTile { get; set; }
