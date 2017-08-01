@@ -162,7 +162,7 @@ namespace Pentamic.SSBI.Services
                     database = server.Databases.Find(mo.DatabaseName);
                     if (mo.State == DataModelObjectState.Modified)
                     {
-                        
+
                         if (database.Model.Name != mo.Name)
                         {
                             database.Model.RequestRename(mo.Name);
@@ -587,7 +587,10 @@ namespace Pentamic.SSBI.Services
 
         public void GenerateModelFromDatabase(int modelId)
         {
-            var mo = Context.Models.Find(modelId);
+            var mo = Context.Models.Where(x => x.Id == modelId)
+                .Include(x => x.Tables)
+                .Include(x => x.Relationships)
+                .Include(x => x.DataSources).FirstOrDefault();
             if (mo == null)
             {
                 throw new Exception("Model not found");
@@ -618,214 +621,114 @@ namespace Pentamic.SSBI.Services
                         Name = ds.Name,
                         Description = ds.Description,
                         OriginalName = ds.Name,
-                        Source = conStrBuilder.DataSource,
+                        ConnectionString = ds.ConnectionString,
+                        State = DataModelObjectState.Unchanged
                     });
                 }
 
-                var tables = Context.Tables.Where(x => x.ModelId == modelId)
-                    .Include(x => x.Partitions)
-                    .Include(x => x.Columns)
-                    .Include(x => x.Measures).ToList();
-                foreach (var tb in tables)
+                //Tables
+                var tables = database.Model.Tables;
+                foreach (AS.Table tb in tables)
                 {
-                    AS.Table table = null;
-                    if (tb.State == DataModelObjectState.Added)
+                    var table = new Table
                     {
-                        table = new AS.Table
-                        {
-                            Name = tb.Name,
-                            Description = tb.Description
-                        };
-                        database.Model.Tables.Add(table);
-                        tb.State = DataModelObjectState.Unchanged;
-                    }
-                    else
-                    {
-                        table = database.Model.Tables.Find(tb.OriginalName);
-                        if (tb.State == DataModelObjectState.Modified)
-                        {
-                            if (tb.Name != table.Name)
-                            {
-                                table.RequestRename(tb.Name);
-                                tb.OriginalName = tb.Name;
-                            }
-                            if (tb.Description != table.Description)
-                            {
-                                table.Description = tb.Description;
-                            }
-                            tb.State = DataModelObjectState.Unchanged;
-                        }
-                    }
+                        Name = tb.Name,
+                        Description = tb.Description,
+                        OriginalName = tb.Name,
+                        State = DataModelObjectState.Unchanged,
+                        Partitions = new List<Partition>(),
+                        Measures = new List<Measure>(),
+                        Columns = new List<Column>()
+                    };
+                    mo.Tables.Add(table);
 
-                    foreach (var pa in tb.Partitions)
+                    foreach (AS.Partition pa in tb.Partitions)
                     {
-                        var ds = pa.DataSource;
-                        if (ds.State == DataModelObjectState.Obsolete || tb.State == DataModelObjectState.Obsolete || pa.State == DataModelObjectState.Deleted)
+                        if (pa.Source is AS.CalculatedPartitionSource)
                         {
-                            if (tb.State != DataModelObjectState.Obsolete)
-                            {
-                                table.Partitions.Remove(pa.OriginalName);
-                            }
-                            pa.State = DataModelObjectState.Obsolete;
-                        }
-                        AS.Partition partition = null;
-                        if (pa.State == DataModelObjectState.Added)
-                        {
-                            table.Partitions.Add(new AS.Partition
+                            var source = pa.Source as AS.CalculatedPartitionSource;
+                            table.Partitions.Add(new Partition
                             {
                                 Name = pa.Name,
-                                Source = new AS.QueryPartitionSource()
-                                {
-                                    DataSource = database.Model.DataSources[ds.Name],
-                                    Query = pa.Query
-                                }
+                                Description = pa.Description,
+                                Query = source.Expression,
+                                State = DataModelObjectState.Unchanged
                             });
-                            pa.State = DataModelObjectState.Unchanged;
                         }
-                        if (pa.State == DataModelObjectState.Modified)
+                        else if (pa.Source is AS.QueryPartitionSource)
                         {
-                            partition = table.Partitions.Find(pa.OriginalName);
-                            if (partition.Name != pa.Name)
+                            var source = pa.Source as AS.QueryPartitionSource;
+                            table.Partitions.Add(new Partition
                             {
-                                partition.RequestRename(pa.Name);
-                                pa.OriginalName = pa.Name;
-                            }
-                            var source = partition.Source as AS.QueryPartitionSource;
-                            if (source.Query != pa.Query)
-                            {
-                                source.Query = pa.Query;
-                            }
-                            pa.State = DataModelObjectState.Unchanged;
+                                Name = pa.Name,
+                                Description = pa.Description,
+                                Query = source.Query,
+                                State = DataModelObjectState.Unchanged
+                            });
                         }
                     }
 
-                    foreach (var co in tb.Columns)
+                    foreach (AS.Column co in tb.Columns)
                     {
-                        if (tb.State == DataModelObjectState.Obsolete || co.State == DataModelObjectState.Deleted)
+
+                        if (co.Type == AS.ColumnType.RowNumber)
                         {
-                            if (tb.State != DataModelObjectState.Obsolete)
-                            {
-                                table.Columns.Remove(co.OriginalName);
-                            }
-                            co.State = DataModelObjectState.Obsolete;
+                            continue;
                         }
-                        if (co.State == DataModelObjectState.Added)
+                        table.Columns.Add(new Column
                         {
-                            table.Columns.Add(new AS.DataColumn
-                            {
-                                Name = co.Name,
-                                DataType = co.DataType.ToDataType(),
-                                SourceColumn = co.SourceColumn,
-                                IsHidden = co.IsHidden,
-                                DisplayFolder = co.DisplayFolder,
-                                FormatString = co.FormatString
-                            });
-                            co.State = DataModelObjectState.Unchanged;
-                        }
-                        if (co.State == DataModelObjectState.Modified)
-                        {
-                            var column = table.Columns.Find(co.OriginalName);
-                            if (co.Name != column.Name)
-                            {
-                                column.RequestRename(co.Name);
-                                co.OriginalName = co.Name;
-                            }
-                            if (co.IsHidden != column.IsHidden)
-                            {
-                                column.IsHidden = co.IsHidden;
-                            }
-                            if (co.DisplayFolder != column.DisplayFolder)
-                            {
-                                column.DisplayFolder = co.DisplayFolder;
-                            }
-                            if (co.FormatString != column.FormatString)
-                            {
-                                column.FormatString = co.FormatString;
-                            }
-                            co.State = DataModelObjectState.Unchanged;
-                        }
+                            Name = co.Name,
+                            DataType = (ColumnDataType)co.DataType,
+                            Description = co.Description,
+                            IsHidden = co.IsHidden,
+                            DisplayFolder = co.DisplayFolder,
+                            FormatString = co.FormatString
+                        });
                     }
 
-                    foreach (var me in tb.Measures)
+                    foreach (AS.Measure me in tb.Measures)
                     {
-                        if (tb.State == DataModelObjectState.Obsolete || me.State == DataModelObjectState.Deleted)
+                        table.Measures.Add(new Measure
                         {
-                            if (tb.State != DataModelObjectState.Obsolete)
-                            {
-                                table.Measures.Remove(me.OriginalName);
-                            }
-                            me.State = DataModelObjectState.Obsolete;
-                        }
-                        if (me.State == DataModelObjectState.Added)
-                        {
-                            table.Measures.Add(new AS.Measure
-                            {
-                                Name = me.Name,
-                                Expression = me.Expression
-                            });
-                            me.State = DataModelObjectState.Unchanged;
-                        }
-                        if (me.State == DataModelObjectState.Modified)
-                        {
-                            var measure = table.Measures.Find(me.OriginalName);
-                            if (measure.Name != me.Name)
-                            {
-                                measure.RequestRename(me.Name);
-                                me.OriginalName = me.Name;
-                            }
-                            if (measure.Expression != me.Expression)
-                            {
-                                measure.Expression = me.Expression;
-                            }
-                            if (measure.Description != me.Description)
-                            {
-                                measure.Description = me.Description;
-                            }
-                            me.State = DataModelObjectState.Unchanged;
-                        }
+                            Name = me.Name,
+                            Description = me.Description,
+                            Expression = me.Expression
+                        });
                     }
                 }
 
                 //Relationships
-                var relationships = Context.Relationships.Where(x => x.ModelId == modelId && x.State != DataModelObjectState.Obsolete)
-                    .Include(x => x.FromColumn.Table).Include(x => x.ToColumn.Table).ToList();
-                foreach (var re in relationships)
+                var relationships = database.Model.Relationships;
+                foreach (AS.SingleColumnRelationship re in relationships)
                 {
-                    if (re.ToColumn.State == DataModelObjectState.Obsolete ||
-                        re.ToColumn.Table.State == DataModelObjectState.Obsolete ||
-                        re.FromColumn.State == DataModelObjectState.Obsolete ||
-                        re.FromColumn.Table.State == DataModelObjectState.Obsolete ||
-                        re.State == DataModelObjectState.Deleted)
+                    var relationship = new Relationship();
+                    foreach (var table in mo.Tables)
                     {
-                        database.Model.Relationships.Remove(re.OriginalName);
-                        re.State = DataModelObjectState.Obsolete;
-                    }
-                    if (re.State == DataModelObjectState.Added)
-                    {
-                        database.Model.Relationships.Add(new AS.SingleColumnRelationship()
+                        if (re.FromTable.Name == table.Name)
                         {
-                            Name = re.Name,
-                            ToColumn = database.Model.Tables[re.ToColumn.Table.Name].Columns[re.ToColumn.Name],
-                            FromColumn = database.Model.Tables[re.FromColumn.Table.Name].Columns[re.FromColumn.Name],
-                            FromCardinality = AS.RelationshipEndCardinality.Many,
-                            ToCardinality = AS.RelationshipEndCardinality.One
-                        });
-                        re.State = DataModelObjectState.Unchanged;
-                    }
-                    if (re.State == DataModelObjectState.Modified)
-                    {
-                        var relationship = database.Model.Relationships.Find(re.OriginalName);
-                        if (re.Name != relationship.Name)
-                        {
-                            relationship.RequestRename(re.Name);
-                            re.OriginalName = re.Name;
+                            foreach (var col in table.Columns)
+                            {
+                                if (re.FromColumn.Name == col.Name)
+                                {
+                                    relationship.FromColumn = col;
+                                }
+                            }
                         }
-                        re.State = DataModelObjectState.Unchanged;
+                        if (re.ToTable.Name == table.Name)
+                        {
+                            foreach (var col in table.Columns)
+                            {
+                                if (re.ToColumn.Name == col.Name)
+                                {
+                                    relationship.ToColumn = col;
+                                }
+                            }
+                        }
                     }
+                    mo.Relationships.Add(relationship);
                 }
 
                 //Commit changes
-                database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
                 server.Disconnect();
                 Context.SaveChanges();
             }

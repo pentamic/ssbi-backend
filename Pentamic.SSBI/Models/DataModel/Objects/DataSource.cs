@@ -11,6 +11,7 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public string OriginalName { get; set; }
         public string Description { get; set; }
         public DataSourceType Type { get; set; }
+        public string ConnectionString { get; set; }
         public string Source { get; set; }
         public string Catalog { get; set; }
         public string User { get; set; }

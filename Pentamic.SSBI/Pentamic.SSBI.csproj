@@ -265,6 +265,10 @@
     <Compile Include="Migrations\DataModelContext\201705040139205_UpdateModel6.Designer.cs">
       <DependentUpon>201705040139205_UpdateModel6.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\DataModelContext\201708010701598_UpdateDataModel1.cs" />
+    <Compile Include="Migrations\DataModelContext\201708010701598_UpdateDataModel1.Designer.cs">
+      <DependentUpon>201708010701598_UpdateDataModel1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DataModelContext\Configuration.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.Designer.cs">
@@ -352,6 +356,7 @@
     <Compile Include="Models\Reporting\ReportingContext.cs" />
     <Compile Include="Models\Reporting\Report.cs" />
     <Compile Include="Models\Reporting\ReportPage.cs" />
+    <Compile Include="Models\Reporting\ReportSharing.cs" />
     <Compile Include="Models\Reporting\ReportTile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DataModelService.cs" />
@@ -406,6 +411,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\DataModelContext\201705040139205_UpdateModel6.resx">
       <DependentUpon>201705040139205_UpdateModel6.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201708010701598_UpdateDataModel1.resx">
+      <DependentUpon>201708010701598_UpdateDataModel1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201702080147015_InitReporting.resx">
       <DependentUpon>201702080147015_InitReporting.cs</DependentUpon>
