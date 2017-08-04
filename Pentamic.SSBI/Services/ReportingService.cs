@@ -64,6 +64,47 @@ namespace Pentamic.SSBI.Services
             get { return Context.DisplayTypes; }
         }
 
+        public void UpdateReportDataConfigColumnName(int modelId, string oldName, string newName)
+        {
+            var reportTiles = Context.ReportTiles.Where(x => x.ModelId == modelId).ToList();
+            foreach (var tile in reportTiles)
+            {
+                if (!string.IsNullOrEmpty(tile.DataConfig))
+                {
+                    var dataConfig = JArray.Parse(tile.DataConfig);
+                    foreach (JObject field in dataConfig)
+                    {
+                        if (field.GetValue("name").ToString() == oldName)
+                        {
+                            field["name"] = newName;
+                        }
+                    }
+                    tile.DataConfig = JsonConvert.SerializeObject(dataConfig);
+                }
+            }
+            Context.SaveChanges();
+        }
+        public void UpdateReportDataConfigTableName(int modelId, string oldName, string newName)
+        {
+            var reportTiles = Context.ReportTiles.Where(x => x.ModelId == modelId).ToList();
+            foreach (var tile in reportTiles)
+            {
+                if (!string.IsNullOrEmpty(tile.DataConfig))
+                {
+                    var dataConfig = JArray.Parse(tile.DataConfig);
+                    foreach (JObject field in dataConfig)
+                    {
+                        if (field.GetValue("tableName").ToString() == oldName)
+                        {
+                            field["tableName"] = newName;
+                        }
+                    }
+                    tile.DataConfig = JsonConvert.SerializeObject(dataConfig);
+                }
+            }
+            Context.SaveChanges();
+        }
+
         //public List<Dictionary<string, object>> GetReportTileData(int reportTileId)
         //{
         //    var tile = Context.ReportTiles.Where(x => x.Id == reportTileId)
@@ -339,7 +380,7 @@ namespace Pentamic.SSBI.Services
         {
             var dmContext = new DataModelContext();
             var model = dmContext.Models.Find(queryModel.ModelId);
-            if(model == null)
+            if (model == null)
             {
                 throw new Exception("Model not found");
             }

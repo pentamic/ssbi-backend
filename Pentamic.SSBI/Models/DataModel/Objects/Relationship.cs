@@ -15,7 +15,6 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         //public string FromColumnName { get; set; }
         //public string ToTableName { get; set; }
         //public string ToColumnName { get; set; }
-        public DataModelObjectState State { get; set; }
 
         [ForeignKey("FromColumnId")]
         public Column FromColumn { get; set; }

@@ -12,7 +12,6 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public string OriginalName { get; set; }
         public string SourceTable { get; set; }
         public string SourceSchema { get; set; }
-        public DataModelObjectState State { get; set; }
         public List<Column> Columns { get; set; }
         public List<Partition> Partitions { get; set; }
         public List<Measure> Measures { get; set; }

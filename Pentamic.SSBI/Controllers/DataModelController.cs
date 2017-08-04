@@ -5,6 +5,7 @@ using Pentamic.SSBI.Models.DataModel;
 using Pentamic.SSBI.Models.DataModel.Objects;
 using Pentamic.SSBI.Services;
 using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -99,20 +100,45 @@ namespace Pentamic.SSBI.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
-            string root = HttpContext.Current.Server.MapPath("~/Uploads");
-            var provider = new MultipartFormDataStreamProvider(root);
+            var basePath = System.Configuration.ConfigurationManager.AppSettings["UploadBasePath"];
+            if (string.IsNullOrEmpty(basePath))
+            {
+                basePath = HttpContext.Current.Server.MapPath("~/Uploads");
+            }
+            if (!Directory.Exists(basePath))
+            {
+                Directory.CreateDirectory(basePath);
+            }
+            var provider = new MultipartFormDataStreamProvider(basePath);
             await Request.Content.ReadAsMultipartAsync(provider);
-            var sourceFileId = await _dataModelService.HandleFileUpload(provider);
-            return Ok(sourceFileId);
+            var sourceFile = await _dataModelService.HandleFileUpload(provider);
+            return Ok(sourceFile);
         }
 
+        //[HttpPost]
+        //[Route("breeze/datamodel/deploy/{id}")]
+        //public IHttpActionResult Deploy(int id)
+        //{
+        //    try
+        //    {
+        //        _dataModelService.DeployModel(id);
+        //        return Ok();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Serilog.Log.Logger.Error(e, e.Message);
+        //        return BadRequest(e.Message);
+        //    }
+
+        //}
+
         [HttpPost]
-        [Route("breeze/datamodel/deploy/{id}")]
-        public IHttpActionResult Deploy(int id)
+        [Route("breeze/datamodel/generate/{id}")]
+        public IHttpActionResult Generate(int id)
         {
             try
             {
-                _dataModelService.DeployModel(id);
+                _dataModelService.GenerateModelFromDatabase(id);
                 return Ok();
             }
             catch (Exception e)
@@ -123,13 +149,14 @@ namespace Pentamic.SSBI.Controllers
 
         }
 
+
         [HttpPost]
-        [Route("breeze/datamodel/generate/{id}")]
-        public IHttpActionResult Generate(int id)
+        [Route("breeze/datamodel/update/{id}")]
+        public IHttpActionResult Update(int id)
         {
             try
             {
-                _dataModelService.GenerateModelFromDatabase(id);
+                _dataModelService.Update(id);
                 return Ok();
             }
             catch (Exception e)

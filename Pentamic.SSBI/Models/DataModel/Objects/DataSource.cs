@@ -18,7 +18,6 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public string Password { get; set; }
         public bool IntegratedSecurity { get; set; }
         public int? SourceFileId { get; set; }
-        public DataModelObjectState State { get; set; }
         public Model Model { get; set; }
         public SourceFile SourceFile { get; set; }
         public string CreatedBy { get; set; }

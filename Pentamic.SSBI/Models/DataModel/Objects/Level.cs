@@ -14,7 +14,6 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public int Ordinal { get; set; }
         public Hierarchy Hierarchy { get; set; }
         public string OriginalName { get; set; }
-        public DataModelObjectState State { get; set; }
         public string CreatedBy { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public string ModifiedBy { get; set; }

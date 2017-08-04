@@ -12,6 +12,7 @@ using System.Dynamic;
 using System.Data.Common;
 using AS = Microsoft.AnalysisServices.Tabular;
 using System.Diagnostics;
+using System.Web;
 
 namespace Pentamic.SSBI.Services
 {
@@ -507,57 +508,62 @@ namespace Pentamic.SSBI.Services
 
         public string GetDataSourceConnectionString(DataSource ds)
         {
-            return ds.ConnectionString;
-            //string cs;
-            //switch (ds.Type)
-            //{
-            //    case DataSourceType.SqlServer:
-            //        if (ds.IntegratedSecurity)
-            //        {
-            //            cs = $"Provider=SQLOLEDB;Data Source={ds.Source};Initial Catalog={ds.Catalog};Integrated Security=SSPI;Persist Security Info=false";
-            //        }
-            //        else
-            //        {
-            //            cs = $"Provider=SQLOLEDB;Data Source={ds.Source};Initial Catalog={ds.Catalog};User ID={ds.User};Password={ds.Password};Persist Security Info=true";
-            //        }
-            //        break;
-            //    case DataSourceType.Excel:
-            //        if (ds.SourceFileId != null && ds.SourceFile == null)
-            //        {
-            //            ds.SourceFile = _dataModelContext.SourceFiles.Find(ds.SourceFileId);
-            //        }
-            //        var builder = new OleDbConnectionStringBuilder()
-            //        {
-            //            Provider = "Microsoft.ACE.OLEDB.12.0",
-            //            DataSource = ds.SourceFile.FilePath,
-            //            PersistSecurityInfo = false
-            //        };
-            //        builder["Mode"] = "Read";
-            //        var extension = Path.GetExtension(ds.SourceFile.FileName).ToUpper();
-            //        switch (extension)
-            //        {
-            //            case ".XLS":
-            //                builder["Extended Properties"] = "Excel 8.0;HDR=Yes";
-            //                break;
-            //            case ".XLSB":
-            //                builder["Extended Properties"] = "Excel 12.0;HDR=Yes";
-            //                break;
-            //            case ".XLSX":
-            //                builder["Extended Properties"] = "Excel 12.0 Xml;HDR=Yes";
-            //                break;
-            //            case ".XLSM":
-            //                builder["Extended Properties"] = "Excel 12.0 Macro;HDR=Yes";
-            //                break;
-            //            default:
-            //                builder["Extended Properties"] = "Excel 12.0;HDR=Yes";
-            //                break;
-            //        }
-            //        cs = builder.ToString();
-            //        break;
-            //    default: return null;
-            //}
-            //return cs;
+            string cs;
+            switch (ds.Type)
+            {
+                case DataSourceType.SqlServer:
+                    if (ds.IntegratedSecurity)
+                    {
+                        cs = $"Provider=SQLNCLI11;Data Source={ds.Source};Initial Catalog={ds.Catalog};Integrated Security=SSPI;Persist Security Info=false";
+                    }
+                    else
+                    {
+                        cs = $"Provider=SQLNCLI11;Data Source={ds.Source};Initial Catalog={ds.Catalog};User ID={ds.User};Password={ds.Password};Persist Security Info=true";
+                    }
+                    break;
+                case DataSourceType.Excel:
+                    if (ds.SourceFileId != null && ds.SourceFile == null)
+                    {
+                        ds.SourceFile = _dataModelContext.SourceFiles.Find(ds.SourceFileId);
+                    }
+                    var basePath = System.Configuration.ConfigurationManager.AppSettings["UploadBasePath"];
+                    if (string.IsNullOrEmpty(basePath))
+                    {
+                        basePath = HttpContext.Current.Server.MapPath("~/Uploads");
+                    }
+                    var builder = new OleDbConnectionStringBuilder()
+                    {
+                        Provider = "Microsoft.ACE.OLEDB.12.0",
+                        DataSource = Path.Combine(basePath, ds.SourceFile.FilePath),
+                        PersistSecurityInfo = false
+                    };
+                    builder["Mode"] = "Read";
+                    var extension = Path.GetExtension(ds.SourceFile.FileName).ToUpper();
+                    switch (extension)
+                    {
+                        case ".XLS":
+                            builder["Extended Properties"] = "Excel 8.0;HDR=Yes";
+                            break;
+                        case ".XLSB":
+                            builder["Extended Properties"] = "Excel 12.0;HDR=Yes";
+                            break;
+                        case ".XLSX":
+                            builder["Extended Properties"] = "Excel 12.0 Xml;HDR=Yes";
+                            break;
+                        case ".XLSM":
+                            builder["Extended Properties"] = "Excel 12.0 Macro;HDR=Yes";
+                            break;
+                        default:
+                            builder["Extended Properties"] = "Excel 12.0;HDR=Yes";
+                            break;
+                    }
+                    cs = builder.ToString();
+                    break;
+                default: return null;
+            }
+            return cs;
         }
+
 
         public DataTable GetProviderFactoryClasses()
         {

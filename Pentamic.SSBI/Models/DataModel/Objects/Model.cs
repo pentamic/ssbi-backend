@@ -11,7 +11,6 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public string OriginalName { get; set; }
         public string DatabaseName { get; set; }
         public ModeType DefaultMode { get; set; }
-        public DataModelObjectState State { get; set; }
         public List<Table> Tables { get; set; }
         public List<DataSource> DataSources { get; set; }
         public List<Relationship> Relationships { get; set; }

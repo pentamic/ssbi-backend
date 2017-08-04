@@ -269,6 +269,14 @@
     <Compile Include="Migrations\DataModelContext\201708010701598_UpdateDataModel1.Designer.cs">
       <DependentUpon>201708010701598_UpdateDataModel1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\DataModelContext\201708020958032_UpdateDataModel2.cs" />
+    <Compile Include="Migrations\DataModelContext\201708020958032_UpdateDataModel2.Designer.cs">
+      <DependentUpon>201708020958032_UpdateDataModel2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\DataModelContext\201708040925145_UpdateDataModel3.cs" />
+    <Compile Include="Migrations\DataModelContext\201708040925145_UpdateDataModel3.Designer.cs">
+      <DependentUpon>201708040925145_UpdateDataModel3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DataModelContext\Configuration.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.Designer.cs">
@@ -311,6 +319,7 @@
       <DependentUpon>201707200718255_UpdateReporting8.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\ReportingContext\Configuration.cs" />
+    <Compile Include="Models\DataModel\RenameRequest.cs" />
     <Compile Include="Models\DataModel\Enums\AggregateType.cs" />
     <Compile Include="Models\DataModel\Enums\ColumnDataType.cs" />
     <Compile Include="Models\DataModel\Enums\EnumExtension.cs" />
@@ -324,7 +333,6 @@
     <Compile Include="Models\DataModel\Enums\DataSourceType.cs" />
     <Compile Include="Models\DataModel\IDataModelObject.cs" />
     <Compile Include="Models\DataModel\Objects\Measure.cs" />
-    <Compile Include="Models\DataModel\Enums\DataModelObjectState.cs" />
     <Compile Include="Models\DataModel\Objects\Partition.cs" />
     <Compile Include="Models\DataModel\Objects\Perspective.cs" />
     <Compile Include="Models\DataModel\Objects\PerspectiveColumn.cs" />
@@ -414,6 +422,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\DataModelContext\201708010701598_UpdateDataModel1.resx">
       <DependentUpon>201708010701598_UpdateDataModel1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201708020958032_UpdateDataModel2.resx">
+      <DependentUpon>201708020958032_UpdateDataModel2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201708040925145_UpdateDataModel3.resx">
+      <DependentUpon>201708040925145_UpdateDataModel3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201702080147015_InitReporting.resx">
       <DependentUpon>201702080147015_InitReporting.cs</DependentUpon>
