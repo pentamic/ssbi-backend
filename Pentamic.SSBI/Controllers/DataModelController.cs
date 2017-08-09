@@ -149,14 +149,29 @@ namespace Pentamic.SSBI.Controllers
 
         }
 
-
         [HttpPost]
-        [Route("breeze/datamodel/update/{id}")]
-        public IHttpActionResult Update(int id)
+        [Route("breeze/datamodel/{modelId}/refresh")]
+        public IHttpActionResult RefreshModel(int modelId)
         {
             try
             {
-                _dataModelService.Update(id);
+                _dataModelService.RefreshModel(modelId);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Serilog.Log.Logger.Error(e, e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("breeze/datamodel/createdatetable")]
+        public IHttpActionResult CreateDateTable(DateTableCreateModel model)
+        {
+            try
+            {
+                _dataModelService.CreateDateTable(model);
                 return Ok();
             }
             catch (Exception e)
@@ -167,20 +182,5 @@ namespace Pentamic.SSBI.Controllers
 
         }
 
-        [HttpPost]
-        [Route("breeze/datamodel/refresh/{id}")]
-        public IHttpActionResult Refresh(int id)
-        {
-            try
-            {
-                _dataModelService.RefreshModel(id);
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                Serilog.Log.Logger.Error(e, e.Message);
-                return BadRequest(e.Message);
-            }
-        }
     }
 }

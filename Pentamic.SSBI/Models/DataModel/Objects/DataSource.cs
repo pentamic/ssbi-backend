@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Pentamic.SSBI.Models.DataModel.Objects
 {
-    public class DataSource : IDataModelObject,IAuditable
+    public class DataSource : IDataModelObject, IAuditable
     {
         public int Id { get; set; }
         public int ModelId { get; set; }
@@ -18,8 +18,11 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public string Password { get; set; }
         public bool IntegratedSecurity { get; set; }
         public int? SourceFileId { get; set; }
+
+        public List<Partition> Partitions { get; set; }
         public Model Model { get; set; }
         public SourceFile SourceFile { get; set; }
+
         public string CreatedBy { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public string ModifiedBy { get; set; }

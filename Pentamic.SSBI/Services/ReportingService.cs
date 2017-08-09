@@ -440,8 +440,29 @@ namespace Pentamic.SSBI.Services
         public SaveResult SaveChanges(JObject saveBundle)
         {
             var txSettings = new TransactionSettings { TransactionType = TransactionType.TransactionScope };
+            _contextProvider.AfterSaveEntitiesDelegate += AfterSaveEntities;
             return _contextProvider.SaveChanges(saveBundle, txSettings);
         }
 
+        protected void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings)
+        {
+            List<EntityInfo> eis;
+            if (saveMap.TryGetValue(typeof(Report), out eis))
+            {
+                foreach (var ei in eis)
+                {
+                    var e = ei.Entity as Report;
+                    if (ei.EntityState == Breeze.ContextProvider.EntityState.Modified && ei.OriginalValuesMap.ContainsKey("ModelId"))
+                    {
+                        var reportTiles = Context.ReportTiles.Where(x => x.ReportPage.ReportId == e.Id).ToList();
+                        foreach (var tile in reportTiles)
+                        {
+                            tile.ModelId = e.ModelId;
+                        }
+                        Context.SaveChanges();
+                    }
+                }
+            }
+        }
     }
 }

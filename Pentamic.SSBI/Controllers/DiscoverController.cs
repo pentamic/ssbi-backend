@@ -62,7 +62,7 @@ namespace Pentamic.SSBI.Controllers
         [Route("data")]
         public async Task<IHttpActionResult> Data([FromBody]DataDiscoverModel model)
         {
-            var result = await _discoverService.DiscoverTable(model.DataSourceId, model.TableSchema, model.TableName);
+            var result = await _discoverService.DiscoverTable(model.DataSourceId, model.TableSchema, model.TableName, model.Query);
             return Ok(result);
         }
 

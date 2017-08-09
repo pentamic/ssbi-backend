@@ -366,7 +366,7 @@ namespace Pentamic.SSBI.Services
             }
         }
 
-        public async Task<TableDetailResult> DiscoverTable(int dsId, string tableSchema, string tableName)
+        public async Task<TableDetailResult> DiscoverTable(int dsId, string tableSchema, string tableName, string query)
         {
             var ds = _dataModelContext.DataSources.Find(dsId);
             if (ds == null)
@@ -386,8 +386,16 @@ namespace Pentamic.SSBI.Services
                 {
                     using (var cmd = con.CreateCommand())
                     {
-                        cmd.CommandText = string.IsNullOrEmpty(tableSchema) ? $"SELECT TOP 100 * FROM [{tableName}]"
-                        : $"SELECT TOP 100 * FROM [{tableSchema}].[{tableName}]";
+                        if (query == null)
+                        {
+                            cmd.CommandText = string.IsNullOrEmpty(tableSchema) ?
+                                $"SELECT TOP 100 * FROM [{tableName}]" :
+                                $"SELECT TOP 100 * FROM [{tableSchema}].[{tableName}]";
+                        }
+                        else
+                        {
+                            cmd.CommandText = query;
+                        }
                         await con.OpenAsync();
                         var data = new List<dynamic>();
                         reader = await cmd.ExecuteReaderAsync();

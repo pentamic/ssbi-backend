@@ -63,5 +63,10 @@ namespace Pentamic.SSBI.Models.DataModel
         {
             return (AS.ModeType)Enum.Parse(typeof(AS.ModeType), modeType.ToString());
         }
+
+        public static AS.PartitionSourceType ToPartitionSourceType(this PartitionSourceType partitionSourceType)
+        {
+            return (AS.PartitionSourceType)Enum.Parse(typeof(AS.PartitionSourceType), partitionSourceType.ToString());
+        }
     }
 }
