@@ -31,6 +31,7 @@ namespace Pentamic.SSBI.Services
                 .ConnectionString;
 
         private List<RenameRequest> renameRequests;
+        private List<string> generateRequests;
 
         public DataModelService()
         {
@@ -591,19 +592,8 @@ namespace Pentamic.SSBI.Services
 
         }
 
-        public void GenerateModelFromDatabase(int modelId)
+        public void GenerateModelFromDatabase(Model mo)
         {
-            var mo = Context.Models.Where(x => x.Id == modelId)
-                .Include(x => x.Tables)
-                .Include(x => x.Relationships)
-                .Include(x => x.DataSources).FirstOrDefault();
-            if (mo == null)
-            {
-                throw new Exception("Model not found");
-            }
-            Context.Database.ExecuteSqlCommand("DELETE [DataModel].[Relationship] WHERE ModelId = @modelId", new SqlParameter("modelId", modelId));
-            Context.Database.ExecuteSqlCommand("DELETE [DataModel].[Table] WHERE ModelId = @modelId", new SqlParameter("modelId", modelId));
-            Context.Database.ExecuteSqlCommand("DELETE [DataModel].[DataSource] WHERE ModelId = @modelId", new SqlParameter("modelId", modelId));
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
@@ -612,6 +602,9 @@ namespace Pentamic.SSBI.Services
                 {
                     throw new Exception("Database not found");
                 }
+                mo.DataSources = new List<DataSource>();
+                mo.Tables = new List<Table>();
+                mo.Relationships = new List<Relationship>();
                 mo.DefaultMode = (ModeType)database.Model.DefaultMode;
                 mo.Description = database.Model.Description;
 
@@ -687,7 +680,8 @@ namespace Pentamic.SSBI.Services
                                 Name = pa.Name,
                                 OriginalName = pa.Name,
                                 Description = pa.Description,
-                                Query = source.Expression
+                                Query = source.Expression,
+                                SourceType = PartitionSourceType.Calculated
                             });
                         }
                         else if (pa.Source is AS.QueryPartitionSource)
@@ -698,7 +692,8 @@ namespace Pentamic.SSBI.Services
                                 Name = pa.Name,
                                 OriginalName = pa.Name,
                                 Description = pa.Description,
-                                Query = source.Query
+                                Query = source.Query,
+                                SourceType = PartitionSourceType.Query
                             });
                         }
                     }
@@ -768,9 +763,6 @@ namespace Pentamic.SSBI.Services
                     }
                     mo.Relationships.Add(relationship);
                 }
-
-                //Commit changes
-                database.Update(AN.UpdateOptions.ExpandFull);
                 server.Disconnect();
                 Context.SaveChanges();
             }
@@ -779,6 +771,7 @@ namespace Pentamic.SSBI.Services
         public SaveResult SaveChanges(JObject saveBundle)
         {
             renameRequests = new List<RenameRequest>();
+            generateRequests = new List<string>();
             var txSettings = new TransactionSettings { TransactionType = TransactionType.TransactionScope };
             _contextProvider.BeforeSaveEntityDelegate += BeforeSaveEntity;
             _contextProvider.BeforeSaveEntitiesDelegate += BeforeSaveEntities;
@@ -802,8 +795,15 @@ namespace Pentamic.SSBI.Services
                         {
                             if (info.Entity is Model mo)
                             {
-                                mo.DatabaseName = Guid.NewGuid().ToString();
-                                info.OriginalValuesMap["DatabaseName"] = null;
+                                if (string.IsNullOrEmpty(mo.DatabaseName))
+                                {
+                                    mo.DatabaseName = Guid.NewGuid().ToString();
+                                    info.OriginalValuesMap["DatabaseName"] = null;
+                                }
+                                else
+                                {
+                                    generateRequests.Add(mo.Name);
+                                }
                             }
                         }
                         entity.OriginalName = entity.Name;
@@ -928,7 +928,14 @@ namespace Pentamic.SSBI.Services
                     var e = ei.Entity as Model;
                     if (ei.EntityState == Breeze.ContextProvider.EntityState.Added)
                     {
-                        CreateModel(e);
+                        if (generateRequests.Contains(e.Name))
+                        {
+                            GenerateModelFromDatabase(e);
+                        }
+                        else
+                        {
+                            CreateModel(e);
+                        }
                     }
                     if (ei.EntityState == Breeze.ContextProvider.EntityState.Modified)
                     {
@@ -1852,7 +1859,7 @@ namespace Pentamic.SSBI.Services
 
         }
 
-        public void AddTable(AS.Database database, int modelId, Table table)
+        public AS.Table AddTable(AS.Database database, int modelId, Table table)
         {
             var tb = new AS.Table
             {
@@ -1863,7 +1870,7 @@ namespace Pentamic.SSBI.Services
             {
                 foreach (var col in table.Columns)
                 {
-                    tb.Columns.Add(new AS.DataColumn
+                    var c = new AS.DataColumn
                     {
                         Name = col.Name,
                         DataType = col.DataType.ToDataType(),
@@ -1871,7 +1878,12 @@ namespace Pentamic.SSBI.Services
                         IsHidden = col.IsHidden,
                         DisplayFolder = col.DisplayFolder,
                         FormatString = col.FormatString
-                    });
+                    };
+                    if (col.SortByColumn != null)
+                    {
+                        c.SortByColumn = tb.Columns[col.SortByColumn.Name];
+                    }
+                    tb.Columns.Add(c);
                 }
             }
             if (table.Partitions != null)
@@ -1913,8 +1925,8 @@ namespace Pentamic.SSBI.Services
                 }
             }
             database.Model.Tables.Add(tb);
+            return tb;
         }
-
 
         public void UpdateTable(Table table)
         {
@@ -2368,12 +2380,7 @@ namespace Pentamic.SSBI.Services
                 Partitions = new List<Partition>()
             };
             Context.Tables.Add(table);
-            table.Columns.Add(new Column
-            {
-                Name = "DateKey",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "DateKey"
-            });
+
             table.Columns.Add(new Column
             {
                 Name = "Date",
@@ -2382,9 +2389,16 @@ namespace Pentamic.SSBI.Services
             });
             table.Columns.Add(new Column
             {
+                Name = "DateKey",
+                DataType = ColumnDataType.Int64,
+                SourceColumn = "DateKey"
+            });
+            table.Columns.Add(new Column
+            {
                 Name = "DateName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "DateName"
+                SourceColumn = "DateName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2396,7 +2410,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "YearName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "YearName"
+                SourceColumn = "YearName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2408,7 +2423,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "MonthName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "MonthName"
+                SourceColumn = "MonthName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2420,7 +2436,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "QuarterName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "QuarterName"
+                SourceColumn = "QuarterName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2432,7 +2449,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "HalfYearName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "HalfYearName"
+                SourceColumn = "HalfYearName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2444,7 +2462,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "DayOfMonthName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "DayOfMonthName"
+                SourceColumn = "DayOfMonthName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2456,7 +2475,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "DayOfWeekName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "DayOfWeekName"
+                SourceColumn = "DayOfWeekName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2468,7 +2488,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "MonthOfYearName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "MonthOfYearName"
+                SourceColumn = "MonthOfYearName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2480,7 +2501,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "QuarterOfYearName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "QuarterOfYearName"
+                SourceColumn = "QuarterOfYearName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2492,7 +2514,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "HalfYearOfYearName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "HalfYearOfYearName"
+                SourceColumn = "HalfYearOfYearName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2504,7 +2527,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "LunarDateName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "LunarDateName"
+                SourceColumn = "LunarDateName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2516,7 +2540,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "LunarMonthName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "LunarMonthName"
+                SourceColumn = "LunarMonthName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2528,7 +2553,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "LunarQuarterName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "LunarQuarterName"
+                SourceColumn = "LunarQuarterName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2540,7 +2566,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "LunarYearName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "LunarYearName"
+                SourceColumn = "LunarYearName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2552,7 +2579,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "LunarDayOfWeekName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "LunarDayOfWeekName"
+                SourceColumn = "LunarDayOfWeekName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2564,7 +2592,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "LunarDayOfMonthName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "LunarDayOfMonthName"
+                SourceColumn = "LunarDayOfMonthName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2576,7 +2605,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "LunarMonthOfYearName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "LunarMonthOfYearName"
+                SourceColumn = "LunarMonthOfYearName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2588,7 +2618,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "LunarQuarterOfYearName",
                 DataType = ColumnDataType.String,
-                SourceColumn = "LunarQuarterOfYearName"
+                SourceColumn = "LunarQuarterOfYearName",
+                SortByColumn = table.Columns.Last()
             });
             table.Columns.Add(new Column
             {
@@ -2620,7 +2651,8 @@ namespace Pentamic.SSBI.Services
             {
                 Name = "DefaultPartition",
                 Query = $"SELECT * FROM [dbo].[{sourceTable}]",
-                DataSourceId = ds.Id
+                DataSourceId = ds.Id,
+                DataSource = ds
             });
             Context.SaveChanges();
             try
@@ -2633,16 +2665,12 @@ namespace Pentamic.SSBI.Services
                     {
                         throw new ArgumentException("Database not found");
                     }
-                    var tb = new AS.Table
-                    {
-                        Name = model.TableName
-                    };
                     var dataSource = database.Model.DataSources.Find(ds.Name);
                     if (dataSource == null)
                     {
                         AddDataSource(database, ds);
                     }
-                    AddTable(database, model.ModelId, table);
+                    var tb = AddTable(database, model.ModelId, table);
                     database.Update(AN.UpdateOptions.ExpandFull);
                     server.Disconnect();
                 }
@@ -2752,19 +2780,19 @@ namespace Pentamic.SSBI.Services
                 var regen = false;
                 using (connection = new SqlConnection(conStr))
                 {
-                    var cmd = new SqlCommand($"TRUNCATE TABLE  {tableName}", connection);
+                    var cmd = new SqlCommand($"SELECT COUNT(DateKey) FROM {tableName}", connection);
                     connection.Open();
-                    cmd.ExecuteNonQuery();
+                    var res = (int)cmd.ExecuteScalar();
+                    regen = (res != i);
                     connection.Close();
                 }
                 if (regen)
                 {
                     using (connection = new SqlConnection(conStr))
                     {
-                        var cmd = new SqlCommand($" {tableName}", connection);
+                        var cmd = new SqlCommand($"TRUNCATE TABLE  {tableName}", connection);
                         connection.Open();
-                        var res = (int)cmd.ExecuteScalar();
-                        regen = (res != i);
+                        cmd.ExecuteNonQuery();
                         connection.Close();
                     }
                     using (connection = new SqlConnection(conStr))

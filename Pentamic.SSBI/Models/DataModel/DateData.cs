@@ -49,16 +49,16 @@ namespace Pentamic.SSBI.Models.DataModel
 
         public DateData(DateTime date)
         {
-            Date = date;
-            DateKey = date.Year * 10000 + date.Month * 100 + date.Day;
-            DateName = date.ToString("dd/MM/yyyy");
-            DayOfMonth = date.Day;
+            Date = date.Date;
+            DateKey = Date.Year * 10000 + Date.Month * 100 + Date.Day;
+            DateName = Date.ToString("dd/MM/yyyy");
+            DayOfMonth = Date.Day;
             DayOfMonthName = "Ngày " + DayOfMonth;
-            Year = date.Year;
-            YearName = "Năm " + date.Year;
-            MonthOfYear = date.Month;
+            Year = Date.Year;
+            YearName = "Năm " + Date.Year;
+            MonthOfYear = Date.Month;
             MonthOfYearName = "Tháng " + MonthOfYear;
-            Month = date.Year * 100 + MonthOfYear;
+            Month = Date.Year * 100 + MonthOfYear;
             MonthName = "Tháng " + MonthOfYear + " năm " + Year;
             if (MonthOfYear >= 1 && MonthOfYear <= 3)
             {
@@ -86,7 +86,7 @@ namespace Pentamic.SSBI.Models.DataModel
             HalfYear = Year * 100 + HalfYearOfYear;
             QuarterName = "Quý " + QuarterOfYear + " năm " + Year;
             HalfYearName = "Kỳ " + HalfYearOfYear + " năm " + Year;
-            DayOfWeek = (int)date.DayOfWeek;
+            DayOfWeek = (int)Date.DayOfWeek;
             switch (DayOfWeek)
             {
                 case 0: DayOfWeekName = "Chủ nhật"; break;
@@ -99,11 +99,11 @@ namespace Pentamic.SSBI.Models.DataModel
                 default: break;
             }
             var lunarCalendar = new ChineseLunisolarCalendar();
-            LunarYear = lunarCalendar.GetYear(date);
+            LunarYear = lunarCalendar.GetYear(Date);
             LunarYearName = "Năm " + LunarYear;
-            LunarMonthOfYear = lunarCalendar.GetMonth(date);
+            LunarMonthOfYear = lunarCalendar.GetMonth(Date);
             LunarMonth = LunarYear * 100 + LunarMonthOfYear;
-            LunarDayOfMonth = lunarCalendar.GetDayOfMonth(date);
+            LunarDayOfMonth = lunarCalendar.GetDayOfMonth(Date);
             LunarDayOfMonthName = "Ngày " + LunarDayOfMonth;
             LunarDate = LunarYear * 10000 + LunarMonthOfYear * 100 + LunarDayOfMonth;
             LunarDateName = $"{LunarDayOfMonth}/{LunarMonthOfYear}/{LunarYear}";
@@ -129,7 +129,7 @@ namespace Pentamic.SSBI.Models.DataModel
             LunarQuarterOfYearName = "Quý " + LunarQuarterOfYear;
             LunarQuarter = LunarYear * 100 + LunarQuarterOfYear;
             LunarQuarterName = "Quý " + LunarQuarterOfYear + " năm " + LunarYear;
-            LunarDayOfWeek = (int)lunarCalendar.GetDayOfWeek(date);
+            LunarDayOfWeek = (int)lunarCalendar.GetDayOfWeek(Date);
             switch (LunarDayOfWeek)
             {
                 case 0: LunarDayOfWeekName = "Chủ nhật"; break;

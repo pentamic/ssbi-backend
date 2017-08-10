@@ -133,23 +133,6 @@ namespace Pentamic.SSBI.Controllers
         //}
 
         [HttpPost]
-        [Route("breeze/datamodel/generate/{id}")]
-        public IHttpActionResult Generate(int id)
-        {
-            try
-            {
-                _dataModelService.GenerateModelFromDatabase(id);
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                Serilog.Log.Logger.Error(e, e.Message);
-                return BadRequest(e.Message);
-            }
-
-        }
-
-        [HttpPost]
         [Route("breeze/datamodel/{modelId}/refresh")]
         public IHttpActionResult RefreshModel(int modelId)
         {
