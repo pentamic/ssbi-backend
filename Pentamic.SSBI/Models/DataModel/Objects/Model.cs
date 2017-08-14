@@ -12,6 +12,8 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public string OriginalName { get; set; }
         public string DatabaseName { get; set; }
         public ModeType DefaultMode { get; set; }
+        public string GenerateFromTemplate { get; set; }
+        public int? CloneFromModelId { get; set; }
 
         public DateTimeOffset ProcessedAt { get; set; }
         public string ProcessedBy { get; set; }

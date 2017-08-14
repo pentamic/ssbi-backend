@@ -31,7 +31,6 @@ namespace Pentamic.SSBI.Services
                 .ConnectionString;
 
         private List<RenameRequest> renameRequests;
-        private List<string> generateRequests;
 
         public DataModelService()
         {
@@ -446,7 +445,6 @@ namespace Pentamic.SSBI.Services
 
         //        //Commit changes
         //        database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
-        //        server.Disconnect();
         //        Context.SaveChanges();
         //    }
         //}
@@ -454,23 +452,12 @@ namespace Pentamic.SSBI.Services
         public void RefreshModel(int modelId)
         {
             var mo = Context.Models.Find(modelId);
-            AS.Server server = null;
-            try
+            using (var server = new AS.Server())
             {
-                using (server = new AS.Server())
-                {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases[mo.DatabaseName];
-                    database.Model.RequestRefresh(AS.RefreshType.Full);
-                    database.Update(AN.UpdateOptions.ExpandFull);
-                }
-            }
-            finally
-            {
-                if (server != null && server.Connected)
-                {
-                    server.Disconnect();
-                }
+                server.Connect(_asConnectionString);
+                var database = server.Databases[mo.DatabaseName];
+                database.Model.RequestRefresh(AS.RefreshType.Full);
+                database.Update(AN.UpdateOptions.ExpandFull);
             }
         }
 
@@ -479,25 +466,13 @@ namespace Pentamic.SSBI.Services
             var tb = Context.Tables.Where(x => x.Id == tableId)
                 .Include(x => x.Model)
                 .FirstOrDefault();
-            AS.Server server = null;
-            try
+            using (var server = new AS.Server())
             {
-                using (server = new AS.Server())
-                {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases[tb.Model.DatabaseName];
-                    var table = database.Model.Tables[tb.Name];
-                    table.RequestRefresh(AS.RefreshType.Full);
-                    database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
-                    server.Disconnect();
-                }
-            }
-            finally
-            {
-                if (server != null && server.Connected)
-                {
-                    server.Disconnect();
-                }
+                server.Connect(_asConnectionString);
+                var database = server.Databases[tb.Model.DatabaseName];
+                var table = database.Model.Tables[tb.Name];
+                table.RequestRefresh(AS.RefreshType.Full);
+                database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
             }
         }
 
@@ -506,25 +481,13 @@ namespace Pentamic.SSBI.Services
             var pa = Context.Partitions.Where(x => x.Id == partitionId)
                 .Include(x => x.Table.Model)
                 .FirstOrDefault();
-            AS.Server server = null;
-            try
+            using (var server = new AS.Server())
             {
-                using (server = new AS.Server())
-                {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases[pa.Table.Model.DatabaseName];
-                    var partition = database.Model.Tables[pa.Table.Name].Partitions[pa.Name];
-                    partition.RequestRefresh(AS.RefreshType.Full);
-                    database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
-                    server.Disconnect();
-                }
-            }
-            finally
-            {
-                if (server != null && server.Connected)
-                {
-                    server.Disconnect();
-                }
+                server.Connect(_asConnectionString);
+                var database = server.Databases[pa.Table.Model.DatabaseName];
+                var partition = database.Model.Tables[pa.Table.Name].Partitions[pa.Name];
+                partition.RequestRefresh(AS.RefreshType.Full);
+                database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
             }
         }
 
@@ -592,16 +555,32 @@ namespace Pentamic.SSBI.Services
 
         }
 
-        public void GenerateModelFromDatabase(Model mo)
+        public void CloneModel(Model mo, int modelId)
         {
+            var fromModel = Context.Models.Find(modelId);
+            if (fromModel == null)
+            {
+                throw new Exception("Clone model not found");
+            }
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
-                AS.Database database = server.Databases.Find(mo.DatabaseName);
+                AS.Database database = server.Databases.Find(fromModel.DatabaseName);
                 if (database == null)
                 {
                     throw new Exception("Database not found");
                 }
+                if (database.CompatibilityLevel < 1200)
+                {
+                    throw new Exception("Database not supported");
+                }
+                var newDb = database.Clone();
+                newDb.ID = mo.DatabaseName;
+                newDb.Name = mo.DatabaseName;
+                newDb.Model = database.Model.Clone();
+                newDb.Model.Name = mo.Name;
+                newDb.Model.Description = mo.Description;
+                server.Databases.Add(newDb);
                 mo.DataSources = new List<DataSource>();
                 mo.Tables = new List<Table>();
                 mo.Relationships = new List<Relationship>();
@@ -763,7 +742,194 @@ namespace Pentamic.SSBI.Services
                     }
                     mo.Relationships.Add(relationship);
                 }
-                server.Disconnect();
+                newDb.Update(AN.UpdateOptions.ExpandFull);
+                Context.SaveChanges();
+            }
+        }
+
+        public void GenerateModelFromDatabase(Model mo)
+        {
+            using (var server = new AS.Server())
+            {
+                server.Connect(_asConnectionString);
+                AS.Database database = server.Databases.Find(mo.GenerateFromTemplate);
+                if (database == null)
+                {
+                    throw new Exception("Database not found");
+                }
+                if (database.CompatibilityLevel < 1200)
+                {
+                    throw new Exception("Database not supported");
+                }
+                var newDb = database.Clone();
+                newDb.ID = mo.DatabaseName;
+                newDb.Name = mo.DatabaseName;
+                newDb.Model = database.Model.Clone();
+                newDb.Model.Name = mo.Name;
+                newDb.Model.Description = mo.Description;
+                server.Databases.Add(newDb);
+                mo.DataSources = new List<DataSource>();
+                mo.Tables = new List<Table>();
+                mo.Relationships = new List<Relationship>();
+                mo.DefaultMode = (ModeType)database.Model.DefaultMode;
+                mo.Description = database.Model.Description;
+
+                //Data Sources
+                var dataSources = database.Model.DataSources;
+                foreach (AS.ProviderDataSource ds in dataSources)
+                {
+                    ds.ImpersonationMode = AS.ImpersonationMode.ImpersonateServiceAccount;
+                    var conStrBuilder = new OleDbConnectionStringBuilder(ds.ConnectionString);
+                    var dataSource = new DataSource
+                    {
+                        Name = ds.Name,
+                        Description = ds.Description,
+                        OriginalName = ds.Name,
+                        ConnectionString = ds.ConnectionString,
+                        Source = conStrBuilder.DataSource
+                    };
+                    conStrBuilder.TryGetValue("Integrated Security", out object val);
+                    if (val != null)
+                    {
+                        if (val is bool)
+                        {
+                            dataSource.IntegratedSecurity = (bool)val;
+                        }
+                        if (val is string)
+                        {
+                            if ((string)val == "SSPI" || (string)val == "true")
+                            {
+                                dataSource.IntegratedSecurity = true;
+                            }
+                        }
+                    }
+                    conStrBuilder.TryGetValue("Initial Catalog", out val);
+                    if (val != null)
+                    {
+                        dataSource.Catalog = (string)val;
+                    }
+                    conStrBuilder.TryGetValue("User ID", out val);
+                    if (val != null)
+                    {
+                        dataSource.User = (string)val;
+                    }
+                    conStrBuilder.TryGetValue("Password", out val);
+                    if (val != null)
+                    {
+                        dataSource.Password = (string)val;
+                    }
+                    mo.DataSources.Add(dataSource);
+                }
+
+                //Tables
+                var tables = database.Model.Tables;
+                foreach (AS.Table tb in tables)
+                {
+                    var table = new Table
+                    {
+                        Name = tb.Name,
+                        Description = tb.Description,
+                        OriginalName = tb.Name,
+                        Partitions = new List<Partition>(),
+                        Measures = new List<Measure>(),
+                        Columns = new List<Column>()
+                    };
+                    mo.Tables.Add(table);
+
+                    foreach (AS.Partition pa in tb.Partitions)
+                    {
+                        if (pa.Source is AS.CalculatedPartitionSource)
+                        {
+                            var source = pa.Source as AS.CalculatedPartitionSource;
+                            table.Partitions.Add(new Partition
+                            {
+                                Name = pa.Name,
+                                OriginalName = pa.Name,
+                                Description = pa.Description,
+                                Query = source.Expression,
+                                SourceType = PartitionSourceType.Calculated
+                            });
+                        }
+                        else if (pa.Source is AS.QueryPartitionSource)
+                        {
+                            var source = pa.Source as AS.QueryPartitionSource;
+                            table.Partitions.Add(new Partition
+                            {
+                                Name = pa.Name,
+                                OriginalName = pa.Name,
+                                Description = pa.Description,
+                                Query = source.Query,
+                                SourceType = PartitionSourceType.Query
+                            });
+                        }
+                    }
+
+                    foreach (AS.Column co in tb.Columns)
+                    {
+
+                        if (co.Type == AS.ColumnType.RowNumber)
+                        {
+                            continue;
+                        }
+                        table.Columns.Add(new Column
+                        {
+                            Name = co.Name,
+                            OriginalName = co.Name,
+                            DataType = (ColumnDataType)co.DataType,
+                            Description = co.Description,
+                            IsHidden = co.IsHidden,
+                            DisplayFolder = co.DisplayFolder,
+                            FormatString = co.FormatString
+                        });
+                    }
+
+                    foreach (AS.Measure me in tb.Measures)
+                    {
+                        table.Measures.Add(new Measure
+                        {
+                            Name = me.Name,
+                            OriginalName = me.Name,
+                            Description = me.Description,
+                            Expression = me.Expression
+                        });
+                    }
+                }
+
+                //Relationships
+                var relationships = database.Model.Relationships;
+                foreach (AS.SingleColumnRelationship re in relationships)
+                {
+                    var relationship = new Relationship
+                    {
+                        Name = re.Name,
+                        OriginalName = re.Name
+                    };
+                    foreach (var table in mo.Tables)
+                    {
+                        if (re.FromTable.Name == table.Name)
+                        {
+                            foreach (var col in table.Columns)
+                            {
+                                if (re.FromColumn.Name == col.Name)
+                                {
+                                    relationship.FromColumn = col;
+                                }
+                            }
+                        }
+                        if (re.ToTable.Name == table.Name)
+                        {
+                            foreach (var col in table.Columns)
+                            {
+                                if (re.ToColumn.Name == col.Name)
+                                {
+                                    relationship.ToColumn = col;
+                                }
+                            }
+                        }
+                    }
+                    mo.Relationships.Add(relationship);
+                }
+                newDb.Update(AN.UpdateOptions.ExpandFull);
                 Context.SaveChanges();
             }
         }
@@ -771,7 +937,6 @@ namespace Pentamic.SSBI.Services
         public SaveResult SaveChanges(JObject saveBundle)
         {
             renameRequests = new List<RenameRequest>();
-            generateRequests = new List<string>();
             var txSettings = new TransactionSettings { TransactionType = TransactionType.TransactionScope };
             _contextProvider.BeforeSaveEntityDelegate += BeforeSaveEntity;
             _contextProvider.BeforeSaveEntitiesDelegate += BeforeSaveEntities;
@@ -795,15 +960,8 @@ namespace Pentamic.SSBI.Services
                         {
                             if (info.Entity is Model mo)
                             {
-                                if (string.IsNullOrEmpty(mo.DatabaseName))
-                                {
-                                    mo.DatabaseName = Guid.NewGuid().ToString();
-                                    info.OriginalValuesMap["DatabaseName"] = null;
-                                }
-                                else
-                                {
-                                    generateRequests.Add(mo.Name);
-                                }
+                                mo.DatabaseName = Guid.NewGuid().ToString();
+                                info.OriginalValuesMap["DatabaseName"] = null;
                             }
                         }
                         entity.OriginalName = entity.Name;
@@ -928,9 +1086,13 @@ namespace Pentamic.SSBI.Services
                     var e = ei.Entity as Model;
                     if (ei.EntityState == Breeze.ContextProvider.EntityState.Added)
                     {
-                        if (generateRequests.Contains(e.Name))
+                        if (!string.IsNullOrEmpty(e.GenerateFromTemplate))
                         {
                             GenerateModelFromDatabase(e);
+                        }
+                        else if (e.CloneFromModelId != null)
+                        {
+
                         }
                         else
                         {
@@ -1151,7 +1313,6 @@ namespace Pentamic.SSBI.Services
                     }
                     database.Model.RequestRename(newName);
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -1187,7 +1348,6 @@ namespace Pentamic.SSBI.Services
                     }
                     ds.RequestRename(newName);
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -1223,7 +1383,6 @@ namespace Pentamic.SSBI.Services
                     }
                     tb.RequestRename(newName);
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -1265,7 +1424,6 @@ namespace Pentamic.SSBI.Services
                     }
                     re.RequestRename(newName);
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -1311,7 +1469,6 @@ namespace Pentamic.SSBI.Services
                     }
                     co.RequestRename(newName);
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -1362,7 +1519,6 @@ namespace Pentamic.SSBI.Services
                     }
                     me.RequestRename(newName);
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -1407,7 +1563,6 @@ namespace Pentamic.SSBI.Services
                     }
                     pa.RequestRename(newName);
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -1441,7 +1596,6 @@ namespace Pentamic.SSBI.Services
                     };
                     server.Databases.Add(database);
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -1468,7 +1622,6 @@ namespace Pentamic.SSBI.Services
                     database.Model.Description = model.Description;
                     database.Model.DefaultMode = model.DefaultMode.ToModeType();
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -1496,7 +1649,6 @@ namespace Pentamic.SSBI.Services
                     {
                         database.Drop();
                     }
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -1529,7 +1681,6 @@ namespace Pentamic.SSBI.Services
                         ImpersonationMode = AS.ImpersonationMode.ImpersonateServiceAccount
                     });
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -1575,7 +1726,6 @@ namespace Pentamic.SSBI.Services
                     ds.ImpersonationMode = AS.ImpersonationMode.ImpersonateServiceAccount;
                     ds.ConnectionString = GetDataSourceConnectionString(dataSource);
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -1607,7 +1757,6 @@ namespace Pentamic.SSBI.Services
                     }
                     database.Model.DataSources.Remove(ds);
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -1692,7 +1841,6 @@ namespace Pentamic.SSBI.Services
                     }
                     database.Model.Tables.Add(tb);
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -1780,7 +1928,6 @@ namespace Pentamic.SSBI.Services
                         database.Model.Tables.Add(tb);
                     }
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -1944,7 +2091,6 @@ namespace Pentamic.SSBI.Services
                     var tb = database.Model.Tables.Find(table.Name);
                     tb.Description = table.Description;
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -1981,7 +2127,6 @@ namespace Pentamic.SSBI.Services
                     }
                     database.Model.Tables.Remove(tb);
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -2047,7 +2192,6 @@ namespace Pentamic.SSBI.Services
                         };
                     }
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -2103,7 +2247,6 @@ namespace Pentamic.SSBI.Services
                         source.Expression = partition.Query;
                     }
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -2148,7 +2291,6 @@ namespace Pentamic.SSBI.Services
                         ToCardinality = AS.RelationshipEndCardinality.One
                     });
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -2193,7 +2335,6 @@ namespace Pentamic.SSBI.Services
                     re.FromColumn = database.Model.Tables[info.FromTableName].Columns[info.FromColumnName];
                     database.Model.Relationships.Remove(re);
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -2230,7 +2371,6 @@ namespace Pentamic.SSBI.Services
                     }
                     database.Model.Relationships.Remove(re);
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -2281,7 +2421,6 @@ namespace Pentamic.SSBI.Services
                     co.IsHidden = column.IsHidden;
                     co.SourceColumn = column.SourceColumn;
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -2326,7 +2465,6 @@ namespace Pentamic.SSBI.Services
                     }
                     tb.Columns.Remove(co);
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
@@ -2672,7 +2810,6 @@ namespace Pentamic.SSBI.Services
                     }
                     var tb = AddTable(database, model.ModelId, table);
                     database.Update(AN.UpdateOptions.ExpandFull);
-                    server.Disconnect();
                 }
             }
             catch (AN.OperationException ex)
