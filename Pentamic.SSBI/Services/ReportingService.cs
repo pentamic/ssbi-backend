@@ -3,6 +3,7 @@ using Breeze.ContextProvider.EF6;
 using Microsoft.AnalysisServices.AdomdClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Pentamic.SSBI.Models;
 using Pentamic.SSBI.Models.DataModel;
 using Pentamic.SSBI.Models.Reporting;
 using Pentamic.SSBI.Models.Reporting.Query;
@@ -11,6 +12,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.OleDb;
 using System.Linq;
+using System.Security.Claims;
+using System.Web;
 
 namespace Pentamic.SSBI.Services
 {
@@ -20,6 +23,35 @@ namespace Pentamic.SSBI.Services
         private string _asConnectionString = System.Configuration.ConfigurationManager
                 .ConnectionStrings["AnalysisServiceConnection"]
                 .ConnectionString;
+        private string _userId = null;
+        private string _userName = null;
+
+        private string UserId
+        {
+            get
+            {
+                if (_userId == null)
+                {
+                    _userId = (HttpContext.Current.User.Identity as ClaimsIdentity).Claims
+                    .First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
+                    .Value;
+                }
+                return _userId;
+            }
+        }
+
+        private string UserName
+        {
+            get
+            {
+                if (_userName == null)
+                {
+                    _userName = HttpContext.Current.User.Identity.Name;
+                }
+                return _userName;
+            }
+        }
+
         public ReportingService()
         {
             _contextProvider = new EFContextProvider<ReportingContext>();
@@ -49,7 +81,11 @@ namespace Pentamic.SSBI.Services
         }
         public IQueryable<Report> Reports
         {
-            get { return Context.Reports; }
+            get
+            {
+                var x = (HttpContext.Current.User.Identity as ClaimsIdentity).Claims;
+                return Context.Reports;
+            }
         }
         public IQueryable<ReportPage> ReportPages
         {
@@ -440,9 +476,39 @@ namespace Pentamic.SSBI.Services
         public SaveResult SaveChanges(JObject saveBundle)
         {
             var txSettings = new TransactionSettings { TransactionType = TransactionType.TransactionScope };
+            _contextProvider.BeforeSaveEntityDelegate += BeforeSaveEntity;
             _contextProvider.AfterSaveEntitiesDelegate += AfterSaveEntities;
             return _contextProvider.SaveChanges(saveBundle, txSettings);
         }
+
+        protected bool BeforeSaveEntity(EntityInfo info)
+        {
+            if (info.Entity is IAuditable)
+            {
+                var entity = info.Entity as IAuditable;
+                switch (info.EntityState)
+                {
+                    case Breeze.ContextProvider.EntityState.Added:
+                        entity.CreatedAt = DateTimeOffset.Now;
+                        entity.CreatedBy = UserId;
+                        entity.ModifiedAt = DateTimeOffset.Now;
+                        entity.ModifiedBy = UserId;
+                        break;
+                    case Breeze.ContextProvider.EntityState.Modified:
+                        entity.ModifiedAt = DateTimeOffset.Now;
+                        entity.ModifiedBy = UserId;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return true;
+        }
+
+        //protected Dictionary<Type, List<EntityInfo>> BeforeSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap)
+        //{    
+        //    return saveMap;
+        //}
 
         protected void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings)
         {

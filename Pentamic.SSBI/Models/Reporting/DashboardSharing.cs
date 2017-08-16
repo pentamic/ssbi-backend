@@ -5,10 +5,10 @@ using System.Web;
 
 namespace Pentamic.SSBI.Models.Reporting
 {
-    public class ReportSharing
+    public class DashboardSharing
     {
         public string UserId { get; set; }
-        public int ReportId { get; set; }
+        public int DashboardId { get; set; }
         public string Permission { get; set; }
     }
 }

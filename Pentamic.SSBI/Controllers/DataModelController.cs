@@ -38,6 +38,16 @@ namespace Pentamic.SSBI.Controllers
             return _dataModelService.Models;
         }
         [HttpGet]
+        public IQueryable<Role> Roles()
+        {
+            return _dataModelService.Roles;
+        }
+        [HttpGet]
+        public IQueryable<RoleTablePermission> RoleTablePermissions()
+        {
+            return _dataModelService.RoleTablePermissions;
+        }
+        [HttpGet]
         public IQueryable<DataSource> DataSources()
         {
             return _dataModelService.DataSources;

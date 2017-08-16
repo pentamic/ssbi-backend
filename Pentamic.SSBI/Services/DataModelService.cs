@@ -20,6 +20,8 @@ using System.Diagnostics;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Data;
+using Pentamic.SSBI.Models;
+using System.Security.Claims;
 
 namespace Pentamic.SSBI.Services
 {
@@ -31,6 +33,35 @@ namespace Pentamic.SSBI.Services
                 .ConnectionString;
 
         private List<RenameRequest> renameRequests;
+
+        private string _userId = null;
+        private string _userName = null;
+
+        private string UserId
+        {
+            get
+            {
+                if (_userId == null)
+                {
+                    _userId = (HttpContext.Current.User.Identity as ClaimsIdentity).Claims
+                    .First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
+                    .Value;
+                }
+                return _userId;
+            }
+        }
+
+        private string UserName
+        {
+            get
+            {
+                if (_userName == null)
+                {
+                    _userName = HttpContext.Current.User.Identity.Name;
+                }
+                return _userName;
+            }
+        }
 
         public DataModelService()
         {
@@ -53,6 +84,10 @@ namespace Pentamic.SSBI.Services
         public IQueryable<Model> Models
         {
             get { return Context.Models; }
+        }
+        public IQueryable<Role> Roles
+        {
+            get { return Context.Roles; }
         }
         public IQueryable<DataSource> DataSources
         {
@@ -94,6 +129,11 @@ namespace Pentamic.SSBI.Services
         {
             get { return Context.SourceFiles; }
         }
+        public IQueryable<RoleTablePermission> RoleTablePermissions
+        {
+            get { return Context.RoleTablePermissions; }
+        }
+
         //public async Task<DataSource> ImportDataSource(MultipartFormDataStreamProvider provider)
         //{
         //    var file = provider.FileData[0];
@@ -946,13 +986,28 @@ namespace Pentamic.SSBI.Services
 
         protected bool BeforeSaveEntity(EntityInfo info)
         {
+            if (info.Entity is IAuditable)
+            {
+                var entity = info.Entity as IAuditable;
+                switch (info.EntityState)
+                {
+                    case Breeze.ContextProvider.EntityState.Added:
+                        entity.CreatedAt = DateTimeOffset.Now;
+                        entity.CreatedBy = UserId;
+                        entity.ModifiedAt = DateTimeOffset.Now;
+                        entity.ModifiedBy = UserId;
+                        break;
+                    case Breeze.ContextProvider.EntityState.Modified:
+                        entity.ModifiedAt = DateTimeOffset.Now;
+                        entity.ModifiedBy = UserId;
+                        break;
+                    default:
+                        break;
+                }
+            }
             if (info.Entity is IDataModelObject)
             {
                 var entity = info.Entity as IDataModelObject;
-                if (entity == null)
-                {
-                    return true;
-                }
                 switch (info.EntityState)
                 {
                     case Breeze.ContextProvider.EntityState.Added:
@@ -1702,7 +1757,6 @@ namespace Pentamic.SSBI.Services
                 ImpersonationMode = AS.ImpersonationMode.ImpersonateServiceAccount
             });
         }
-
 
         public void UpdateDataSource(DataSource dataSource)
         {
@@ -2464,6 +2518,42 @@ namespace Pentamic.SSBI.Services
                         throw new ArgumentException("Column not found");
                     }
                     tb.Columns.Remove(co);
+                    database.Update(AN.UpdateOptions.ExpandFull);
+                }
+            }
+            catch (AN.OperationException ex)
+            {
+                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
+                {
+                }
+                throw;
+            }
+        }
+
+        public void CreateRole()
+        {
+            var dbName = "";
+            try
+            {
+                using (var server = new AS.Server())
+                {
+                    server.Connect(_asConnectionString);
+                    var database = server.Databases.FindByName(dbName);
+                    if (database == null)
+                    {
+                        throw new ArgumentException("Database not found");
+                    }
+                    var role = new AS.ModelRole
+                    {
+                        Name = "Test",
+                        Description = "Test",
+                        ModelPermission = AS.ModelPermission.ReadRefresh
+                    };
+                    //role.TablePermissions.Add(new AS.TablePermission
+                    //{
+                    //    Name
+                    //})
+                    database.Model.Roles.Add(role);
                     database.Update(AN.UpdateOptions.ExpandFull);
                 }
             }

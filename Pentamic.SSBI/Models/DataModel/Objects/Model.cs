@@ -22,6 +22,7 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public List<Table> Tables { get; set; }
         public List<DataSource> DataSources { get; set; }
         public List<Relationship> Relationships { get; set; }
+        public List<Role> Roles { get; set; }
 
         public string CreatedBy { get; set; }
         public DateTimeOffset CreatedAt { get; set; }

@@ -297,6 +297,10 @@
     <Compile Include="Migrations\DataModelContext\201708120315258_UpdateDataModel8.Designer.cs">
       <DependentUpon>201708120315258_UpdateDataModel8.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\DataModelContext\201708151041477_UpdateDataModel9.cs" />
+    <Compile Include="Migrations\DataModelContext\201708151041477_UpdateDataModel9.Designer.cs">
+      <DependentUpon>201708151041477_UpdateDataModel9.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DataModelContext\Configuration.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.Designer.cs">
@@ -343,6 +347,10 @@
     <Compile Include="Models\DataModel\DateTableCreateModel.cs" />
     <Compile Include="Models\DataModel\Enums\PartitionSourceType.cs" />
     <Compile Include="Models\DataModel\ModelRefreshModel.cs" />
+    <Compile Include="Models\DataModel\Objects\Connection.cs" />
+    <Compile Include="Models\DataModel\Objects\Role.cs" />
+    <Compile Include="Models\DataModel\Objects\RoleTablePermission.cs" />
+    <Compile Include="Models\DataModel\Objects\UserRole.cs" />
     <Compile Include="Models\DataModel\RenameRequest.cs" />
     <Compile Include="Models\DataModel\Enums\AggregateType.cs" />
     <Compile Include="Models\DataModel\Enums\ColumnDataType.cs" />
@@ -377,6 +385,7 @@
     <Compile Include="Models\DataModel\SourceFile.cs" />
     <Compile Include="Models\IAuditable.cs" />
     <Compile Include="Models\Reporting\Dashboard.cs" />
+    <Compile Include="Models\Reporting\DashboardSharing.cs" />
     <Compile Include="Models\Reporting\DashboardTile.cs" />
     <Compile Include="Models\Reporting\DisplayType.cs" />
     <Compile Include="Models\Reporting\Query\FilterField.cs" />
@@ -393,6 +402,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DataModelService.cs" />
     <Compile Include="Services\DiscoverService.cs" />
+    <Compile Include="Services\IdentityManagerProxyHandler.cs" />
     <Compile Include="Services\ListExtension.cs" />
     <Compile Include="Services\ReportingService.cs" />
     <Compile Include="Startup.cs" />
@@ -468,6 +478,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\DataModelContext\201708120315258_UpdateDataModel8.resx">
       <DependentUpon>201708120315258_UpdateDataModel8.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201708151041477_UpdateDataModel9.resx">
+      <DependentUpon>201708151041477_UpdateDataModel9.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201702080147015_InitReporting.resx">
       <DependentUpon>201702080147015_InitReporting.cs</DependentUpon>
