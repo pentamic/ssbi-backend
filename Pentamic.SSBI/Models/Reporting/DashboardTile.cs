@@ -7,7 +7,7 @@ using System.Web;
 
 namespace Pentamic.SSBI.Models.Reporting
 {
-    public class DashboardTile
+    public class DashboardTile : IAuditable
     {
         [Key]
         [Column(Order = 1)]
@@ -17,7 +17,13 @@ namespace Pentamic.SSBI.Models.Reporting
         public int ReportTileId { get; set; }
         public string PositionConfig { get; set; }
 
+        public string CreatedBy { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+        public string ModifiedBy { get; set; }
+        public DateTimeOffset ModifiedAt { get; set; }
+
         public Dashboard Dashboard { get; set; }
         public ReportTile ReportTile { get; set; }
+
     }
 }

@@ -72,9 +72,12 @@ namespace Pentamic.SSBI.Services
 
         public IQueryable<Dashboard> Dashboards
         {
-            get { return Context.Dashboards; }
+            get
+            {
+                return Context.Dashboards.Where(x => x.CreatedBy == UserId)
+               .Concat(Context.DashboardSharings.Where(x => x.UserId == UserId).Select(x => x.Dashboard));
+            }
         }
-
         public IQueryable<DashboardTile> DashboardTiles
         {
             get { return Context.DashboardTiles; }
@@ -83,8 +86,8 @@ namespace Pentamic.SSBI.Services
         {
             get
             {
-                var x = (HttpContext.Current.User.Identity as ClaimsIdentity).Claims;
-                return Context.Reports;
+                return Context.Reports.Where(x => x.CreatedBy == UserId)
+                    .Concat(Context.ReportSharings.Where(x => x.UserId == UserId).Select(x => x.Report));
             }
         }
         public IQueryable<ReportPage> ReportPages
@@ -98,6 +101,14 @@ namespace Pentamic.SSBI.Services
         public IQueryable<DisplayType> DisplayTypes
         {
             get { return Context.DisplayTypes; }
+        }
+        public IQueryable<ReportSharing> ReportSharings
+        {
+            get { return Context.ReportSharings.Where(x => x.SharedBy == UserId); }
+        }
+        public IQueryable<DashboardSharing> DashboardSharings
+        {
+            get { return Context.DashboardSharings; }
         }
 
         public void UpdateReportDataConfigColumnName(int modelId, string oldName, string newName)
@@ -432,6 +443,11 @@ namespace Pentamic.SSBI.Services
                 query = string.Format(" EVALUATE ( SUMMARIZECOLUMNS ( {0} ) ) ",
                     string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values)));
             }
+            if (queryModel.OrderBy.Count > 0)
+            {
+                query += string.Format(" ORDER BY {0} ",
+                    string.Join(",", queryModel.OrderBy));
+            }
             var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
             {
                 ["Catalog"] = model.DatabaseName
@@ -501,6 +517,23 @@ namespace Pentamic.SSBI.Services
                     default:
                         break;
                 }
+            }
+            if (info.Entity is IShareInfo)
+            {
+                var entity = info.Entity as IShareInfo;
+                switch (info.EntityState)
+                {
+                    case Breeze.ContextProvider.EntityState.Added:
+                        entity.SharedAt = DateTimeOffset.Now;
+                        entity.SharedBy = UserId;
+                        break;
+                    case Breeze.ContextProvider.EntityState.Modified:
+                        entity.SharedAt = DateTimeOffset.Now;
+                        break;
+                    default:
+                        break;
+                }
+
             }
             return true;
         }

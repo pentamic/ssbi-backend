@@ -9,7 +9,7 @@ namespace Pentamic.SSBI
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-            config.MessageHandlers.Add(new IdentityManagerProxyHandler());
+            //config.MessageHandlers.Add(new IdentityManagerProxyHandler());
 
             config.MapHttpAttributeRoutes();
 

@@ -13,7 +13,7 @@ using System.Web.Http;
 
 namespace Pentamic.SSBI.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [BreezeController]
     public class ReportingController : ApiController
     {
@@ -58,6 +58,16 @@ namespace Pentamic.SSBI.Controllers
         public IQueryable<DisplayType> DisplayTypes()
         {
             return _reportingService.DisplayTypes;
+        }
+        [HttpGet]
+        public IQueryable<ReportSharing> ReportSharings()
+        {
+            return _reportingService.ReportSharings;
+        }
+        [HttpGet]
+        public IQueryable<DashboardSharing> DashboardSharings()
+        {
+            return _reportingService.DashboardSharings;
         }
 
         [HttpPost]

@@ -18,5 +18,6 @@ namespace Pentamic.SSBI.Models.Reporting
         public DateTimeOffset ModifiedAt { get; set; }
 
         public List<ReportPage> ReportPages { get; set; }
+        public List<ReportSharing> ReportSharings { get; set; }
     }
 }

@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -342,12 +343,22 @@
     <Compile Include="Migrations\ReportingContext\201707200718255_UpdateReporting8.Designer.cs">
       <DependentUpon>201707200718255_UpdateReporting8.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\ReportingContext\201708170240380_UpdateReporting9.cs" />
+    <Compile Include="Migrations\ReportingContext\201708170240380_UpdateReporting9.Designer.cs">
+      <DependentUpon>201708170240380_UpdateReporting9.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ReportingContext\201708170251100_UpdateReporting10.cs" />
+    <Compile Include="Migrations\ReportingContext\201708170251100_UpdateReporting10.Designer.cs">
+      <DependentUpon>201708170251100_UpdateReporting10.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ReportingContext\Configuration.cs" />
     <Compile Include="Models\DataModel\DateData.cs" />
     <Compile Include="Models\DataModel\DateTableCreateModel.cs" />
     <Compile Include="Models\DataModel\Enums\PartitionSourceType.cs" />
     <Compile Include="Models\DataModel\ModelRefreshModel.cs" />
     <Compile Include="Models\DataModel\Objects\Connection.cs" />
+    <Compile Include="Models\DataModel\Objects\ConnectionSharing.cs" />
+    <Compile Include="Models\DataModel\Objects\ModelSharing.cs" />
     <Compile Include="Models\DataModel\Objects\Role.cs" />
     <Compile Include="Models\DataModel\Objects\RoleTablePermission.cs" />
     <Compile Include="Models\DataModel\Objects\UserRole.cs" />
@@ -384,16 +395,17 @@
     <Compile Include="Models\Discover\TableDiscoverResult.cs" />
     <Compile Include="Models\DataModel\SourceFile.cs" />
     <Compile Include="Models\IAuditable.cs" />
+    <Compile Include="Models\IShareInfo.cs" />
     <Compile Include="Models\Reporting\Dashboard.cs" />
     <Compile Include="Models\Reporting\DashboardSharing.cs" />
     <Compile Include="Models\Reporting\DashboardTile.cs" />
     <Compile Include="Models\Reporting\DisplayType.cs" />
     <Compile Include="Models\Reporting\Query\FilterField.cs" />
-    <Compile Include="Models\Reporting\Query\QueryFieldType.cs" />
+    <Compile Include="Models\Reporting\Query\FilterModel.cs" />
     <Compile Include="Models\Reporting\Query\FilterOperator.cs" />
-    <Compile Include="Models\Reporting\Query\OrderField.cs" />
-    <Compile Include="Models\Reporting\Query\QueryField.cs" />
+    <Compile Include="Models\Reporting\Query\FieldModel.cs" />
     <Compile Include="Models\Reporting\Query\QueryModel.cs" />
+    <Compile Include="Models\Reporting\Query\OrderModel.cs" />
     <Compile Include="Models\Reporting\ReportingContext.cs" />
     <Compile Include="Models\Reporting\Report.cs" />
     <Compile Include="Models\Reporting\ReportPage.cs" />
@@ -511,6 +523,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201707200718255_UpdateReporting8.resx">
       <DependentUpon>201707200718255_UpdateReporting8.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201708170240380_UpdateReporting9.resx">
+      <DependentUpon>201708170240380_UpdateReporting9.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201708170251100_UpdateReporting10.resx">
+      <DependentUpon>201708170251100_UpdateReporting10.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

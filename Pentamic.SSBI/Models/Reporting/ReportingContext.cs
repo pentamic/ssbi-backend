@@ -17,6 +17,9 @@ namespace Pentamic.SSBI.Models.Reporting
         public DbSet<ReportTile> ReportTiles { get; set; }
         public DbSet<DisplayType> DisplayTypes { get; set; }
 
+        public DbSet<ReportSharing> ReportSharings { get; set; }
+        public DbSet<DashboardSharing> DashboardSharings { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

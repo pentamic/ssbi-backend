@@ -7,5 +7,7 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
 {
     public class Connection
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }
