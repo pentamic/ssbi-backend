@@ -396,6 +396,8 @@
     <Compile Include="Models\DataModel\SourceFile.cs" />
     <Compile Include="Models\IAuditable.cs" />
     <Compile Include="Models\IShareInfo.cs" />
+    <Compile Include="Models\Reporting\DashboardComment.cs" />
+    <Compile Include="Models\Reporting\ReportComment.cs" />
     <Compile Include="Models\Reporting\Dashboard.cs" />
     <Compile Include="Models\Reporting\DashboardSharing.cs" />
     <Compile Include="Models\Reporting\DashboardTile.cs" />
@@ -411,6 +413,8 @@
     <Compile Include="Models\Reporting\ReportPage.cs" />
     <Compile Include="Models\Reporting\ReportSharing.cs" />
     <Compile Include="Models\Reporting\ReportTile.cs" />
+    <Compile Include="Models\Reporting\DashboardView.cs" />
+    <Compile Include="Models\Reporting\ReportView.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DataModelService.cs" />
     <Compile Include="Services\DiscoverService.cs" />

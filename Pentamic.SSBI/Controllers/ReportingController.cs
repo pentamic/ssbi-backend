@@ -69,6 +69,26 @@ namespace Pentamic.SSBI.Controllers
         {
             return _reportingService.DashboardSharings;
         }
+        [HttpGet]
+        public IQueryable<DashboardComment> DashboardComments()
+        {
+            return _reportingService.DashboardComments;
+        }
+        [HttpGet]
+        public IQueryable<DashboardView> DashboardViews()
+        {
+            return _reportingService.DashboardViews;
+        }
+        [HttpGet]
+        public IQueryable<ReportComment> ReportComments()
+        {
+            return _reportingService.ReportComments;
+        }
+        [HttpGet]
+        public IQueryable<ReportView> ReportViews()
+        {
+            return _reportingService.ReportViews;
+        }
 
         [HttpPost]
         public IHttpActionResult Data(QueryModel queryModel)

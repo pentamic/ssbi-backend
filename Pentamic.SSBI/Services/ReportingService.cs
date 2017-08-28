@@ -110,6 +110,22 @@ namespace Pentamic.SSBI.Services
         {
             get { return Context.DashboardSharings; }
         }
+        public IQueryable<ReportComment> ReportComments
+        {
+            get { return Context.ReportComments; }
+        }
+        public IQueryable<ReportView> ReportViews
+        {
+            get { return Context.ReportViews; }
+        }
+        public IQueryable<DashboardComment> DashboardComments
+        {
+            get { return Context.DashboardComments; }
+        }
+        public IQueryable<DashboardView> DashboardViews
+        {
+            get { return Context.DashboardViews; }
+        }
 
         public void UpdateReportDataConfigColumnName(int modelId, string oldName, string newName)
         {
