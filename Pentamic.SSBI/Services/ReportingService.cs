@@ -96,7 +96,7 @@ namespace Pentamic.SSBI.Services
         }
         public IQueryable<ReportTile> ReportTiles
         {
-            get { return Context.ReportTiles; }
+            get { return Context.ReportTiles.Where(x => Reports.Select(y => y.Id).Contains(x.ReportId)); }
         }
         public IQueryable<DisplayType> DisplayTypes
         {
@@ -104,7 +104,7 @@ namespace Pentamic.SSBI.Services
         }
         public IQueryable<ReportSharing> ReportSharings
         {
-            get { return Context.ReportSharings.Where(x => x.SharedBy == UserId); }
+            get { return Context.ReportSharings; }
         }
         public IQueryable<DashboardSharing> DashboardSharings
         {

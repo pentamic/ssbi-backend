@@ -10,6 +10,8 @@ namespace Pentamic.SSBI.Models.Reporting
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
+        public int Ordinal { get; set; }
         public string GridConfig { get; set; }
 
         public string CreatedBy { get; set; }

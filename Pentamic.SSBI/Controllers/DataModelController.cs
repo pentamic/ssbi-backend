@@ -35,6 +35,7 @@ namespace Pentamic.SSBI.Controllers
         [HttpGet]
         public IQueryable<Model> Models()
         {
+            //_dataModelService.FixModelColumns(1068);
             return _dataModelService.Models;
         }
         [HttpGet]
@@ -81,6 +82,11 @@ namespace Pentamic.SSBI.Controllers
         public IQueryable<SourceFile> SourceFiles()
         {
             return _dataModelService.SourceFiles;
+        }
+        [HttpGet]
+        public IQueryable<ModelSharing> ModelSharings()
+        {
+            return _dataModelService.ModelSharings;
         }
 
         [HttpPost]

@@ -18,5 +18,7 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public string Permission { get; set; }
         public string SharedBy { get; set; }
         public DateTimeOffset SharedAt { get; set; }
+
+        public Model Model { get; set; }
     }
 }

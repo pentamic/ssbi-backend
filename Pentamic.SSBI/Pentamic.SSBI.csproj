@@ -302,6 +302,10 @@
     <Compile Include="Migrations\DataModelContext\201708151041477_UpdateDataModel9.Designer.cs">
       <DependentUpon>201708151041477_UpdateDataModel9.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\DataModelContext\201709130957448_UpdateDataModel10.cs" />
+    <Compile Include="Migrations\DataModelContext\201709130957448_UpdateDataModel10.Designer.cs">
+      <DependentUpon>201709130957448_UpdateDataModel10.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DataModelContext\Configuration.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.Designer.cs">
@@ -350,6 +354,14 @@
     <Compile Include="Migrations\ReportingContext\201708170251100_UpdateReporting10.cs" />
     <Compile Include="Migrations\ReportingContext\201708170251100_UpdateReporting10.Designer.cs">
       <DependentUpon>201708170251100_UpdateReporting10.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ReportingContext\201708280804274_UpdateReporting11.cs" />
+    <Compile Include="Migrations\ReportingContext\201708280804274_UpdateReporting11.Designer.cs">
+      <DependentUpon>201708280804274_UpdateReporting11.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ReportingContext\201709120254517_UpdateReporting12.cs" />
+    <Compile Include="Migrations\ReportingContext\201709120254517_UpdateReporting12.Designer.cs">
+      <DependentUpon>201709120254517_UpdateReporting12.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\ReportingContext\Configuration.cs" />
     <Compile Include="Models\DataModel\DateData.cs" />
@@ -498,6 +510,9 @@
     <EmbeddedResource Include="Migrations\DataModelContext\201708151041477_UpdateDataModel9.resx">
       <DependentUpon>201708151041477_UpdateDataModel9.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201709130957448_UpdateDataModel10.resx">
+      <DependentUpon>201709130957448_UpdateDataModel10.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201702080147015_InitReporting.resx">
       <DependentUpon>201702080147015_InitReporting.cs</DependentUpon>
     </EmbeddedResource>
@@ -533,6 +548,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201708170251100_UpdateReporting10.resx">
       <DependentUpon>201708170251100_UpdateReporting10.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201708280804274_UpdateReporting11.resx">
+      <DependentUpon>201708280804274_UpdateReporting11.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201709120254517_UpdateReporting12.resx">
+      <DependentUpon>201709120254517_UpdateReporting12.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

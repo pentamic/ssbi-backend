@@ -133,6 +133,10 @@ namespace Pentamic.SSBI.Services
         {
             get { return Context.RoleTablePermissions; }
         }
+        public IQueryable<ModelSharing> ModelSharings
+        {
+            get { return Context.ModelSharings; }
+        }
 
         //public async Task<DataSource> ImportDataSource(MultipartFormDataStreamProvider provider)
         //{
@@ -3043,6 +3047,69 @@ namespace Pentamic.SSBI.Services
             }
             dateTable.Clear();
             return tableName;
+        }
+
+        public void FixModelColumns(int modelId)
+        {
+            var model = Context.Models.Find(modelId);
+            if (model == null)
+            {
+                throw new ArgumentException("Model not found");
+            }
+            try
+            {
+                using (var server = new AS.Server())
+                {
+                    server.Connect(_asConnectionString);
+                    var database = server.Databases.FindByName(model.DatabaseName);
+                    if (database == null)
+                    {
+                        throw new ArgumentException("Database not found");
+                    }
+                    //List<KeyValuePair<string, AS.DataColumn>> newCols = new List<KeyValuePair<string, AS.DataColumn>>();
+                    foreach (var tb in database.Model.Tables)
+                    {
+                        foreach (var co in tb.Columns)
+                        {
+                            if (co.Type == AS.ColumnType.Data)
+                            {
+                                if (string.IsNullOrEmpty(((AS.DataColumn)co).SourceColumn))
+                                {
+                                    ((AS.DataColumn)co).SourceColumn = ((AS.DataColumn)co).Name;
+                                }
+                            }
+                            //if (co.DataType == AS.DataType.Binary)
+                            //{
+                            //    var nv = new AS.DataColumn
+                            //    {
+                            //        Name = co.Name,
+                            //        Description = co.Description,
+                            //        DataType = AS.DataType.Int64,
+                            //        DisplayFolder = co.DisplayFolder,
+                            //        FormatString = co.FormatString,
+                            //        IsHidden = co.IsHidden
+                            //    };
+                            //    tb.Columns.Remove(co);
+                            //    newCols.Add(new KeyValuePair<string, AS.DataColumn>(tb.Name, nv));
+                            //}
+
+                        }
+                    }
+                    database.Update(AN.UpdateOptions.ExpandFull);
+                    //foreach (var c in newCols)
+                    //{
+                    //    database.Model.Tables[c.Key].Columns.Add(c.Value);
+                    //}
+                    //database.Update(AN.UpdateOptions.ExpandFull);
+                }
+            }
+            catch (AN.OperationException ex)
+            {
+                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
+                {
+                }
+                throw;
+            }
         }
     }
 }
