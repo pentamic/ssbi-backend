@@ -25,6 +25,9 @@ namespace Pentamic.SSBI.Models.DataModel
         public DbSet<RoleTablePermission> RoleTablePermissions { get; set; }
         public DbSet<SourceFile> SourceFiles { get; set; }
         public DbSet<ModelSharing> ModelSharings { get; set; }
+        public DbSet<UserModelActivity> UserModelActivities { get; set; }
+        public DbSet<UserFavoriteModel> UserFavoriteModels { get; set; }
+        public DbSet<ModelProcessQueue> ModelProcessQueues { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

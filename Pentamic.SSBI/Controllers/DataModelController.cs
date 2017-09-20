@@ -88,6 +88,18 @@ namespace Pentamic.SSBI.Controllers
         {
             return _dataModelService.ModelSharings;
         }
+        [HttpGet]
+        public IQueryable<UserModelActivity> UserRecentModels()
+        {
+            return _dataModelService.GetUserRecentModels();
+        }
+
+        [HttpGet]
+        public IQueryable<UserFavoriteModel> UserFavoriteModels()
+        {
+            return _dataModelService.UserFavoriteModels;
+        }
+
 
         [HttpPost]
         public IHttpActionResult TableData(TableQueryModel queryModel)

@@ -126,6 +126,72 @@ namespace Pentamic.SSBI.Services
         {
             get { return Context.DashboardViews; }
         }
+        public IQueryable<UserReportActivity> UserReportActivities
+        {
+            get { return Context.UserReportActivities.Where(x => x.UserId == UserId); }
+        }
+        public IQueryable<UserDashboardActivity> UserDashboardActivities
+        {
+            get { return Context.UserDashboardActivities.Where(x => x.UserId == UserId); }
+        }
+        public IQueryable<UserFavoriteReport> UserFavoriteReports
+        {
+            get { return Context.UserFavoriteReports.Where(x => x.UserId == UserId); }
+        }
+        public IQueryable<UserFavoriteDashboard> UserFavoriteDashboards
+        {
+            get { return Context.UserFavoriteDashboards.Where(x => x.UserId == UserId); }
+        }
+
+        public IQueryable<UserReportActivity> GetUserRecentReports()
+        {
+            return Context.UserReportActivities
+                .GroupBy(x => x.ReportId)
+                .OrderByDescending(x => x.Max(y => y.CreatedAt))
+                .Take(10)
+                .Select(x => x.OrderByDescending(y => y.CreatedAt).FirstOrDefault())
+                .Include(x => x.Report);
+        }
+
+        public IQueryable<UserDashboardActivity> GetUserRecentDashboards()
+        {
+            return Context.UserDashboardActivities
+                .GroupBy(x => x.DashboardId)
+                .OrderByDescending(x => x.Max(y => y.CreatedAt))
+                .Take(10)
+                .Select(x => x.OrderByDescending(y => y.CreatedAt).FirstOrDefault())
+                .Include(x => x.Dashboard);
+        }
+
+        //public bool CheckUserModelPermission(int modelId)
+        //{
+        //    var dataModelContext = new DataModelContext();
+        //    var model = dataModelContext.Models.Find(modelId);
+        //    if (model == null)
+        //    {
+        //        throw new Exception("Model not found");
+        //    }
+        //    if (model.CreatedBy == UserId)
+        //    {
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return dataModelContext.ModelSharings.Any(x => x.UserId == UserId);
+        //    }
+        //}
+        //public bool CheckUserModelPermission(Models.DataModel.Objects.Model model)
+        //{
+        //    if (model.CreatedBy == UserId)
+        //    {
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        var dataModelContext = new DataModelContext();
+        //        return dataModelContext.ModelSharings.Any(x => x.UserId == UserId);
+        //    }
+        //}
 
         public void UpdateReportDataConfigColumnName(int modelId, string oldName, string newName)
         {
@@ -549,7 +615,21 @@ namespace Pentamic.SSBI.Services
                     default:
                         break;
                 }
-
+            }
+            if (info.Entity is UserFavoriteDashboard && info.EntityState == Breeze.ContextProvider.EntityState.Added)
+            {
+                var entity = info.Entity as UserFavoriteDashboard;
+                entity.UserId = UserId;
+            }
+            if (info.Entity is UserFavoriteReport && info.EntityState == Breeze.ContextProvider.EntityState.Added)
+            {
+                var entity = info.Entity as UserFavoriteReport;
+                entity.UserId = UserId;
+            }
+            if (info.Entity is UserReportActivity && info.EntityState == Breeze.ContextProvider.EntityState.Added)
+            {
+                var entity = info.Entity as UserReportActivity;
+                entity.UserId = UserId;
             }
             return true;
         }
@@ -558,6 +638,7 @@ namespace Pentamic.SSBI.Services
         //{    
         //    return saveMap;
         //}
+
 
         protected void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings)
         {

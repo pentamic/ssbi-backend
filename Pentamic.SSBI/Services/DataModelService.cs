@@ -83,7 +83,11 @@ namespace Pentamic.SSBI.Services
 
         public IQueryable<Model> Models
         {
-            get { return Context.Models; }
+            get
+            {
+                return Context.Models.Where(x => x.CreatedBy == UserId)
+                    .Concat(Context.ModelSharings.Where(x => x.UserId == UserId).Select(x => x.Model)); ;
+            }
         }
         public IQueryable<Role> Roles
         {
@@ -136,6 +140,56 @@ namespace Pentamic.SSBI.Services
         public IQueryable<ModelSharing> ModelSharings
         {
             get { return Context.ModelSharings; }
+        }
+        public IQueryable<UserFavoriteModel> UserFavoriteModels
+        {
+            get { return Context.UserFavoriteModels.Where(x => x.UserId == UserId); }
+        }
+        public IQueryable<UserModelActivity> UserModelActivities
+        {
+            get { return Context.UserModelActivities.Where(x => x.UserId == UserId); }
+        }
+
+        public IQueryable<UserModelActivity> GetUserRecentModels()
+        {
+            return Context.UserModelActivities
+                .GroupBy(x => x.ModelId)
+                .OrderByDescending(x => x.Max(y => y.CreatedAt))
+                .Take(10)
+                .Select(x => x.OrderByDescending(y => y.CreatedAt).FirstOrDefault())
+                .Include(x => x.Model);
+        }
+
+        public void EnqueueProcessModel(int modelId)
+        {
+            var model = Context.Models.Find(modelId);
+            if (model == null)
+            {
+                throw new Exception("Model not found");
+            }
+            Context.ModelProcessQueues.Add(new ModelProcessQueue
+            {
+                ModelId = model.Id,
+                CreatedAt = DateTimeOffset.Now,
+                CreatedBy = UserId
+            });
+        }
+
+        public void RunModelProcessQueue()
+        {
+            var queueEntries = Context.ModelProcessQueues
+                .Where(x => x.EndedAt == null)
+                .GroupBy(x => x.ModelId)
+                .Select(x => x.OrderBy(y => y.CreatedAt).FirstOrDefault());
+            foreach (var e in queueEntries)
+            {
+                if (e.StartedAt == null)
+                {
+                    e.StartedAt = DateTimeOffset.Now;
+                    RefreshModel(e.ModelId);
+
+                }
+            }
         }
 
         //public async Task<DataSource> ImportDataSource(MultipartFormDataStreamProvider provider)
@@ -1044,6 +1098,33 @@ namespace Pentamic.SSBI.Services
                         break;
                 }
             }
+            if (info.Entity is IShareInfo)
+            {
+                var entity = info.Entity as IShareInfo;
+                switch (info.EntityState)
+                {
+                    case Breeze.ContextProvider.EntityState.Added:
+                        entity.SharedAt = DateTimeOffset.Now;
+                        entity.SharedBy = UserId;
+                        break;
+                    case Breeze.ContextProvider.EntityState.Modified:
+                        entity.SharedAt = DateTimeOffset.Now;
+                        break;
+                    default:
+                        break;
+                }
+            }
+            if (info.Entity is UserFavoriteModel && info.EntityState == Breeze.ContextProvider.EntityState.Added)
+            {
+                var entity = info.Entity as UserFavoriteModel;
+                entity.UserId = UserId;
+            }
+            if (info.Entity is UserModelActivity && info.EntityState == Breeze.ContextProvider.EntityState.Added)
+            {
+                var entity = info.Entity as UserModelActivity;
+                entity.UserId = UserId;
+            }
+
             return true;
         }
 

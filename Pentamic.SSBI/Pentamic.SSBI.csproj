@@ -306,6 +306,10 @@
     <Compile Include="Migrations\DataModelContext\201709130957448_UpdateDataModel10.Designer.cs">
       <DependentUpon>201709130957448_UpdateDataModel10.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\DataModelContext\201709200230158_UpdateDataModel11.cs" />
+    <Compile Include="Migrations\DataModelContext\201709200230158_UpdateDataModel11.Designer.cs">
+      <DependentUpon>201709200230158_UpdateDataModel11.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DataModelContext\Configuration.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.Designer.cs">
@@ -363,16 +367,40 @@
     <Compile Include="Migrations\ReportingContext\201709120254517_UpdateReporting12.Designer.cs">
       <DependentUpon>201709120254517_UpdateReporting12.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\ReportingContext\201709151003445_UpdateReporting13.cs" />
+    <Compile Include="Migrations\ReportingContext\201709151003445_UpdateReporting13.Designer.cs">
+      <DependentUpon>201709151003445_UpdateReporting13.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ReportingContext\201709180316304_UpdateReporting14.cs" />
+    <Compile Include="Migrations\ReportingContext\201709180316304_UpdateReporting14.Designer.cs">
+      <DependentUpon>201709180316304_UpdateReporting14.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ReportingContext\201709180340157_UpdateReporting15.cs" />
+    <Compile Include="Migrations\ReportingContext\201709180340157_UpdateReporting15.Designer.cs">
+      <DependentUpon>201709180340157_UpdateReporting15.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ReportingContext\201709190319231_UpdateReporting16.cs" />
+    <Compile Include="Migrations\ReportingContext\201709190319231_UpdateReporting16.Designer.cs">
+      <DependentUpon>201709190319231_UpdateReporting16.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ReportingContext\201709190355474_UpdateReporting17.cs" />
+    <Compile Include="Migrations\ReportingContext\201709190355474_UpdateReporting17.Designer.cs">
+      <DependentUpon>201709190355474_UpdateReporting17.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ReportingContext\Configuration.cs" />
+    <Compile Include="Models\AuthGroup.cs" />
     <Compile Include="Models\DataModel\DateData.cs" />
     <Compile Include="Models\DataModel\DateTableCreateModel.cs" />
     <Compile Include="Models\DataModel\Enums\PartitionSourceType.cs" />
     <Compile Include="Models\DataModel\ModelRefreshModel.cs" />
     <Compile Include="Models\DataModel\Objects\Connection.cs" />
     <Compile Include="Models\DataModel\Objects\ConnectionSharing.cs" />
+    <Compile Include="Models\DataModel\Objects\ModelProcessQueue.cs" />
     <Compile Include="Models\DataModel\Objects\ModelSharing.cs" />
     <Compile Include="Models\DataModel\Objects\Role.cs" />
     <Compile Include="Models\DataModel\Objects\RoleTablePermission.cs" />
+    <Compile Include="Models\DataModel\Objects\UserFavoriteModel.cs" />
+    <Compile Include="Models\DataModel\Objects\UserModelActivity.cs" />
     <Compile Include="Models\DataModel\Objects\UserRole.cs" />
     <Compile Include="Models\DataModel\RenameRequest.cs" />
     <Compile Include="Models\DataModel\Enums\AggregateType.cs" />
@@ -409,6 +437,7 @@
     <Compile Include="Models\IAuditable.cs" />
     <Compile Include="Models\IShareInfo.cs" />
     <Compile Include="Models\Reporting\DashboardComment.cs" />
+    <Compile Include="Models\Reporting\ReportAction.cs" />
     <Compile Include="Models\Reporting\ReportComment.cs" />
     <Compile Include="Models\Reporting\Dashboard.cs" />
     <Compile Include="Models\Reporting\DashboardSharing.cs" />
@@ -427,6 +456,11 @@
     <Compile Include="Models\Reporting\ReportTile.cs" />
     <Compile Include="Models\Reporting\DashboardView.cs" />
     <Compile Include="Models\Reporting\ReportView.cs" />
+    <Compile Include="Models\Reporting\UserFavoriteDashboard.cs" />
+    <Compile Include="Models\Reporting\UserFavoriteReport.cs" />
+    <Compile Include="Models\Reporting\UserDashboardActivity.cs" />
+    <Compile Include="Models\Reporting\UserReportActivity.cs" />
+    <Compile Include="Models\UserGroup.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DataModelService.cs" />
     <Compile Include="Services\DiscoverService.cs" />
@@ -513,6 +547,9 @@
     <EmbeddedResource Include="Migrations\DataModelContext\201709130957448_UpdateDataModel10.resx">
       <DependentUpon>201709130957448_UpdateDataModel10.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201709200230158_UpdateDataModel11.resx">
+      <DependentUpon>201709200230158_UpdateDataModel11.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201702080147015_InitReporting.resx">
       <DependentUpon>201702080147015_InitReporting.cs</DependentUpon>
     </EmbeddedResource>
@@ -554,6 +591,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201709120254517_UpdateReporting12.resx">
       <DependentUpon>201709120254517_UpdateReporting12.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201709151003445_UpdateReporting13.resx">
+      <DependentUpon>201709151003445_UpdateReporting13.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201709180316304_UpdateReporting14.resx">
+      <DependentUpon>201709180316304_UpdateReporting14.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201709180340157_UpdateReporting15.resx">
+      <DependentUpon>201709180340157_UpdateReporting15.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201709190319231_UpdateReporting16.resx">
+      <DependentUpon>201709190319231_UpdateReporting16.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201709190355474_UpdateReporting17.resx">
+      <DependentUpon>201709190355474_UpdateReporting17.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

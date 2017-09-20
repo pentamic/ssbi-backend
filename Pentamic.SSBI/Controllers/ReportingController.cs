@@ -6,6 +6,7 @@ using Pentamic.SSBI.Models.Reporting;
 using Pentamic.SSBI.Models.Reporting.Query;
 using Pentamic.SSBI.Services;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
@@ -89,6 +90,40 @@ namespace Pentamic.SSBI.Controllers
         {
             return _reportingService.ReportViews;
         }
+        [HttpGet]
+        public IQueryable<UserReportActivity> UserReportActivities()
+        {
+            return _reportingService.UserReportActivities;
+        }
+        [HttpGet]
+        public IQueryable<UserDashboardActivity> UserDashboardActivities()
+        {
+            return _reportingService.UserDashboardActivities;
+        }
+
+        [HttpGet]
+        public IQueryable<UserReportActivity> UserRecentReports()
+        {
+            return _reportingService.GetUserRecentReports();
+        }
+
+        [HttpGet]
+        public IQueryable<UserDashboardActivity> UserRecentDashboards()
+        {
+            return _reportingService.GetUserRecentDashboards();
+        }
+
+        [HttpGet]
+        public IQueryable<UserFavoriteReport> UserFavoriteReports()
+        {
+            return _reportingService.UserFavoriteReports;
+        }
+
+        [HttpGet]
+        public IQueryable<UserFavoriteDashboard> UserFavoriteDashboards()
+        {
+            return _reportingService.UserFavoriteDashboards;
+        }
 
         [HttpPost]
         public IHttpActionResult Data(QueryModel queryModel)
@@ -96,6 +131,7 @@ namespace Pentamic.SSBI.Controllers
             var result = _reportingService.Query(queryModel);
             return Ok(result);
         }
+
 
         [HttpPost]
         public SaveResult SaveChanges(JObject saveBundle)
