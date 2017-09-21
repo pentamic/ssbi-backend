@@ -166,7 +166,7 @@ namespace Pentamic.SSBI.Controllers
         {
             try
             {
-                _dataModelService.RefreshModel(modelId);
+                _dataModelService.EnqueueRefreshModel(modelId);
                 return Ok();
             }
             catch (Exception e)

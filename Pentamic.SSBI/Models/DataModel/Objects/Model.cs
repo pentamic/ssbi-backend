@@ -16,6 +16,7 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public int? CloneFromModelId { get; set; }
 
         public string RefreshSchedule { get; set; }
+        public string RefreshJobId { get; set; }
 
         public List<Table> Tables { get; set; }
         public List<DataSource> DataSources { get; set; }

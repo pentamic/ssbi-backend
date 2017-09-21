@@ -22,6 +22,7 @@ using System.ComponentModel;
 using System.Data;
 using Pentamic.SSBI.Models;
 using System.Security.Claims;
+using Hangfire;
 
 namespace Pentamic.SSBI.Services
 {
@@ -160,35 +161,21 @@ namespace Pentamic.SSBI.Services
                 .Include(x => x.Model);
         }
 
-        public void EnqueueProcessModel(int modelId)
+        public void EnqueueRefreshModel(int modelId)
         {
             var model = Context.Models.Find(modelId);
             if (model == null)
             {
                 throw new Exception("Model not found");
             }
-            Context.ModelProcessQueues.Add(new ModelProcessQueue
+            if (!Context.ModelRefreshQueues.Any(x => x.ModelId == modelId && x.EndedAt == null))
             {
-                ModelId = model.Id,
-                CreatedAt = DateTimeOffset.Now,
-                CreatedBy = UserId
-            });
-        }
-
-        public void RunModelProcessQueue()
-        {
-            var queueEntries = Context.ModelProcessQueues
-                .Where(x => x.EndedAt == null)
-                .GroupBy(x => x.ModelId)
-                .Select(x => x.OrderBy(y => y.CreatedAt).FirstOrDefault());
-            foreach (var e in queueEntries)
-            {
-                if (e.StartedAt == null)
+                Context.ModelRefreshQueues.Add(new ModelRefreshQueue
                 {
-                    e.StartedAt = DateTimeOffset.Now;
-                    RefreshModel(e.ModelId);
-
-                }
+                    ModelId = model.Id,
+                    CreatedAt = DateTimeOffset.Now
+                });
+                Context.SaveChanges();
             }
         }
 
@@ -550,6 +537,10 @@ namespace Pentamic.SSBI.Services
         public void RefreshModel(int modelId)
         {
             var mo = Context.Models.Find(modelId);
+            if (mo == null)
+            {
+                throw new Exception("Model not found");
+            }
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
@@ -1242,10 +1233,41 @@ namespace Pentamic.SSBI.Services
                     if (ei.EntityState == Breeze.ContextProvider.EntityState.Modified)
                     {
                         UpdateModel(e);
+                        if (ei.OriginalValuesMap.ContainsKey("RefreshSchedule"))
+                        {
+                            if (string.IsNullOrEmpty(e.RefreshSchedule))
+                            {
+                                if (!string.IsNullOrEmpty(e.RefreshJobId))
+                                {
+                                    RecurringJob.RemoveIfExists(e.RefreshJobId);
+                                }
+                                e.RefreshJobId = null;
+                                Context.SaveChanges();
+                            }
+                            else
+                            {
+                                string jobId;
+                                if (string.IsNullOrEmpty(e.RefreshJobId))
+                                {
+                                    jobId = Guid.NewGuid().ToString();
+                                    e.RefreshJobId = jobId;
+                                }
+                                else
+                                {
+                                    jobId = e.RefreshJobId;
+                                }
+                                RecurringJob.AddOrUpdate(jobId, () => EnqueueRefreshModel(e.Id), e.RefreshSchedule);
+                                Context.SaveChanges();
+                            }
+                        }
                     }
                     if (ei.EntityState == Breeze.ContextProvider.EntityState.Deleted)
                     {
                         DeleteModel(e);
+                        if (!string.IsNullOrEmpty(e.RefreshJobId))
+                        {
+                            RecurringJob.RemoveIfExists(e.RefreshJobId);
+                        }
                     }
                 }
             }

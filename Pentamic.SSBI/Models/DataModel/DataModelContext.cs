@@ -27,7 +27,7 @@ namespace Pentamic.SSBI.Models.DataModel
         public DbSet<ModelSharing> ModelSharings { get; set; }
         public DbSet<UserModelActivity> UserModelActivities { get; set; }
         public DbSet<UserFavoriteModel> UserFavoriteModels { get; set; }
-        public DbSet<ModelProcessQueue> ModelProcessQueues { get; set; }
+        public DbSet<ModelRefreshQueue> ModelRefreshQueues { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

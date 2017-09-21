@@ -5,7 +5,7 @@ using System.Web;
 
 namespace Pentamic.SSBI.Models.DataModel.Objects
 {
-    public class ModelProcessQueue
+    public class ModelRefreshQueue
     {
         public int Id { get; set; }
         public int ModelId { get; set; }

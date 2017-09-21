@@ -1,0 +1,4 @@
+﻿Update DataModel
+
+Add-Migration -configuration Pentamic.SSBI.Migrations.DataModelContext.Configuration UpdateDataModel
+Update-Database -configuration Pentamic.SSBI.Migrations.DataModelContext.Configuration

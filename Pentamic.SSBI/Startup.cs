@@ -9,6 +9,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
+using Hangfire;
+using Pentamic.SSBI.Services;
 
 namespace Pentamic.SSBI
 {
@@ -29,6 +31,11 @@ namespace Pentamic.SSBI
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.RollingFile("Logs/log-{Date}.txt")
                 .CreateLogger();
+
+            Hangfire.GlobalConfiguration.Configuration.UseSqlServerStorage("BackgroundServiceConnection");
+            app.UseHangfireServer();
+            app.UseHangfireDashboard();
+            RecurringJob.AddOrUpdate<DataModelBackgroundService>(x => x.RunModelRefreshQueue(), Cron.Minutely);
 
             //var c1 = new Migrations.ReportingContext.Configuration();
             //var c2 = new Migrations.DataModelContext.Configuration();
