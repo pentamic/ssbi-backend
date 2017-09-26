@@ -407,8 +407,10 @@
     <Compile Include="Models\DataModel\DateTableCreateModel.cs" />
     <Compile Include="Models\DataModel\Enums\ConnectionType.cs" />
     <Compile Include="Models\DataModel\Enums\PartitionSourceType.cs" />
+    <Compile Include="Models\DataModel\Connections\DatabaseConnection.cs" />
+    <Compile Include="Models\DataModel\Connections\FileConnection.cs" />
     <Compile Include="Models\DataModel\ModelRefreshModel.cs" />
-    <Compile Include="Models\DataModel\Objects\Connection.cs" />
+    <Compile Include="Models\DataModel\Connections\Connection.cs" />
     <Compile Include="Models\DataModel\Objects\ConnectionSharing.cs" />
     <Compile Include="Models\DataModel\Objects\ModelRefreshQueue.cs" />
     <Compile Include="Models\DataModel\Objects\ModelSharing.cs" />

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace Pentamic.SSBI.Models.DataModel.Objects
+﻿namespace Pentamic.SSBI.Models.DataModel.Connections
 {
     public class Connection
     {

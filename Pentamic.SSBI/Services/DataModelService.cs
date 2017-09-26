@@ -2673,7 +2673,6 @@ namespace Pentamic.SSBI.Services
             }
         }
 
-
         public bool CheckDataSourceNamesExist(int modelId, List<string> names)
         {
             return Context.DataSources.Any(x => x.ModelId == modelId && names.Contains(x.Name));
