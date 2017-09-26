@@ -19,24 +19,20 @@ namespace Pentamic.SSBI.Services
 {
     public class ReportingService
     {
-        private EFContextProvider<ReportingContext> _contextProvider;
-        private string _asConnectionString = System.Configuration.ConfigurationManager
+        private readonly EFContextProvider<ReportingContext> _contextProvider;
+        private readonly string _asConnectionString = System.Configuration.ConfigurationManager
                 .ConnectionStrings["AnalysisServiceConnection"]
                 .ConnectionString;
-        private string _userId = null;
-        private string _userName = null;
+        private string _userId;
+        private string _userName;
 
         private string UserId
         {
             get
             {
-                if (_userId == null)
-                {
-                    _userId = (HttpContext.Current.User.Identity as ClaimsIdentity).Claims
-                    .First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
-                    .Value;
-                }
-                return _userId;
+                return _userId ?? (_userId = (HttpContext.Current.User.Identity as ClaimsIdentity)?.Claims
+                           .First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
+                           .Value);
             }
         }
 
@@ -57,18 +53,9 @@ namespace Pentamic.SSBI.Services
             _contextProvider = new EFContextProvider<ReportingContext>();
         }
 
-        private ReportingContext Context
-        {
-            get
-            {
-                return _contextProvider.Context;
-            }
-        }
+        private ReportingContext Context => _contextProvider.Context;
 
-        public string Metadata
-        {
-            get { return _contextProvider.Metadata(); }
-        }
+        public string Metadata => _contextProvider.Metadata();
 
         public IQueryable<Dashboard> Dashboards
         {
@@ -78,10 +65,8 @@ namespace Pentamic.SSBI.Services
                .Concat(Context.DashboardSharings.Where(x => x.UserId == UserId).Select(x => x.Dashboard));
             }
         }
-        public IQueryable<DashboardTile> DashboardTiles
-        {
-            get { return Context.DashboardTiles; }
-        }
+        public IQueryable<DashboardTile> DashboardTiles => Context.DashboardTiles;
+
         public IQueryable<Report> Reports
         {
             get
@@ -90,42 +75,26 @@ namespace Pentamic.SSBI.Services
                     .Concat(Context.ReportSharings.Where(x => x.UserId == UserId).Select(x => x.Report));
             }
         }
-        public IQueryable<ReportPage> ReportPages
-        {
-            get { return Context.ReportPages; }
-        }
+        public IQueryable<ReportPage> ReportPages => Context.ReportPages;
+
         public IQueryable<ReportTile> ReportTiles
         {
             get { return Context.ReportTiles.Where(x => Reports.Select(y => y.Id).Contains(x.ReportId)); }
         }
-        public IQueryable<DisplayType> DisplayTypes
-        {
-            get { return Context.DisplayTypes; }
-        }
-        public IQueryable<ReportSharing> ReportSharings
-        {
-            get { return Context.ReportSharings; }
-        }
-        public IQueryable<DashboardSharing> DashboardSharings
-        {
-            get { return Context.DashboardSharings; }
-        }
-        public IQueryable<ReportComment> ReportComments
-        {
-            get { return Context.ReportComments; }
-        }
-        public IQueryable<ReportView> ReportViews
-        {
-            get { return Context.ReportViews; }
-        }
-        public IQueryable<DashboardComment> DashboardComments
-        {
-            get { return Context.DashboardComments; }
-        }
-        public IQueryable<DashboardView> DashboardViews
-        {
-            get { return Context.DashboardViews; }
-        }
+        public IQueryable<DisplayType> DisplayTypes => Context.DisplayTypes;
+
+        public IQueryable<ReportSharing> ReportSharings => Context.ReportSharings;
+
+        public IQueryable<DashboardSharing> DashboardSharings => Context.DashboardSharings;
+
+        public IQueryable<ReportComment> ReportComments => Context.ReportComments;
+
+        public IQueryable<ReportView> ReportViews => Context.ReportViews;
+
+        public IQueryable<DashboardComment> DashboardComments => Context.DashboardComments;
+
+        public IQueryable<DashboardView> DashboardViews => Context.DashboardViews;
+
         public IQueryable<UserReportActivity> UserReportActivities
         {
             get { return Context.UserReportActivities.Where(x => x.UserId == UserId); }
@@ -513,22 +482,12 @@ namespace Pentamic.SSBI.Services
             {
                 throw new Exception("Model not found");
             }
-            var query = "";
-            if (queryModel.Filters2.Count > 0)
-            {
-                query = string.Format(" EVALUATE ( FILTER (  SUMMARIZECOLUMNS ( {0} ), {1} ) ) ",
-                    string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values)),
-                    string.Join(" && ", queryModel.Filters2));
-            }
-            else
-            {
-                query = string.Format(" EVALUATE ( SUMMARIZECOLUMNS ( {0} ) ) ",
-                    string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values)));
-            }
+            var query = queryModel.Filters2.Count > 0 ? 
+                $" EVALUATE ( FILTER (  SUMMARIZECOLUMNS ( {string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values))} ), {string.Join(" && ", queryModel.Filters2)} ) ) " 
+                : $" EVALUATE ( SUMMARIZECOLUMNS ( {string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values))} ) ) ";
             if (queryModel.OrderBy.Count > 0)
             {
-                query += string.Format(" ORDER BY {0} ",
-                    string.Join(",", queryModel.OrderBy));
+                query += $" ORDER BY {string.Join(",", queryModel.OrderBy)} ";
             }
             var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
             {
@@ -536,37 +495,27 @@ namespace Pentamic.SSBI.Services
             };
             using (var conn = new AdomdConnection(conStrBuilder.ToString()))
             {
-                try
+                conn.Open();
+                var command = conn.CreateCommand();
+                command.CommandText = query;
+                using (var reader = command.ExecuteReader())
                 {
-                    conn.Open();
-                    var command = conn.CreateCommand();
-                    command.CommandText = query;
-                    using (var reader = command.ExecuteReader())
+                    var result = new List<Dictionary<string, object>>();
+                    while (reader.Read())
                     {
-                        var result = new List<Dictionary<string, object>>();
-                        while (reader.Read())
+                        var row = new Dictionary<string, object>();
+                        var columns = new List<string>();
+                        for (var i = 0; i < reader.FieldCount; ++i)
                         {
-                            var row = new Dictionary<string, object>();
-                            var columns = new List<string>();
-                            for (var i = 0; i < reader.FieldCount; ++i)
-                            {
-                                columns.Add(reader.GetName(i));
-                            }
-                            for (var i = 0; i < reader.FieldCount; ++i)
-                            {
-                                row[columns[i]] = reader.GetValue(i);
-                            }
-                            result.Add(row);
+                            columns.Add(reader.GetName(i));
                         }
-                        return result;
+                        for (var i = 0; i < reader.FieldCount; ++i)
+                        {
+                            row[columns[i]] = reader.GetValue(i);
+                        }
+                        result.Add(row);
                     }
-                }
-                finally
-                {
-                    if (conn != null)
-                    {
-                        conn.Close();
-                    }
+                    return result;
                 }
             }
         }

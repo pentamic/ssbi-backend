@@ -16,9 +16,6 @@ using AC = Microsoft.AnalysisServices.AdomdClient;
 using System.Data.SqlClient;
 using System.Web;
 using AN = Microsoft.AnalysisServices;
-using System.Diagnostics;
-using Newtonsoft.Json;
-using System.ComponentModel;
 using System.Data;
 using Pentamic.SSBI.Models;
 using System.Security.Claims;
@@ -28,12 +25,12 @@ namespace Pentamic.SSBI.Services
 {
     public class DataModelService
     {
-        private EFContextProvider<DataModelContext> _contextProvider;
-        private string _asConnectionString = System.Configuration.ConfigurationManager
+        private readonly EFContextProvider<DataModelContext> _contextProvider;
+        private readonly string _asConnectionString = System.Configuration.ConfigurationManager
                 .ConnectionStrings["AnalysisServiceConnection"]
                 .ConnectionString;
 
-        private List<RenameRequest> renameRequests;
+        private List<RenameRequest> _renameRequests;
 
         private string _userId = null;
         private string _userName = null;
@@ -1025,7 +1022,7 @@ namespace Pentamic.SSBI.Services
 
         public SaveResult SaveChanges(JObject saveBundle)
         {
-            renameRequests = new List<RenameRequest>();
+            _renameRequests = new List<RenameRequest>();
             var txSettings = new TransactionSettings { TransactionType = TransactionType.TransactionScope };
             _contextProvider.BeforeSaveEntityDelegate += BeforeSaveEntity;
             _contextProvider.BeforeSaveEntitiesDelegate += BeforeSaveEntities;
@@ -1074,7 +1071,7 @@ namespace Pentamic.SSBI.Services
                     case Breeze.ContextProvider.EntityState.Modified:
                         if (entity.OriginalName != entity.Name)
                         {
-                            renameRequests.Add(new RenameRequest
+                            _renameRequests.Add(new RenameRequest
                             {
                                 Id = entity.Id,
                                 Name = entity.Name,
@@ -1423,7 +1420,7 @@ namespace Pentamic.SSBI.Services
 
         public void ProcessRenameRequests()
         {
-            foreach (var req in renameRequests)
+            foreach (var req in _renameRequests)
             {
                 if (req.Type == typeof(Model))
                 {
