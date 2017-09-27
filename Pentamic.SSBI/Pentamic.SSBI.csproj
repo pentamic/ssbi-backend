@@ -401,6 +401,10 @@
     <Compile Include="Migrations\ReportingContext\201709190355474_UpdateReporting17.Designer.cs">
       <DependentUpon>201709190355474_UpdateReporting17.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\ReportingContext\201709260814431_UpdateReporting18.cs" />
+    <Compile Include="Migrations\ReportingContext\201709260814431_UpdateReporting18.Designer.cs">
+      <DependentUpon>201709260814431_UpdateReporting18.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ReportingContext\Configuration.cs" />
     <Compile Include="Models\AuthGroup.cs" />
     <Compile Include="Models\DataModel\DateData.cs" />
@@ -464,6 +468,8 @@
     <Compile Include="Models\Reporting\Query\FieldModel.cs" />
     <Compile Include="Models\Reporting\Query\QueryModel.cs" />
     <Compile Include="Models\Reporting\Query\OrderModel.cs" />
+    <Compile Include="Models\Reporting\DashboardFilter.cs" />
+    <Compile Include="Models\Reporting\ReportFilter.cs" />
     <Compile Include="Models\Reporting\ReportingContext.cs" />
     <Compile Include="Models\Reporting\Report.cs" />
     <Compile Include="Models\Reporting\ReportPage.cs" />
@@ -629,6 +635,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201709190355474_UpdateReporting17.resx">
       <DependentUpon>201709190355474_UpdateReporting17.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201709260814431_UpdateReporting18.resx">
+      <DependentUpon>201709260814431_UpdateReporting18.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
