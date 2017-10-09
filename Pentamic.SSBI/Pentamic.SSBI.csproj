@@ -324,6 +324,22 @@
     <Compile Include="Migrations\DataModelContext\201709210940115_UpdateDataModel13.Designer.cs">
       <DependentUpon>201709210940115_UpdateDataModel13.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\DataModelContext\201709280454415_UpdateDataModel14.cs" />
+    <Compile Include="Migrations\DataModelContext\201709280454415_UpdateDataModel14.Designer.cs">
+      <DependentUpon>201709280454415_UpdateDataModel14.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\DataModelContext\201709280904032_UpdateDataModel15.cs" />
+    <Compile Include="Migrations\DataModelContext\201709280904032_UpdateDataModel15.Designer.cs">
+      <DependentUpon>201709280904032_UpdateDataModel15.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\DataModelContext\201709290429431_UpdateDataModel16.cs" />
+    <Compile Include="Migrations\DataModelContext\201709290429431_UpdateDataModel16.Designer.cs">
+      <DependentUpon>201709290429431_UpdateDataModel16.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\DataModelContext\201709291011511_UpdateDataModel17.cs" />
+    <Compile Include="Migrations\DataModelContext\201709291011511_UpdateDataModel17.Designer.cs">
+      <DependentUpon>201709291011511_UpdateDataModel17.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DataModelContext\Configuration.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.Designer.cs">
@@ -406,14 +422,20 @@
     <Compile Include="Models\DataModel\DateData.cs" />
     <Compile Include="Models\DataModel\DateTableCreateModel.cs" />
     <Compile Include="Models\DataModel\Enums\ConnectionType.cs" />
-    <Compile Include="Models\DataModel\Enums\PartitionSourceType.cs" />
-    <Compile Include="Models\DataModel\Connections\DatabaseConnection.cs" />
-    <Compile Include="Models\DataModel\Connections\FileConnection.cs" />
+    <Compile Include="Models\DataModel\Connections\SqlServerConnection.cs" />
+    <Compile Include="Models\DataModel\Connections\ExcelConnection.cs" />
     <Compile Include="Models\DataModel\ModelRefreshModel.cs" />
     <Compile Include="Models\DataModel\Connections\Connection.cs" />
+    <Compile Include="Models\DataModel\Objects\DataColumn .cs" />
+    <Compile Include="Models\DataModel\Objects\CalculatedTableColumn.cs" />
+    <Compile Include="Models\DataModel\Objects\CalculatedColumn.cs" />
     <Compile Include="Models\DataModel\Objects\ConnectionSharing.cs" />
+    <Compile Include="Models\DataModel\Objects\Gateway.cs" />
+    <Compile Include="Models\DataModel\Objects\ModelConnection.cs" />
     <Compile Include="Models\DataModel\Objects\ModelRefreshQueue.cs" />
     <Compile Include="Models\DataModel\Objects\ModelSharing.cs" />
+    <Compile Include="Models\DataModel\Objects\QueryPartition.cs" />
+    <Compile Include="Models\DataModel\Objects\CalculatedPartition.cs" />
     <Compile Include="Models\DataModel\Objects\Role.cs" />
     <Compile Include="Models\DataModel\Objects\RoleTablePermission.cs" />
     <Compile Include="Models\DataModel\Objects\UserFavoriteModel.cs" />
@@ -440,10 +462,12 @@
     <Compile Include="Models\DataModel\Objects\Table.cs" />
     <Compile Include="Models\DataModel\Enums\TableType.cs" />
     <Compile Include="Models\DataModel\TableQueryModel.cs" />
+    <Compile Include="Models\Discover\CatalogDiscoverModel.cs" />
     <Compile Include="Models\Discover\CatalogDiscoverResult.cs" />
     <Compile Include="Models\Discover\DataDiscoverModel.cs" />
     <Compile Include="Models\Discover\ColumnDiscoverModel.cs" />
     <Compile Include="Models\Discover\ColumnDiscoverResult.cs" />
+    <Compile Include="Models\Discover\DataProvider.cs" />
     <Compile Include="Models\Discover\RelationshipDiscoverModel.cs" />
     <Compile Include="Models\Discover\ModelDiscoverRestriction.cs" />
     <Compile Include="Models\Discover\RelationshipDiscoverResult.cs" />
@@ -485,6 +509,7 @@
     <Compile Include="Services\IdentityManagerProxyHandler.cs" />
     <Compile Include="Services\ListExtension.cs" />
     <Compile Include="Services\ReportingService.cs" />
+    <Compile Include="Services\SqlServerDiscoverService.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -574,6 +599,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\DataModelContext\201709210940115_UpdateDataModel13.resx">
       <DependentUpon>201709210940115_UpdateDataModel13.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201709280454415_UpdateDataModel14.resx">
+      <DependentUpon>201709280454415_UpdateDataModel14.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201709280904032_UpdateDataModel15.resx">
+      <DependentUpon>201709280904032_UpdateDataModel15.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201709290429431_UpdateDataModel16.resx">
+      <DependentUpon>201709290429431_UpdateDataModel16.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201709291011511_UpdateDataModel17.resx">
+      <DependentUpon>201709291011511_UpdateDataModel17.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201702080147015_InitReporting.resx">
       <DependentUpon>201702080147015_InitReporting.cs</DependentUpon>

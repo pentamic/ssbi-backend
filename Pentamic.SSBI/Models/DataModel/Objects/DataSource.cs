@@ -14,7 +14,7 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public string Description { get; set; }
         public string ConnectionString { get; set; }
 
-        public List<Partition> Partitions { get; set; }
+        public List<QueryPartition> Partitions { get; set; }
         public Model Model { get; set; }
         public Connection Connection { get; set; }
 

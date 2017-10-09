@@ -1,6 +1,8 @@
 ﻿using Pentamic.SSBI.Models.DataModel.Objects;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Linq;
+using Pentamic.SSBI.Models.DataModel.Connections;
 
 namespace Pentamic.SSBI.Models.DataModel
 {
@@ -13,10 +15,19 @@ namespace Pentamic.SSBI.Models.DataModel
         public DbSet<Model> Models { get; set; }
         public DbSet<DataSource> DataSources { get; set; }
         public DbSet<Table> Tables { get; set; }
+
         public DbSet<Column> Columns { get; set; }
+        public DbSet<DataColumn> DataColumns { get; set; }
+        public DbSet<CalculatedColumn> CalculatedColumns { get; set; }
+        public DbSet<CalculatedTableColumn> CalculatedTableColumns { get; set; }
+
         public DbSet<Relationship> Relationships { get; set; }
         public DbSet<Measure> Measures { get; set; }
+
         public DbSet<Partition> Partitions { get; set; }
+        public DbSet<QueryPartition> QueryPartitions { get; set; }
+        public DbSet<CalculatedPartition> CalculatedPartitions { get; set; }
+
         public DbSet<Perspective> Perspectives { get; set; }
         public DbSet<PerspectiveColumn> PerspectiveColumns { get; set; }
         public DbSet<Hierarchy> Hierarchies { get; set; }
@@ -28,6 +39,11 @@ namespace Pentamic.SSBI.Models.DataModel
         public DbSet<UserModelActivity> UserModelActivities { get; set; }
         public DbSet<UserFavoriteModel> UserFavoriteModels { get; set; }
         public DbSet<ModelRefreshQueue> ModelRefreshQueues { get; set; }
+
+        public DbSet<Connection> Connections { get; set; }
+        public DbSet<SqlServerConnection> SqlServerConnections { get; set; }
+        public DbSet<ExcelConnection> ExcelConnections { get; set; }
+        public DbSet<ModelConnection> ModelConnections { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

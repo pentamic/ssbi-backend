@@ -16,132 +16,71 @@ using AC = Microsoft.AnalysisServices.AdomdClient;
 using System.Data.SqlClient;
 using System.Web;
 using AN = Microsoft.AnalysisServices;
-using System.Diagnostics;
-using Newtonsoft.Json;
-using System.ComponentModel;
-using System.Data;
 using Pentamic.SSBI.Models;
 using System.Security.Claims;
 using Hangfire;
+using Pentamic.SSBI.Models.DataModel.Connections;
 
 namespace Pentamic.SSBI.Services
 {
     public class DataModelService
     {
-        private EFContextProvider<DataModelContext> _contextProvider;
-        private string _asConnectionString = System.Configuration.ConfigurationManager
+        private readonly EFContextProvider<DataModelContext> _contextProvider;
+        private readonly string _asConnectionString = System.Configuration.ConfigurationManager
                 .ConnectionStrings["AnalysisServiceConnection"]
                 .ConnectionString;
 
-        private List<RenameRequest> renameRequests;
+        private List<RenameRequest> _renameRequests;
 
-        private string _userId = null;
-        private string _userName = null;
+        private string _userId;
+        private string _userName;
 
         private string UserId
         {
             get
             {
-                if (_userId == null)
-                {
-                    _userId = (HttpContext.Current.User.Identity as ClaimsIdentity).Claims
-                    .First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
-                    .Value;
-                }
-                return _userId;
+                return _userId ?? (_userId = (HttpContext.Current.User.Identity as ClaimsIdentity)?.Claims
+                           .First(x => x.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
+                           .Value);
             }
         }
 
-        private string UserName
-        {
-            get
-            {
-                if (_userName == null)
-                {
-                    _userName = HttpContext.Current.User.Identity.Name;
-                }
-                return _userName;
-            }
-        }
+        private string UserName => _userName ?? (_userName = HttpContext.Current.User.Identity.Name);
 
         public DataModelService()
         {
             _contextProvider = new EFContextProvider<DataModelContext>();
         }
 
-        private DataModelContext Context
-        {
-            get
-            {
-                return _contextProvider.Context;
-            }
-        }
+        private DataModelContext Context => _contextProvider.Context;
 
-        public string Metadata
-        {
-            get { return _contextProvider.Metadata(); }
-        }
+        public string Metadata => _contextProvider.Metadata();
 
         public IQueryable<Model> Models
         {
             get
             {
                 return Context.Models.Where(x => x.CreatedBy == UserId)
-                    .Concat(Context.ModelSharings.Where(x => x.UserId == UserId).Select(x => x.Model)); ;
+                    .Concat(Context.ModelSharings.Where(x => x.UserId == UserId).Select(x => x.Model));
             }
         }
-        public IQueryable<Role> Roles
-        {
-            get { return Context.Roles; }
-        }
-        public IQueryable<DataSource> DataSources
-        {
-            get { return Context.DataSources; }
-        }
-        public IQueryable<Table> Tables
-        {
-            get { return Context.Tables; }
-        }
-        public IQueryable<Column> Columns
-        {
-            get { return Context.Columns; }
-        }
-        public IQueryable<Partition> Partitions
-        {
-            get { return Context.Partitions; }
-        }
-        public IQueryable<Measure> Measures
-        {
-            get { return Context.Measures; }
-        }
-        public IQueryable<Relationship> Relationships
-        {
-            get { return Context.Relationships; }
-        }
-        public IQueryable<Perspective> Perspectives
-        {
-            get { return Context.Perspectives; }
-        }
-        public IQueryable<Hierarchy> Hierarchies
-        {
-            get { return Context.Hierarchies; }
-        }
-        public IQueryable<Level> Levels
-        {
-            get { return Context.Levels; }
-        }
-        public IQueryable<SourceFile> SourceFiles
-        {
-            get { return Context.SourceFiles; }
-        }
-        public IQueryable<RoleTablePermission> RoleTablePermissions
-        {
-            get { return Context.RoleTablePermissions; }
-        }
-        public IQueryable<ModelSharing> ModelSharings
-        {
-            get { return Context.ModelSharings; }
-        }
+        public IQueryable<Role> Roles => Context.Roles;
+        public IQueryable<DataSource> DataSources => Context.DataSources;
+        public IQueryable<ModelConnection> ModelConnections => Context.ModelConnections;
+        public IQueryable<Connection> Connections => Context.Connections;
+        public IQueryable<SqlServerConnection> SqlServerConnections => Context.SqlServerConnections;
+        public IQueryable<ExcelConnection> ExcelConnections => Context.ExcelConnections;
+        public IQueryable<Table> Tables => Context.Tables;
+        public IQueryable<Column> Columns => Context.Columns;
+        public IQueryable<Partition> Partitions => Context.Partitions;
+        public IQueryable<Measure> Measures => Context.Measures;
+        public IQueryable<Relationship> Relationships => Context.Relationships;
+        public IQueryable<Perspective> Perspectives => Context.Perspectives;
+        public IQueryable<Hierarchy> Hierarchies => Context.Hierarchies;
+        public IQueryable<Level> Levels => Context.Levels;
+        public IQueryable<SourceFile> SourceFiles => Context.SourceFiles;
+        public IQueryable<RoleTablePermission> RoleTablePermissions => Context.RoleTablePermissions;
+        public IQueryable<ModelSharing> ModelSharings => Context.ModelSharings;
         public IQueryable<UserFavoriteModel> UserFavoriteModels
         {
             get { return Context.UserFavoriteModels.Where(x => x.UserId == UserId); }
@@ -150,7 +89,6 @@ namespace Pentamic.SSBI.Services
         {
             get { return Context.UserModelActivities.Where(x => x.UserId == UserId); }
         }
-
         public IQueryable<UserModelActivity> GetUserRecentModels()
         {
             return Context.UserModelActivities
@@ -558,10 +496,13 @@ namespace Pentamic.SSBI.Services
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
-                var database = server.Databases[tb.Model.DatabaseName];
-                var table = database.Model.Tables[tb.Name];
-                table.RequestRefresh(AS.RefreshType.Full);
-                database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
+                if (tb != null)
+                {
+                    var database = server.Databases[tb.Model.DatabaseName];
+                    var table = database.Model.Tables[tb.Name];
+                    table.RequestRefresh(AS.RefreshType.Full);
+                    database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
+                }
             }
         }
 
@@ -570,6 +511,10 @@ namespace Pentamic.SSBI.Services
             var pa = Context.Partitions.Where(x => x.Id == partitionId)
                 .Include(x => x.Table.Model)
                 .FirstOrDefault();
+            if (pa == null)
+            {
+                return;
+            }
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
@@ -678,8 +623,9 @@ namespace Pentamic.SSBI.Services
 
                 //Data Sources
                 var dataSources = database.Model.DataSources;
-                foreach (AS.ProviderDataSource ds in dataSources)
+                foreach (var dataSource1 in dataSources)
                 {
+                    var ds = (AS.ProviderDataSource)dataSource1;
                     ds.ImpersonationMode = AS.ImpersonationMode.ImpersonateServiceAccount;
                     var conStrBuilder = new OleDbConnectionStringBuilder(ds.ConnectionString);
                     var dataSource = new DataSource
@@ -687,39 +633,10 @@ namespace Pentamic.SSBI.Services
                         Name = ds.Name,
                         Description = ds.Description,
                         OriginalName = ds.Name,
-                        ConnectionString = ds.ConnectionString,
-                        Source = conStrBuilder.DataSource
+                        ConnectionString = ds.ConnectionString
                     };
                     conStrBuilder.TryGetValue("Integrated Security", out object val);
-                    if (val != null)
-                    {
-                        if (val is bool)
-                        {
-                            dataSource.IntegratedSecurity = (bool)val;
-                        }
-                        if (val is string)
-                        {
-                            if ((string)val == "SSPI" || (string)val == "true")
-                            {
-                                dataSource.IntegratedSecurity = true;
-                            }
-                        }
-                    }
                     conStrBuilder.TryGetValue("Initial Catalog", out val);
-                    if (val != null)
-                    {
-                        dataSource.Catalog = (string)val;
-                    }
-                    conStrBuilder.TryGetValue("User ID", out val);
-                    if (val != null)
-                    {
-                        dataSource.User = (string)val;
-                    }
-                    conStrBuilder.TryGetValue("Password", out val);
-                    if (val != null)
-                    {
-                        dataSource.Password = (string)val;
-                    }
                     mo.DataSources.Add(dataSource);
                 }
 
@@ -740,28 +657,24 @@ namespace Pentamic.SSBI.Services
 
                     foreach (AS.Partition pa in tb.Partitions)
                     {
-                        if (pa.Source is AS.CalculatedPartitionSource)
+                        if (pa.Source is AS.CalculatedPartitionSource source1)
                         {
-                            var source = pa.Source as AS.CalculatedPartitionSource;
-                            table.Partitions.Add(new Partition
+                            table.Partitions.Add(new CalculatedPartition
                             {
                                 Name = pa.Name,
                                 OriginalName = pa.Name,
                                 Description = pa.Description,
-                                Query = source.Expression,
-                                SourceType = PartitionSourceType.Calculated
+                                Expression = source1.Expression
                             });
                         }
-                        else if (pa.Source is AS.QueryPartitionSource)
+                        else if (pa.Source is AS.QueryPartitionSource source)
                         {
-                            var source = pa.Source as AS.QueryPartitionSource;
-                            table.Partitions.Add(new Partition
+                            table.Partitions.Add(new QueryPartition
                             {
                                 Name = pa.Name,
                                 OriginalName = pa.Name,
                                 Description = pa.Description,
-                                Query = source.Query,
-                                SourceType = PartitionSourceType.Query
+                                Query = source.Query
                             });
                         }
                     }
@@ -773,7 +686,7 @@ namespace Pentamic.SSBI.Services
                         {
                             continue;
                         }
-                        table.Columns.Add(new Column
+                        table.Columns.Add(new DataColumn
                         {
                             Name = co.Name,
                             OriginalName = co.Name,
@@ -799,8 +712,9 @@ namespace Pentamic.SSBI.Services
 
                 //Relationships
                 var relationships = database.Model.Relationships;
-                foreach (AS.SingleColumnRelationship re in relationships)
+                foreach (var relationship1 in relationships)
                 {
+                    var re = (AS.SingleColumnRelationship)relationship1;
                     var relationship = new Relationship
                     {
                         Name = re.Name,
@@ -865,8 +779,9 @@ namespace Pentamic.SSBI.Services
 
                 //Data Sources
                 var dataSources = database.Model.DataSources;
-                foreach (AS.ProviderDataSource ds in dataSources)
+                foreach (var dataSource1 in dataSources)
                 {
+                    var ds = (AS.ProviderDataSource)dataSource1;
                     ds.ImpersonationMode = AS.ImpersonationMode.ImpersonateServiceAccount;
                     var conStrBuilder = new OleDbConnectionStringBuilder(ds.ConnectionString);
                     var dataSource = new DataSource
@@ -874,39 +789,8 @@ namespace Pentamic.SSBI.Services
                         Name = ds.Name,
                         Description = ds.Description,
                         OriginalName = ds.Name,
-                        ConnectionString = ds.ConnectionString,
-                        Source = conStrBuilder.DataSource
+                        ConnectionString = ds.ConnectionString
                     };
-                    conStrBuilder.TryGetValue("Integrated Security", out object val);
-                    if (val != null)
-                    {
-                        if (val is bool)
-                        {
-                            dataSource.IntegratedSecurity = (bool)val;
-                        }
-                        if (val is string)
-                        {
-                            if ((string)val == "SSPI" || (string)val == "true")
-                            {
-                                dataSource.IntegratedSecurity = true;
-                            }
-                        }
-                    }
-                    conStrBuilder.TryGetValue("Initial Catalog", out val);
-                    if (val != null)
-                    {
-                        dataSource.Catalog = (string)val;
-                    }
-                    conStrBuilder.TryGetValue("User ID", out val);
-                    if (val != null)
-                    {
-                        dataSource.User = (string)val;
-                    }
-                    conStrBuilder.TryGetValue("Password", out val);
-                    if (val != null)
-                    {
-                        dataSource.Password = (string)val;
-                    }
                     mo.DataSources.Add(dataSource);
                 }
 
@@ -927,28 +811,24 @@ namespace Pentamic.SSBI.Services
 
                     foreach (AS.Partition pa in tb.Partitions)
                     {
-                        if (pa.Source is AS.CalculatedPartitionSource)
+                        if (pa.Source is AS.CalculatedPartitionSource source1)
                         {
-                            var source = pa.Source as AS.CalculatedPartitionSource;
-                            table.Partitions.Add(new Partition
+                            table.Partitions.Add(new CalculatedPartition
                             {
                                 Name = pa.Name,
                                 OriginalName = pa.Name,
                                 Description = pa.Description,
-                                Query = source.Expression,
-                                SourceType = PartitionSourceType.Calculated
+                                Expression = source1.Expression
                             });
                         }
-                        else if (pa.Source is AS.QueryPartitionSource)
+                        else if (pa.Source is AS.QueryPartitionSource source)
                         {
-                            var source = pa.Source as AS.QueryPartitionSource;
-                            table.Partitions.Add(new Partition
+                            table.Partitions.Add(new QueryPartition
                             {
                                 Name = pa.Name,
                                 OriginalName = pa.Name,
                                 Description = pa.Description,
-                                Query = source.Query,
-                                SourceType = PartitionSourceType.Query
+                                Query = source.Query
                             });
                         }
                     }
@@ -960,7 +840,7 @@ namespace Pentamic.SSBI.Services
                         {
                             continue;
                         }
-                        table.Columns.Add(new Column
+                        table.Columns.Add(new DataColumn
                         {
                             Name = co.Name,
                             OriginalName = co.Name,
@@ -986,8 +866,9 @@ namespace Pentamic.SSBI.Services
 
                 //Relationships
                 var relationships = database.Model.Relationships;
-                foreach (AS.SingleColumnRelationship re in relationships)
+                foreach (var relationship1 in relationships)
                 {
+                    var re = (AS.SingleColumnRelationship)relationship1;
                     var relationship = new Relationship
                     {
                         Name = re.Name,
@@ -1025,7 +906,7 @@ namespace Pentamic.SSBI.Services
 
         public SaveResult SaveChanges(JObject saveBundle)
         {
-            renameRequests = new List<RenameRequest>();
+            _renameRequests = new List<RenameRequest>();
             var txSettings = new TransactionSettings { TransactionType = TransactionType.TransactionScope };
             _contextProvider.BeforeSaveEntityDelegate += BeforeSaveEntity;
             _contextProvider.BeforeSaveEntitiesDelegate += BeforeSaveEntities;
@@ -1035,22 +916,19 @@ namespace Pentamic.SSBI.Services
 
         protected bool BeforeSaveEntity(EntityInfo info)
         {
-            if (info.Entity is IAuditable)
+            if (info.Entity is IAuditable entity1)
             {
-                var entity = info.Entity as IAuditable;
                 switch (info.EntityState)
                 {
                     case Breeze.ContextProvider.EntityState.Added:
-                        entity.CreatedAt = DateTimeOffset.Now;
-                        entity.CreatedBy = UserId;
-                        entity.ModifiedAt = DateTimeOffset.Now;
-                        entity.ModifiedBy = UserId;
+                        entity1.CreatedAt = DateTimeOffset.Now;
+                        entity1.CreatedBy = UserId;
+                        entity1.ModifiedAt = DateTimeOffset.Now;
+                        entity1.ModifiedBy = UserId;
                         break;
                     case Breeze.ContextProvider.EntityState.Modified:
-                        entity.ModifiedAt = DateTimeOffset.Now;
-                        entity.ModifiedBy = UserId;
-                        break;
-                    default:
+                        entity1.ModifiedAt = DateTimeOffset.Now;
+                        entity1.ModifiedBy = UserId;
                         break;
                 }
             }
@@ -1074,7 +952,7 @@ namespace Pentamic.SSBI.Services
                     case Breeze.ContextProvider.EntityState.Modified:
                         if (entity.OriginalName != entity.Name)
                         {
-                            renameRequests.Add(new RenameRequest
+                            _renameRequests.Add(new RenameRequest
                             {
                                 Id = entity.Id,
                                 Name = entity.Name,
@@ -1101,8 +979,6 @@ namespace Pentamic.SSBI.Services
                     case Breeze.ContextProvider.EntityState.Modified:
                         entity.SharedAt = DateTimeOffset.Now;
                         break;
-                    default:
-                        break;
                 }
             }
             if (info.Entity is UserFavoriteModel && info.EntityState == Breeze.ContextProvider.EntityState.Added)
@@ -1121,8 +997,7 @@ namespace Pentamic.SSBI.Services
 
         protected Dictionary<Type, List<EntityInfo>> BeforeSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap)
         {
-            List<EntityInfo> eis;
-            if (saveMap.TryGetValue(typeof(DataSource), out eis))
+            if (saveMap.TryGetValue(typeof(DataSource), out var eis))
             {
                 var names = eis.Where(x => x.EntityState == Breeze.ContextProvider.EntityState.Added).Select(x => x.Entity as DataSource)
                     .GroupBy(x => x.ModelId).Select(x => new
@@ -1209,8 +1084,7 @@ namespace Pentamic.SSBI.Services
         protected void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings)
         {
             ProcessRenameRequests();
-            List<EntityInfo> eis;
-            if (saveMap.TryGetValue(typeof(Model), out eis))
+            if (saveMap.TryGetValue(typeof(Model), out var eis))
             {
                 foreach (var ei in eis)
                 {
@@ -1363,67 +1237,63 @@ namespace Pentamic.SSBI.Services
             }
         }
 
-        public string GetDataSourceConnectionString(DataSource ds)
+        public string GetDataSourceConnectionString(Connection connection)
         {
-            string cs;
-            switch (ds.Type)
+            string cs = null;
+            switch (connection)
             {
-                case DataSourceType.SqlServer:
-                    if (ds.IntegratedSecurity)
-                    {
-                        cs = $"Provider=SQLNCLI11;Data Source={ds.Source};Initial Catalog={ds.Catalog};Integrated Security=SSPI;Persist Security Info=false";
-                    }
-                    else
-                    {
-                        cs = $"Provider=SQLNCLI11;Data Source={ds.Source};Initial Catalog={ds.Catalog};User ID={ds.User};Password={ds.Password};Persist Security Info=true";
-                    }
+                case SqlServerConnection sqlCon:
+                    cs = sqlCon.IntegratedSecurity ? $"Provider=SQLNCLI11;Data Source={sqlCon.Server};Initial Catalog={sqlCon.Database};Integrated Security=SSPI;Persist Security Info=false" :
+                        $"Provider=SQLNCLI11;Data Source={sqlCon.Server};Initial Catalog={sqlCon.Database};User ID={sqlCon.User};Password={sqlCon.Password};Persist Security Info=true";
                     break;
-                case DataSourceType.Excel:
-                    if (ds.SourceFileId != null && ds.SourceFile == null)
+                case ExcelConnection excelCon:
+                    if (excelCon.SourceFile == null)
                     {
-                        ds.SourceFile = Context.SourceFiles.Find(ds.SourceFileId);
+                        excelCon.SourceFile = Context.SourceFiles.Find(excelCon.SourceFileId);
                     }
                     var basePath = System.Configuration.ConfigurationManager.AppSettings["UploadBasePath"];
                     if (string.IsNullOrEmpty(basePath))
                     {
                         basePath = HttpContext.Current.Server.MapPath("~/Uploads");
                     }
-                    var builder = new OleDbConnectionStringBuilder()
+                    if (excelCon.SourceFile != null)
                     {
-                        Provider = "Microsoft.ACE.OLEDB.12.0",
-                        DataSource = Path.Combine(basePath, ds.SourceFile.FilePath),
-                        PersistSecurityInfo = false
-                    };
-                    builder["Mode"] = "Read";
-                    var extension = Path.GetExtension(ds.SourceFile.FileName).ToUpper();
-                    switch (extension)
-                    {
-                        case ".XLS":
-                            builder["Extended Properties"] = "Excel 8.0;HDR=Yes";
-                            break;
-                        case ".XLSB":
-                            builder["Extended Properties"] = "Excel 12.0;HDR=Yes";
-                            break;
-                        case ".XLSX":
-                            builder["Extended Properties"] = "Excel 12.0 Xml;HDR=Yes";
-                            break;
-                        case ".XLSM":
-                            builder["Extended Properties"] = "Excel 12.0 Macro;HDR=Yes";
-                            break;
-                        default:
-                            builder["Extended Properties"] = "Excel 12.0;HDR=Yes";
-                            break;
+                        var builder = new OleDbConnectionStringBuilder
+                        {
+                            Provider = "Microsoft.ACE.OLEDB.12.0",
+                            DataSource = Path.Combine(basePath, excelCon.SourceFile.FilePath),
+                            PersistSecurityInfo = false,
+                            ["Mode"] = "Read"
+                        };
+                        var extension = Path.GetExtension(excelCon.SourceFile.FileName)?.ToUpper();
+                        switch (extension)
+                        {
+                            case ".XLS":
+                                builder["Extended Properties"] = "Excel 8.0;HDR=Yes";
+                                break;
+                            case ".XLSB":
+                                builder["Extended Properties"] = "Excel 12.0;HDR=Yes";
+                                break;
+                            case ".XLSX":
+                                builder["Extended Properties"] = "Excel 12.0 Xml;HDR=Yes";
+                                break;
+                            case ".XLSM":
+                                builder["Extended Properties"] = "Excel 12.0 Macro;HDR=Yes";
+                                break;
+                            default:
+                                builder["Extended Properties"] = "Excel 12.0;HDR=Yes";
+                                break;
+                        }
+                        cs = builder.ToString();
                     }
-                    cs = builder.ToString();
                     break;
-                default: return null;
             }
             return cs;
         }
 
         public void ProcessRenameRequests()
         {
-            foreach (var req in renameRequests)
+            foreach (var req in _renameRequests)
             {
                 if (req.Type == typeof(Model))
                 {
@@ -1524,7 +1394,7 @@ namespace Pentamic.SSBI.Services
         public void RenameTable(int id, string oldName, string newName)
         {
             var model = Context.Tables.Where(x => x.Id == id).Select(x => x.Model).FirstOrDefault();
-            if (model == null || model.DatabaseName == null)
+            if (model?.DatabaseName == null)
             {
                 throw new ArgumentException("Model not found");
             }
@@ -1601,11 +1471,11 @@ namespace Pentamic.SSBI.Services
         {
             var info = Context.Columns.Where(x => x.Id == id).Select(x => new
             {
-                ModelId = x.Table.ModelId,
-                DatabaseName = x.Table.Model.DatabaseName,
+                x.Table.ModelId,
+                x.Table.Model.DatabaseName,
                 TableName = x.Table.Name
             }).FirstOrDefault();
-            if (info.DatabaseName == null)
+            if (info?.DatabaseName == null)
             {
                 throw new ArgumentException("Model not found");
             }
@@ -1652,10 +1522,10 @@ namespace Pentamic.SSBI.Services
         {
             var info = Context.Measures.Where(x => x.Id == id).Select(x => new
             {
-                DatabaseName = x.Table.Model.DatabaseName,
+                x.Table.Model.DatabaseName,
                 TableName = x.Table.Name
             }).FirstOrDefault();
-            if (info.DatabaseName == null)
+            if (info?.DatabaseName == null)
             {
                 throw new ArgumentException("Model not found");
             }
@@ -1696,10 +1566,10 @@ namespace Pentamic.SSBI.Services
         {
             var info = Context.Partitions.Where(x => x.Id == id).Select(x => new
             {
-                DatabaseName = x.Table.Model.DatabaseName,
+                x.Table.Model.DatabaseName,
                 TableName = x.Table.Name
             }).FirstOrDefault();
-            if (info.DatabaseName == null)
+            if (info?.DatabaseName == null)
             {
                 throw new ArgumentException("Model not found");
             }
@@ -1743,18 +1613,18 @@ namespace Pentamic.SSBI.Services
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = new AS.Database()
+                    var database = new AS.Database
                     {
                         Name = model.DatabaseName,
                         ID = model.DatabaseName,
                         CompatibilityLevel = 1200,
                         StorageEngineUsed = AN.StorageEngineUsed.TabularMetadata,
-                    };
-                    database.Model = new AS.Model
-                    {
-                        Name = model.Name,
-                        Description = model.Description,
-                        DefaultMode = model.DefaultMode.ToModeType()
+                        Model = new AS.Model
+                        {
+                            Name = model.Name,
+                            Description = model.Description,
+                            DefaultMode = model.DefaultMode.ToModeType()
+                        },
                     };
                     server.Databases.Add(database);
                     database.Update(AN.UpdateOptions.ExpandFull);
@@ -1807,10 +1677,7 @@ namespace Pentamic.SSBI.Services
                     //{
                     //    throw new ArgumentException("Database not found");
                     //}
-                    if (database != null)
-                    {
-                        database.Drop();
-                    }
+                    database?.Drop();
                 }
             }
             catch (AN.OperationException ex)
@@ -1839,7 +1706,7 @@ namespace Pentamic.SSBI.Services
                     {
                         Name = dataSource.Name,
                         Description = dataSource.Description,
-                        ConnectionString = GetDataSourceConnectionString(dataSource),
+                        ConnectionString = GetDataSourceConnectionString(dataSource.Connection),
                         ImpersonationMode = AS.ImpersonationMode.ImpersonateServiceAccount
                     });
                     database.Update(AN.UpdateOptions.ExpandFull);
@@ -1860,7 +1727,7 @@ namespace Pentamic.SSBI.Services
             {
                 Name = dataSource.Name,
                 Description = dataSource.Description,
-                ConnectionString = GetDataSourceConnectionString(dataSource),
+                ConnectionString = GetDataSourceConnectionString(dataSource.Connection),
                 ImpersonationMode = AS.ImpersonationMode.ImpersonateServiceAccount
             });
         }
@@ -1878,14 +1745,13 @@ namespace Pentamic.SSBI.Services
                     {
                         throw new ArgumentException("Database not found");
                     }
-                    var ds = database.Model.DataSources.Find(dataSource.Name) as AS.ProviderDataSource;
-                    if (ds == null)
+                    if (!(database.Model.DataSources.Find(dataSource.Name) is AS.ProviderDataSource ds))
                     {
                         throw new ArgumentException("Data Source not found");
                     }
                     ds.Description = dataSource.Description;
                     ds.ImpersonationMode = AS.ImpersonationMode.ImpersonateServiceAccount;
-                    ds.ConnectionString = GetDataSourceConnectionString(dataSource);
+                    ds.ConnectionString = GetDataSourceConnectionString(dataSource.Connection);
                     database.Update(AN.UpdateOptions.ExpandFull);
                 }
             }
@@ -1949,7 +1815,7 @@ namespace Pentamic.SSBI.Services
                     };
                     if (table.Columns != null)
                     {
-                        foreach (var col in table.Columns)
+                        foreach (DataColumn col in table.Columns)
                         {
                             tb.Columns.Add(new AS.DataColumn
                             {
@@ -1966,24 +1832,33 @@ namespace Pentamic.SSBI.Services
                     {
                         foreach (var par in table.Partitions)
                         {
-                            DataSource ds;
-                            if (par.DataSource == null)
+                            if (par is QueryPartition par1)
                             {
-                                ds = Context.DataSources.Find(par.DataSourceId);
-                            }
-                            else
-                            {
-                                ds = par.DataSource;
-                            }
-                            tb.Partitions.Add(new AS.Partition
-                            {
-                                Name = par.Name,
-                                Source = new AS.QueryPartitionSource()
+                                var ds = par1.DataSource ?? Context.DataSources.Find(par1.DataSourceId);
+                                if (ds != null)
                                 {
-                                    DataSource = database.Model.DataSources[ds.Name],
-                                    Query = par.Query
+                                    tb.Partitions.Add(new AS.Partition
+                                    {
+                                        Name = par.Name,
+                                        Source = new AS.QueryPartitionSource()
+                                        {
+                                            DataSource = database.Model.DataSources[ds.Name],
+                                            Query = par1.Query
+                                        }
+                                    });
                                 }
-                            });
+                            }
+                            if (par is CalculatedPartition par2)
+                            {
+                                tb.Partitions.Add(new AS.Partition
+                                {
+                                    Name = par.Name,
+                                    Source = new AS.CalculatedPartitionSource()
+                                    {
+                                        Expression = par2.Expression
+                                    }
+                                });
+                            }
                         }
                     }
                     if (table.Measures != null)
@@ -2035,8 +1910,9 @@ namespace Pentamic.SSBI.Services
                         };
                         if (table.Columns != null)
                         {
-                            foreach (var col in table.Columns)
+                            foreach (var column in table.Columns)
                             {
+                                var col = (DataColumn)column;
                                 tb.Columns.Add(new AS.DataColumn
                                 {
                                     Name = col.Name,
@@ -2052,24 +1928,33 @@ namespace Pentamic.SSBI.Services
                         {
                             foreach (var par in table.Partitions)
                             {
-                                DataSource ds;
-                                if (par.DataSource == null)
+                                if (par is QueryPartition par1)
                                 {
-                                    ds = Context.DataSources.Find(par.DataSourceId);
-                                }
-                                else
-                                {
-                                    ds = par.DataSource;
-                                }
-                                tb.Partitions.Add(new AS.Partition
-                                {
-                                    Name = par.Name,
-                                    Source = new AS.QueryPartitionSource()
+                                    var ds = par1.DataSource ?? Context.DataSources.Find(par1.DataSourceId);
+                                    if (ds != null)
                                     {
-                                        DataSource = database.Model.DataSources[ds.Name],
-                                        Query = par.Query
+                                        tb.Partitions.Add(new AS.Partition
+                                        {
+                                            Name = par.Name,
+                                            Source = new AS.QueryPartitionSource()
+                                            {
+                                                DataSource = database.Model.DataSources[ds.Name],
+                                                Query = par1.Query
+                                            }
+                                        });
                                     }
-                                });
+                                }
+                                if (par is CalculatedPartition par2)
+                                {
+                                    tb.Partitions.Add(new AS.Partition
+                                    {
+                                        Name = par.Name,
+                                        Source = new AS.CalculatedPartitionSource()
+                                        {
+                                            Expression = par2.Expression
+                                        }
+                                    });
+                                }
                             }
                         }
                         if (table.Measures != null)
@@ -2111,8 +1996,9 @@ namespace Pentamic.SSBI.Services
                 };
                 if (table.Columns != null)
                 {
-                    foreach (var col in table.Columns)
+                    foreach (var column in table.Columns)
                     {
+                        var col = (DataColumn)column;
                         tb.Columns.Add(new AS.DataColumn
                         {
                             Name = col.Name,
@@ -2128,24 +2014,33 @@ namespace Pentamic.SSBI.Services
                 {
                     foreach (var par in table.Partitions)
                     {
-                        DataSource ds;
-                        if (par.DataSource == null)
+                        if (par is QueryPartition par1)
                         {
-                            ds = Context.DataSources.Find(par.DataSourceId);
-                        }
-                        else
-                        {
-                            ds = par.DataSource;
-                        }
-                        tb.Partitions.Add(new AS.Partition
-                        {
-                            Name = par.Name,
-                            Source = new AS.QueryPartitionSource()
+                            var ds = par1.DataSource ?? Context.DataSources.Find(par1.DataSourceId);
+                            if (ds != null)
                             {
-                                DataSource = database.Model.DataSources[ds.Name],
-                                Query = par.Query
+                                tb.Partitions.Add(new AS.Partition
+                                {
+                                    Name = par.Name,
+                                    Source = new AS.QueryPartitionSource()
+                                    {
+                                        DataSource = database.Model.DataSources[ds.Name],
+                                        Query = par1.Query
+                                    }
+                                });
                             }
-                        });
+                        }
+                        if (par is CalculatedPartition par2)
+                        {
+                            tb.Partitions.Add(new AS.Partition
+                            {
+                                Name = par.Name,
+                                Source = new AS.CalculatedPartitionSource()
+                                {
+                                    Expression = par2.Expression
+                                }
+                            });
+                        }
                     }
                 }
                 if (table.Measures != null)
@@ -2176,8 +2071,9 @@ namespace Pentamic.SSBI.Services
             };
             if (table.Columns != null)
             {
-                foreach (var col in table.Columns)
+                foreach (var column in table.Columns)
                 {
+                    var col = (DataColumn)column;
                     var c = new AS.DataColumn
                     {
                         Name = col.Name,
@@ -2198,24 +2094,33 @@ namespace Pentamic.SSBI.Services
             {
                 foreach (var par in table.Partitions)
                 {
-                    DataSource ds;
-                    if (par.DataSource == null)
+                    if (par is QueryPartition par1)
                     {
-                        ds = Context.DataSources.Find(par.DataSourceId);
-                    }
-                    else
-                    {
-                        ds = par.DataSource;
-                    }
-                    tb.Partitions.Add(new AS.Partition
-                    {
-                        Name = par.Name,
-                        Source = new AS.QueryPartitionSource()
+                        var ds = par1.DataSource ?? Context.DataSources.Find(par1.DataSourceId);
+                        if (ds != null)
                         {
-                            DataSource = database.Model.DataSources[ds.Name],
-                            Query = par.Query
+                            tb.Partitions.Add(new AS.Partition
+                            {
+                                Name = par.Name,
+                                Source = new AS.QueryPartitionSource()
+                                {
+                                    DataSource = database.Model.DataSources[ds.Name],
+                                    Query = par1.Query
+                                }
+                            });
                         }
-                    });
+                    }
+                    if (par is CalculatedPartition par2)
+                    {
+                        tb.Partitions.Add(new AS.Partition
+                        {
+                            Name = par.Name,
+                            Source = new AS.CalculatedPartitionSource()
+                            {
+                                Expression = par2.Expression
+                            }
+                        });
+                    }
                 }
             }
             if (table.Measures != null)
@@ -2235,6 +2140,37 @@ namespace Pentamic.SSBI.Services
             database.Model.Tables.Add(tb);
             return tb;
         }
+
+        public AS.Table AddCalculatedTable(AS.Database database, int modelId, Table table)
+        {
+            var tb = new AS.Table
+            {
+                Name = table.Name,
+                Description = table.Description,
+            };
+            if (table.Partitions != null)
+            {
+                foreach (var par in table.Partitions)
+                {
+                    if (par is CalculatedPartition par1)
+                    {
+                        tb.Partitions.Add(new AS.Partition
+                        {
+                            Name = par1.Name,
+                            Source = new AS.CalculatedPartitionSource()
+                            {
+
+                                Expression = par1.Expression
+                            }
+                        });
+                    }
+                }
+            }
+
+            database.Model.Tables.Add(tb);
+            return tb;
+        }
+
 
         public void UpdateTable(Table table)
         {
@@ -2301,39 +2237,39 @@ namespace Pentamic.SSBI.Services
 
         public void CreatePartition(Partition partition)
         {
-            var info = Context.Partitions.Where(x => x.Id == partition.Id)
-                .Select(x => new
-                {
-                    DatabaseName = x.Table.Model.DatabaseName,
-                    TableName = x.Name,
-                    DataSourceName = x.DataSource.Name
-                }).FirstOrDefault();
-            if (info == null || info.DatabaseName == null)
+            if (partition is QueryPartition par1)
             {
-                throw new ArgumentException("Model not found");
-            }
-            try
-            {
-                using (var server = new AS.Server())
+                var info = Context.QueryPartitions.Where(x => x.Id == partition.Id)
+               .Select(x => new
+               {
+                   x.Table.Model.DatabaseName,
+                   DataSourceName = x.DataSource.Name,
+                   TableName = x.Name,
+               }).FirstOrDefault();
+                if (info?.DatabaseName == null)
                 {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(info.DatabaseName);
-                    if (database == null)
+                    throw new ArgumentException("Model not found");
+                }
+                try
+                {
+                    using (var server = new AS.Server())
                     {
-                        throw new ArgumentException("Database not found");
-                    }
-                    var tb = database.Model.Tables.Find(info.TableName);
-                    if (tb == null)
-                    {
-                        throw new ArgumentException("Table not found");
-                    }
-                    var pa = new AS.Partition
-                    {
-                        Name = partition.Name,
-                        Description = partition.Description
-                    };
-                    if (partition.SourceType == PartitionSourceType.Query)
-                    {
+                        server.Connect(_asConnectionString);
+                        var database = server.Databases.FindByName(info.DatabaseName);
+                        if (database == null)
+                        {
+                            throw new ArgumentException("Database not found");
+                        }
+                        var tb = database.Model.Tables.Find(info.TableName);
+                        if (tb == null)
+                        {
+                            throw new ArgumentException("Table not found");
+                        }
+                        var pa = new AS.Partition
+                        {
+                            Name = partition.Name,
+                            Description = partition.Description
+                        };
                         var dataSource = database.Model.DataSources[info.DataSourceName];
                         if (dataSource == null)
                         {
@@ -2341,26 +2277,68 @@ namespace Pentamic.SSBI.Services
                         }
                         pa.Source = new AS.QueryPartitionSource
                         {
-                            Query = partition.Query,
+                            Query = par1.Query,
                             DataSource = dataSource
                         };
+                        tb.Partitions.Add(pa);
+                        database.Update(AN.UpdateOptions.ExpandFull);
                     }
-                    if (partition.SourceType == PartitionSourceType.Calculated)
+                }
+                catch (AN.OperationException ex)
+                {
+                    foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
                     {
-                        pa.Source = new AS.CalculatedPartitionSource
-                        {
-                            Expression = partition.Query
-                        };
                     }
-                    database.Update(AN.UpdateOptions.ExpandFull);
+                    throw;
                 }
             }
-            catch (AN.OperationException ex)
+            if (partition is CalculatedPartition par2)
             {
-                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
+                var info = Context.QueryPartitions.Where(x => x.Id == partition.Id)
+                   .Select(x => new
+                   {
+                       x.Table.Model.DatabaseName,
+                       TableName = x.Name,
+                   }).FirstOrDefault();
+                if (info?.DatabaseName == null)
                 {
+                    throw new ArgumentException("Model not found");
                 }
-                throw;
+                try
+                {
+                    using (var server = new AS.Server())
+                    {
+                        server.Connect(_asConnectionString);
+                        var database = server.Databases.FindByName(info.DatabaseName);
+                        if (database == null)
+                        {
+                            throw new ArgumentException("Database not found");
+                        }
+                        var tb = database.Model.Tables.Find(info.TableName);
+                        if (tb == null)
+                        {
+                            throw new ArgumentException("Table not found");
+                        }
+                        var pa = new AS.Partition
+                        {
+                            Name = partition.Name,
+                            Description = partition.Description,
+                            Source = new AS.CalculatedPartitionSource()
+                            {
+                                Expression = par2.Expression
+                            }
+                        };
+                        tb.Partitions.Add(pa);
+                        database.Update(AN.UpdateOptions.ExpandFull);
+                    }
+                }
+                catch (AN.OperationException ex)
+                {
+                    foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
+                    {
+                    }
+                    throw;
+                }
             }
         }
 
@@ -2369,10 +2347,10 @@ namespace Pentamic.SSBI.Services
             var info = Context.Tables.Where(x => x.Id == partition.TableId)
                 .Select(x => new
                 {
-                    DatabaseName = x.Model.DatabaseName,
+                    x.Model.DatabaseName,
                     TableName = x.Name
                 }).FirstOrDefault();
-            if (info == null || info.DatabaseName == null)
+            if (info?.DatabaseName == null)
             {
                 throw new ArgumentException("Model not found");
             }
@@ -2397,15 +2375,18 @@ namespace Pentamic.SSBI.Services
                         throw new ArgumentException("Partition not found");
                     }
                     pa.Description = partition.Description;
-                    if (pa.SourceType == AS.PartitionSourceType.Query)
+                    switch (partition)
                     {
-                        var source = pa.Source as AS.QueryPartitionSource;
-                        source.Query = partition.Query;
-                    }
-                    if (pa.SourceType == AS.PartitionSourceType.Calculated)
-                    {
-                        var source = pa.Source as AS.CalculatedPartitionSource;
-                        source.Expression = partition.Query;
+                        case QueryPartition par1:
+                            {
+                                if (pa.Source is AS.QueryPartitionSource source) source.Query = par1.Query;
+                                break;
+                            }
+                        case CalculatedPartition par2:
+                            {
+                                if (pa.Source is AS.CalculatedPartitionSource source) source.Expression = par2.Expression;
+                                break;
+                            }
                     }
                     database.Update(AN.UpdateOptions.ExpandFull);
                 }
@@ -2446,8 +2427,8 @@ namespace Pentamic.SSBI.Services
                     database.Model.Relationships.Add(new AS.SingleColumnRelationship
                     {
                         Name = relationship.Name,
-                        ToColumn = database.Model.Tables[info.ToTableName].Columns[info.ToColumnName],
-                        FromColumn = database.Model.Tables[info.FromTableName].Columns[info.FromColumnName],
+                        ToColumn = database.Model.Tables[info?.ToTableName].Columns[info?.ToColumnName],
+                        FromColumn = database.Model.Tables[info?.FromTableName].Columns[info?.FromColumnName],
                         FromCardinality = AS.RelationshipEndCardinality.Many,
                         ToCardinality = AS.RelationshipEndCardinality.One
                     });
@@ -2487,13 +2468,12 @@ namespace Pentamic.SSBI.Services
                     {
                         throw new ArgumentException("Database not found");
                     }
-                    var re = database.Model.Relationships.Find(relationship.Name) as AS.SingleColumnRelationship;
-                    if (re == null)
+                    if (!(database.Model.Relationships.Find(relationship.Name) is AS.SingleColumnRelationship re))
                     {
                         throw new ArgumentException("Relationship not found");
                     }
-                    re.ToColumn = database.Model.Tables[info.ToTableName].Columns[info.ToColumnName];
-                    re.FromColumn = database.Model.Tables[info.FromTableName].Columns[info.FromColumnName];
+                    re.ToColumn = database.Model.Tables[info?.ToTableName].Columns[info?.ToColumnName];
+                    re.FromColumn = database.Model.Tables[info?.FromTableName].Columns[info?.FromColumnName];
                     database.Model.Relationships.Remove(re);
                     database.Update(AN.UpdateOptions.ExpandFull);
                 }
@@ -2547,11 +2527,11 @@ namespace Pentamic.SSBI.Services
         {
             var info = Context.Columns.Where(x => x.Id == column.Id).Select(x => new
             {
-                DatabaseName = x.Table.Model.DatabaseName,
+                x.Table.Model.DatabaseName,
                 TableName = x.Table.Name,
-                Name = x.Name
+                x.Name
             }).FirstOrDefault();
-            if (info == null || info.DatabaseName == null)
+            if (info?.DatabaseName == null)
             {
                 throw new ArgumentException("Model not found");
             }
@@ -2570,8 +2550,7 @@ namespace Pentamic.SSBI.Services
                     {
                         throw new ArgumentException("Table not found");
                     }
-                    var co = tb.Columns.Find(info.Name) as AS.DataColumn;
-                    if (co == null)
+                    if (!(tb.Columns.Find(info.Name) is AS.DataColumn co))
                     {
                         throw new ArgumentException("Column not found");
                     }
@@ -2580,7 +2559,10 @@ namespace Pentamic.SSBI.Services
                     co.DisplayFolder = column.DisplayFolder;
                     co.FormatString = column.FormatString;
                     co.IsHidden = column.IsHidden;
-                    co.SourceColumn = column.SourceColumn;
+                    if (column is DataColumn col1)
+                    {
+                        co.SourceColumn = col1.SourceColumn;
+                    }
                     database.Update(AN.UpdateOptions.ExpandFull);
                 }
             }
@@ -2597,10 +2579,10 @@ namespace Pentamic.SSBI.Services
         {
             var info = Context.Tables.Where(x => x.Id == column.TableId).Select(x => new
             {
-                DatabaseName = x.Model.DatabaseName,
+                x.Model.DatabaseName,
                 TableName = x.Name
             }).FirstOrDefault();
-            if (info == null || info.DatabaseName == null)
+            if (info?.DatabaseName == null)
             {
                 throw new ArgumentException("Model not found");
             }
@@ -2694,461 +2676,512 @@ namespace Pentamic.SSBI.Services
             return Context.Measures.Any(x => x.TableId == tableId && names.Contains(x.Name));
         }
 
-        public void CreateDateTable(DateTableCreateModel model)
-        {
-            if (Context.Tables.Any(x => x.ModelId == model.ModelId && x.Name == model.TableName))
-            {
-                throw new Exception("Table exist");
-            }
-            var conStr = Context.Database.Connection.ConnectionString;
-            var sourceTable = CreateDateTableSource(model.FromDate, model.ToDate);
-            var dbName = Context.Models.Where(x => x.Id == model.ModelId).Select(x => x.DatabaseName).FirstOrDefault();
-            var table = new Table
-            {
-                Name = model.TableName,
-                ModelId = model.ModelId,
-                SourceTable = sourceTable,
-                SourceSchema = "dbo",
-                OriginalName = model.TableName,
-                Columns = new List<Column>(),
-                Partitions = new List<Partition>()
-            };
-            Context.Tables.Add(table);
+        //public void CreateDateTable(DateTableCreateModel model)
+        //{
+        //    if (Context.Tables.Any(x => x.ModelId == model.ModelId && x.Name == model.TableName))
+        //    {
+        //        throw new Exception("Table exist");
+        //    }
+        //    var conStr = Context.Database.Connection.ConnectionString;
+        //    var sourceTable = CreateDateTableSource(model.FromDate, model.ToDate);
+        //    var dbName = Context.Models.Where(x => x.Id == model.ModelId).Select(x => x.DatabaseName).FirstOrDefault();
+        //    var table = new Table
+        //    {
+        //        Name = model.TableName,
+        //        ModelId = model.ModelId,
+        //        SourceTable = sourceTable,
+        //        SourceSchema = "dbo",
+        //        OriginalName = model.TableName,
+        //        Columns = new List<Column>(),
+        //        Partitions = new List<Partition>()
+        //    };
+        //    Context.Tables.Add(table);
 
-            table.Columns.Add(new Column
-            {
-                Name = "Date",
-                DataType = ColumnDataType.DateTime,
-                SourceColumn = "Date"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "DateKey",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "DateKey"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "DateName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "DateName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "Year",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "Year"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "YearName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "YearName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "Month",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "Month"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "MonthName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "MonthName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "Quarter",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "Quarter"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "QuarterName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "QuarterName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "HalfYear",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "HalfYear"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "HalfYearName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "HalfYearName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "DayOfMonth",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "DayOfMonth"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "DayOfMonthName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "DayOfMonthName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "DayOfWeek",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "DayOfWeek"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "DayOfWeekName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "DayOfWeekName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "MonthOfYear",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "MonthOfYear"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "MonthOfYearName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "MonthOfYearName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "QuarterOfYear",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "QuarterOfYear"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "QuarterOfYearName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "QuarterOfYearName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "HalfYearOfYear",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "HalfYearOfYear"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "HalfYearOfYearName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "HalfYearOfYearName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarDate",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "LunarDate"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarDateName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "LunarDateName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarMonth",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "LunarMonth"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarMonthName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "LunarMonthName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarQuarter",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "LunarQuarter"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarQuarterName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "LunarQuarterName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarYear",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "LunarYear"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarYearName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "LunarYearName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarDayOfWeek",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "LunarDayOfWeek"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarDayOfWeekName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "LunarDayOfWeekName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarDayOfMonth",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "LunarDayOfMonth"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarDayOfMonthName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "LunarDayOfMonthName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarMonthOfYear",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "LunarMonthOfYear"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarMonthOfYearName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "LunarMonthOfYearName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarQuarterOfYear",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "LunarQuarterOfYear"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarQuarterOfYearName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "LunarQuarterOfYearName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "EventName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "EventName"
-            });
-            var dsName = "DS_" + dbName;
-            var ds = Context.DataSources.Where(x => x.ModelId == model.ModelId && x.Name == dsName).FirstOrDefault();
-            var scb = new SqlConnectionStringBuilder(conStr);
-            if (ds == null)
-            {
-                ds = new DataSource
-                {
-                    Name = dsName,
-                    OriginalName = dsName,
-                    ModelId = model.ModelId,
-                    ConnectionString = conStr,
-                    Catalog = scb.InitialCatalog,
-                    IntegratedSecurity = scb.IntegratedSecurity,
-                    Source = scb.DataSource,
-                    User = scb.UserID,
-                    Password = scb.Password,
-                    Type = DataSourceType.SqlServer
-                };
-                Context.DataSources.Add(ds);
-            }
-            table.Partitions.Add(new Partition
-            {
-                Name = "DefaultPartition",
-                Query = $"SELECT * FROM [dbo].[{sourceTable}]",
-                DataSourceId = ds.Id,
-                DataSource = ds
-            });
-            Context.SaveChanges();
-            try
-            {
-                using (var server = new AS.Server())
-                {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(dbName);
-                    if (database == null)
-                    {
-                        throw new ArgumentException("Database not found");
-                    }
-                    var dataSource = database.Model.DataSources.Find(ds.Name);
-                    if (dataSource == null)
-                    {
-                        AddDataSource(database, ds);
-                    }
-                    var tb = AddTable(database, model.ModelId, table);
-                    database.Update(AN.UpdateOptions.ExpandFull);
-                }
-            }
-            catch (AN.OperationException ex)
-            {
-                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
-                {
-                }
-                throw;
-            }
-        }
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "Date",
+        //        DataType = ColumnDataType.DateTime,
+        //        SourceColumn = "Date"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "DateKey",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "DateKey"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "DateName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "DateName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "Year",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "Year"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "YearName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "YearName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "Month",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "Month"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "MonthName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "MonthName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "Quarter",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "Quarter"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "QuarterName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "QuarterName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "HalfYear",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "HalfYear"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "HalfYearName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "HalfYearName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "DayOfMonth",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "DayOfMonth"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "DayOfMonthName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "DayOfMonthName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "DayOfWeek",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "DayOfWeek"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "DayOfWeekName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "DayOfWeekName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "MonthOfYear",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "MonthOfYear"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "MonthOfYearName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "MonthOfYearName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "QuarterOfYear",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "QuarterOfYear"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "QuarterOfYearName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "QuarterOfYearName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "HalfYearOfYear",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "HalfYearOfYear"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "HalfYearOfYearName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "HalfYearOfYearName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "LunarDate",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "LunarDate"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "LunarDateName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "LunarDateName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "LunarMonth",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "LunarMonth"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "LunarMonthName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "LunarMonthName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "LunarQuarter",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "LunarQuarter"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "LunarQuarterName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "LunarQuarterName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "LunarYear",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "LunarYear"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "LunarYearName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "LunarYearName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "LunarDayOfWeek",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "LunarDayOfWeek"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "LunarDayOfWeekName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "LunarDayOfWeekName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "LunarDayOfMonth",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "LunarDayOfMonth"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "LunarDayOfMonthName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "LunarDayOfMonthName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "LunarMonthOfYear",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "LunarMonthOfYear"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "LunarMonthOfYearName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "LunarMonthOfYearName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "LunarQuarterOfYear",
+        //        DataType = ColumnDataType.Int64,
+        //        SourceColumn = "LunarQuarterOfYear"
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "LunarQuarterOfYearName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "LunarQuarterOfYearName",
+        //        SortByColumn = table.Columns.Last()
+        //    });
+        //    table.Columns.Add(new Column
+        //    {
+        //        Name = "EventName",
+        //        DataType = ColumnDataType.String,
+        //        SourceColumn = "EventName"
+        //    });
+        //    var dsName = "DS_" + dbName;
+        //    var ds = Context.DataSources.FirstOrDefault(x => x.ModelId == model.ModelId && x.Name == dsName);
+        //    var scb = new SqlConnectionStringBuilder(conStr);
+        //    if (ds == null)
+        //    {
+        //        ds = new DataSource
+        //        {
+        //            Name = dsName,
+        //            OriginalName = dsName,
+        //            ModelId = model.ModelId,
+        //            ConnectionString = conStr
+        //        };
+        //        Context.DataSources.Add(ds);
+        //    }
+        //    table.Partitions.Add(new Partition
+        //    {
+        //        Name = "DefaultPartition",
+        //        Query = $"SELECT * FROM [dbo].[{sourceTable}]",
+        //        DataSourceId = ds.Id,
+        //        DataSource = ds
+        //    });
+        //    Context.SaveChanges();
+        //    try
+        //    {
+        //        using (var server = new AS.Server())
+        //        {
+        //            server.Connect(_asConnectionString);
+        //            var database = server.Databases.FindByName(dbName);
+        //            if (database == null)
+        //            {
+        //                throw new ArgumentException("Database not found");
+        //            }
+        //            var dataSource = database.Model.DataSources.Find(ds.Name);
+        //            if (dataSource == null)
+        //            {
+        //                AddDataSource(database, ds);
+        //            }
+        //            var tb = AddTable(database, model.ModelId, table);
+        //            database.Update(AN.UpdateOptions.ExpandFull);
+        //        }
+        //    }
+        //    catch (AN.OperationException ex)
+        //    {
+        //        foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
+        //        {
+        //        }
+        //        throw;
+        //    }
+        //}
 
-        public string CreateDateTableSource(DateTime fromDate, DateTime toDate)
+        //public string CreateDateTableSource(DateTime fromDate, DateTime toDate)
+        //{
+        //    var conStr = _contextProvider.Context.Database.Connection.ConnectionString;
+        //    var i = 0;
+        //    var dates = new List<DateData>();
+        //    while (true)
+        //    {
+        //        var currentDate = fromDate.AddDays(i);
+        //        if (currentDate > toDate) { break; }
+        //        var date = new DateData(currentDate);
+        //        dates.Add(date);
+        //        i++;
+        //    }
+        //    var dateTable = dates.ToDataTable();
+        //    var tableName = $"TempDate_{fromDate.ToString("yyyyMMdd")}_{toDate.ToString("yyyyMMdd")}";
+        //    SqlConnection connection;
+        //    var exist = false;
+        //    using (connection = new SqlConnection(conStr))
+        //    {
+        //        var cmd = new SqlCommand($"IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{tableName}') SELECT 1 ELSE SELECT 0", connection);
+        //        connection.Open();
+        //        var res = (int)cmd.ExecuteScalar();
+        //        exist = (res == 1);
+        //        connection.Close();
+        //    }
+        //    if (!exist)
+        //    {
+        //        using (connection = new SqlConnection(conStr))
+        //        {
+        //            var sql = $"CREATE TABLE [dbo].[{tableName}](" +
+        //                        "[DateKey] [int] NOT NULL PRIMARY KEY," +
+        //                        "[Date] [datetime] NOT NULL," +
+        //                        "[DateName] [nvarchar] (64) NOT NULL," +
+        //                        "[Year] [int] NULL," +
+        //                        "[YearName] [nvarchar] (64) NULL," +
+        //                        "[Month] [int] NULL," +
+        //                        "[MonthName] [nvarchar] (64) NULL," +
+        //                        "[Quarter] [int] NULL," +
+        //                        "[QuarterName] [nvarchar] (64) NULL," +
+        //                        "[HalfYear] [int] NULL," +
+        //                        "[HalfYearName] [nvarchar] (64) NULL," +
+        //                        "[DayOfMonth] [int] NULL," +
+        //                        "[DayOfMonthName] [nvarchar] (64) NULL," +
+        //                        "[DayOfWeek] [int] NULL," +
+        //                        "[DayOfWeekName] [nvarchar] (64) NULL," +
+        //                        "[MonthOfYear] [int] NULL," +
+        //                        "[MonthOfYearName] [nvarchar] (64) NULL," +
+        //                        "[QuarterOfYear] [int] NULL," +
+        //                        "[QuarterOfYearName] [nvarchar] (64) NULL," +
+        //                        "[HalfYearOfYear] [int] NULL," +
+        //                        "[HalfYearOfYearName] [nvarchar] (64) NULL," +
+        //                        "[LunarDate] [int] NULL," +
+        //                        "[LunarDateName] [nvarchar] (64) NULL," +
+        //                        "[LunarMonth] [int] NULL," +
+        //                        "[LunarMonthName] [nvarchar] (64) NULL," +
+        //                        "[LunarQuarter] [int] NULL," +
+        //                        "[LunarQuarterName] [nvarchar] (64) NULL," +
+        //                        "[LunarYear] [int] NULL," +
+        //                        "[LunarYearName] [nvarchar] (64) NULL," +
+        //                        "[LunarDayOfWeek] [int] NULL," +
+        //                        "[LunarDayOfWeekName] [nvarchar] (64) NULL," +
+        //                        "[LunarDayOfMonth] [int] NULL," +
+        //                        "[LunarDayOfMonthName] [nvarchar] (64) NULL," +
+        //                        "[LunarMonthOfYear] [int] NULL," +
+        //                        "[LunarMonthOfYearName] [nvarchar] (64) NULL," +
+        //                        "[LunarQuarterOfYear] [int] NULL," +
+        //                        "[LunarQuarterOfYearName] [nvarchar] (64) NULL," +
+        //                        "[EventName] [nvarchar] (256) NULL)";
+        //            var cmd = new SqlCommand(sql, connection);
+        //            connection.Open();
+        //            cmd.ExecuteNonQuery();
+        //            connection.Close();
+        //        }
+        //        using (connection = new SqlConnection(conStr))
+        //        {
+        //            var bulkCopy = new SqlBulkCopy
+        //                (connection,
+        //                SqlBulkCopyOptions.TableLock | SqlBulkCopyOptions.FireTriggers | SqlBulkCopyOptions.UseInternalTransaction,
+        //                null)
+        //            {
+        //                DestinationTableName = tableName
+        //            };
+        //            foreach (DataColumn col in dateTable.Columns)
+        //            {
+        //                bulkCopy.ColumnMappings.Add(col.ColumnName, col.ColumnName);
+        //            }
+        //            connection.Open();
+        //            bulkCopy.WriteToServer(dateTable);
+        //            connection.Close();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        var regen = false;
+        //        using (connection = new SqlConnection(conStr))
+        //        {
+        //            var cmd = new SqlCommand($"SELECT COUNT(DateKey) FROM {tableName}", connection);
+        //            connection.Open();
+        //            var res = (int)cmd.ExecuteScalar();
+        //            regen = (res != i);
+        //            connection.Close();
+        //        }
+        //        if (regen)
+        //        {
+        //            using (connection = new SqlConnection(conStr))
+        //            {
+        //                var cmd = new SqlCommand($"TRUNCATE TABLE  {tableName}", connection);
+        //                connection.Open();
+        //                cmd.ExecuteNonQuery();
+        //                connection.Close();
+        //            }
+        //            using (connection = new SqlConnection(conStr))
+        //            {
+        //                var bulkCopy = new SqlBulkCopy
+        //                    (connection,
+        //                    SqlBulkCopyOptions.TableLock | SqlBulkCopyOptions.FireTriggers | SqlBulkCopyOptions.UseInternalTransaction,
+        //                    null)
+        //                {
+        //                    DestinationTableName = tableName
+        //                };
+        //                foreach (DataColumn col in dateTable.Columns)
+        //                {
+        //                    bulkCopy.ColumnMappings.Add(col.ColumnName, col.ColumnName);
+        //                }
+        //                connection.Open();
+        //                bulkCopy.WriteToServer(dateTable);
+        //                connection.Close();
+        //            }
+        //        }
+        //    }
+        //    dateTable.Clear();
+        //    return tableName;
+        //}
+
+
+        public string BuildDateTableExpression(DateTime fromDate, DateTime toDate)
         {
-            var conStr = _contextProvider.Context.Database.Connection.ConnectionString;
+            var dataExpr = new List<string>();
             var i = 0;
-            var dates = new List<DateData>();
             while (true)
             {
                 var currentDate = fromDate.AddDays(i);
                 if (currentDate > toDate) { break; }
                 var date = new DateData(currentDate);
-                dates.Add(date);
+                var tmp = new[]
+                {
+                    date.DateKey.ToString(),
+                    "\"" + date.Date.ToString("yyyy-MM-dd") + "\"",
+                    "\"" + date.DateName + "\"",
+                    date.Year.ToString(),
+                    "\"" +date.YearName + "\"",
+                    date.Month.ToString(),
+                    "\"" +date.MonthName + "\"",
+                    date.Quarter.ToString(),
+                    "\"" +date.QuarterName + "\"",
+                    date.HalfYear.ToString(),
+                    "\"" +date.HalfYearName + "\"",
+                    date.DayOfMonth.ToString(),
+                    "\"" +date.DayOfMonthName + "\"",
+                    date.DayOfWeek.ToString(),
+                    "\"" +date.DayOfWeekName + "\"",
+                    date.MonthOfYear.ToString(),
+                    "\"" +date.MonthOfYearName + "\"",
+                    date.QuarterOfYear.ToString(),
+                    "\"" +date.QuarterOfYearName + "\"",
+                    date.HalfYearOfYear.ToString(),
+                    "\"" +date.HalfYearOfYearName + "\"",
+                    date.LunarDate.ToString(),
+                    "\"" +date.LunarDateName + "\"",
+                    date.LunarMonth.ToString(),
+                    "\"" +date.LunarMonthName + "\"",
+                    date.LunarQuarter.ToString(),
+                    "\"" +date.LunarQuarterName + "\"",
+                    date.LunarYear.ToString(),
+                    "\"" +date.LunarYearName + "\"",
+                    date.LunarDayOfWeek.ToString(),
+                    "\"" +date.LunarDayOfWeekName + "\"",
+                    date.LunarDayOfMonth.ToString(),
+                    "\"" +date.LunarDayOfMonthName + "\"",
+                    date.LunarMonthOfYear.ToString(),
+                    "\"" +date.LunarMonthOfYearName + "\"",
+                    date.LunarQuarterOfYear.ToString(),
+                    "\"" +date.LunarQuarterOfYearName + "\"",
+                    "\"" +date.EventName + "\""
+                };
+                dataExpr.Add(" { " + string.Join(", ", tmp) + " } ");
                 i++;
             }
-            var dateTable = dates.ToDataTable();
-            var tableName = $"TempDate_{fromDate.ToString("yyyyMMdd")}_{toDate.ToString("yyyyMMdd")}";
-            SqlConnection connection;
-            var exist = false;
-            using (connection = new SqlConnection(conStr))
-            {
-                var cmd = new SqlCommand($"IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{tableName}') SELECT 1 ELSE SELECT 0", connection);
-                connection.Open();
-                var res = (int)cmd.ExecuteScalar();
-                exist = (res == 1);
-                connection.Close();
-            }
-            if (!exist)
-            {
-                using (connection = new SqlConnection(conStr))
-                {
-                    var sql = $"CREATE TABLE [dbo].[{tableName}](" +
-                                "[DateKey] [int] NOT NULL PRIMARY KEY," +
-                                "[Date] [datetime] NOT NULL," +
-                                "[DateName] [nvarchar] (64) NOT NULL," +
-                                "[Year] [int] NULL," +
-                                "[YearName] [nvarchar] (64) NULL," +
-                                "[Month] [int] NULL," +
-                                "[MonthName] [nvarchar] (64) NULL," +
-                                "[Quarter] [int] NULL," +
-                                "[QuarterName] [nvarchar] (64) NULL," +
-                                "[HalfYear] [int] NULL," +
-                                "[HalfYearName] [nvarchar] (64) NULL," +
-                                "[DayOfMonth] [int] NULL," +
-                                "[DayOfMonthName] [nvarchar] (64) NULL," +
-                                "[DayOfWeek] [int] NULL," +
-                                "[DayOfWeekName] [nvarchar] (64) NULL," +
-                                "[MonthOfYear] [int] NULL," +
-                                "[MonthOfYearName] [nvarchar] (64) NULL," +
-                                "[QuarterOfYear] [int] NULL," +
-                                "[QuarterOfYearName] [nvarchar] (64) NULL," +
-                                "[HalfYearOfYear] [int] NULL," +
-                                "[HalfYearOfYearName] [nvarchar] (64) NULL," +
-                                "[LunarDate] [int] NULL," +
-                                "[LunarDateName] [nvarchar] (64) NULL," +
-                                "[LunarMonth] [int] NULL," +
-                                "[LunarMonthName] [nvarchar] (64) NULL," +
-                                "[LunarQuarter] [int] NULL," +
-                                "[LunarQuarterName] [nvarchar] (64) NULL," +
-                                "[LunarYear] [int] NULL," +
-                                "[LunarYearName] [nvarchar] (64) NULL," +
-                                "[LunarDayOfWeek] [int] NULL," +
-                                "[LunarDayOfWeekName] [nvarchar] (64) NULL," +
-                                "[LunarDayOfMonth] [int] NULL," +
-                                "[LunarDayOfMonthName] [nvarchar] (64) NULL," +
-                                "[LunarMonthOfYear] [int] NULL," +
-                                "[LunarMonthOfYearName] [nvarchar] (64) NULL," +
-                                "[LunarQuarterOfYear] [int] NULL," +
-                                "[LunarQuarterOfYearName] [nvarchar] (64) NULL," +
-                                "[EventName] [nvarchar] (256) NULL)";
-                    var cmd = new SqlCommand(sql, connection);
-                    connection.Open();
-                    cmd.ExecuteNonQuery();
-                    connection.Close();
-                }
-                using (connection = new SqlConnection(conStr))
-                {
-                    var bulkCopy = new SqlBulkCopy
-                        (connection,
-                        SqlBulkCopyOptions.TableLock | SqlBulkCopyOptions.FireTriggers | SqlBulkCopyOptions.UseInternalTransaction,
-                        null)
-                    {
-                        DestinationTableName = tableName
-                    };
-                    foreach (DataColumn col in dateTable.Columns)
-                    {
-                        bulkCopy.ColumnMappings.Add(col.ColumnName, col.ColumnName);
-                    }
-                    connection.Open();
-                    bulkCopy.WriteToServer(dateTable);
-                    connection.Close();
-                }
-            }
-            else
-            {
-                var regen = false;
-                using (connection = new SqlConnection(conStr))
-                {
-                    var cmd = new SqlCommand($"SELECT COUNT(DateKey) FROM {tableName}", connection);
-                    connection.Open();
-                    var res = (int)cmd.ExecuteScalar();
-                    regen = (res != i);
-                    connection.Close();
-                }
-                if (regen)
-                {
-                    using (connection = new SqlConnection(conStr))
-                    {
-                        var cmd = new SqlCommand($"TRUNCATE TABLE  {tableName}", connection);
-                        connection.Open();
-                        cmd.ExecuteNonQuery();
-                        connection.Close();
-                    }
-                    using (connection = new SqlConnection(conStr))
-                    {
-                        var bulkCopy = new SqlBulkCopy
-                            (connection,
-                            SqlBulkCopyOptions.TableLock | SqlBulkCopyOptions.FireTriggers | SqlBulkCopyOptions.UseInternalTransaction,
-                            null)
-                        {
-                            DestinationTableName = tableName
-                        };
-                        foreach (DataColumn col in dateTable.Columns)
-                        {
-                            bulkCopy.ColumnMappings.Add(col.ColumnName, col.ColumnName);
-                        }
-                        connection.Open();
-                        bulkCopy.WriteToServer(dateTable);
-                        connection.Close();
-                    }
-                }
-            }
-            dateTable.Clear();
-            return tableName;
+            return "{" + string.Join(", ", dataExpr) + "}";
         }
 
         public void FixModelColumns(int modelId)
@@ -3213,5 +3246,99 @@ namespace Pentamic.SSBI.Services
                 throw;
             }
         }
+
+
+        public void CreateDateTable(DateTableCreateModel model)
+        {
+            if (Context.Tables.Any(x => x.ModelId == model.ModelId && x.Name == model.TableName))
+            {
+                throw new Exception("Table exist");
+            }
+            var dbName = Context.Models.Where(x => x.Id == model.ModelId).Select(x => x.DatabaseName).FirstOrDefault();
+            var table = new Table
+            {
+                Name = model.TableName,
+                ModelId = model.ModelId,
+                OriginalName = model.TableName,
+                Columns = new List<Column>(),
+                Partitions = new List<Partition>()
+            };
+            Context.Tables.Add(table);
+            var tmp = new[]
+                {
+                    "\"DateKey\"", "INTEGER",
+                    "\"Date\"", "DATETIME",
+                    "\"DateName\"","STRING",
+                    "\"Year\"","INTEGER",
+                    "\"YearName\"","STRING",
+                    "\"Month\"","INTEGER",
+                    "\"MonthName\"","STRING",
+                    "\"Quarter\"","INTEGER",
+                    "\"QuarterName\"","STRING",
+                    "\"HalfYear\"","INTEGER",
+                    "\"HalfYearName\"","STRING",
+                    "\"DayOfMonth\"","INTEGER",
+                    "\"DayOfMonthName\"","STRING",
+                    "\"DayOfWeek\"","INTEGER",
+                    "\"DayOfWeekName\"","STRING",
+                    "\"MonthOfYear\"","INTEGER",
+                    "\"MonthOfYearName\"","STRING",
+                    "\"QuarterOfYear\"","INTEGER",
+                    "\"QuarterOfYearName\"","STRING",
+                    "\"HalfYearOfYear\"","INTEGER",
+                    "\"HalfYearOfYearName\"","STRING",
+                    "\"LunarDate\"","INTEGER",
+                    "\"LunarDateName\"","STRING",
+                    "\"LunarMonth\"","INTEGER",
+                    "\"LunarMonthName\"","STRING",
+                    "\"LunarQuarter\"","INTEGER",
+                    "\"LunarQuarterName\"","STRING",
+                    "\"LunarYear\"","INTEGER",
+                    "\"LunarYearName\"","STRING",
+                    "\"LunarDayOfWeek\"","INTEGER",
+                    "\"LunarDayOfWeekName\"","STRING",
+                    "\"LunarDayOfMonth\"","INTEGER",
+                    "\"LunarDayOfMonthName\"","STRING",
+                    "\"LunarMonthOfYear\"","INTEGER",
+                    "\"LunarMonthOfYearName\"","STRING",
+                    "\"LunarQuarterOfYear\"","INTEGER",
+                    "\"LunarQuarterOfYearName\"","STRING",
+                    "\"EventName\"","STRING"
+                };
+            var dataExpr = BuildDateTableExpression(model.FromDate, model.ToDate);
+            var colExpr = string.Join(", ", tmp);
+            var par = new CalculatedPartition
+            {
+                Name = "DefaultPartition",
+                Expression = $"DATATABLE ( {colExpr}, {dataExpr} )"
+            };
+            table.Partitions.Add(par);
+            using (var server = new AS.Server())
+            {
+                server.Connect(_asConnectionString);
+                var database = server.Databases.FindByName(dbName);
+                if (database == null)
+                {
+                    throw new ArgumentException("Database not found");
+                }
+                var tb = AddCalculatedTable(database, model.ModelId, table);
+                database.Update(AN.UpdateOptions.ExpandFull);
+                foreach (var column in tb.Columns)
+                {
+                    if (column is AS.CalculatedTableColumn col)
+                    {
+                        table.Columns.Add(new CalculatedTableColumn()
+                        {
+                            Name = col.Name,
+                            DataType = (ColumnDataType)col.DataType,
+                            SourceColumn = col.SourceColumn
+                        });
+                    }
+                }
+                Context.SaveChanges();
+            }
+
+        }
+
     }
 }

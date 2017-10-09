@@ -2,24 +2,38 @@
 using Pentamic.SSBI.Services;
 using System.Web.Http;
 using Pentamic.SSBI.Models.Discover;
-using Pentamic.SSBI.Models.DataModel.Objects;
 using System;
+using Breeze.WebApi2;
 
 namespace Pentamic.SSBI.Controllers
 {
     [Authorize]
-    [RoutePrefix("api/discover")]
+    [BreezeController]
     public class DiscoverController : ApiController
     {
-        private DiscoverService _discoverService;
+        private readonly DiscoverService _discoverService;
 
         public DiscoverController()
         {
             _discoverService = new DiscoverService();
         }
 
-        [HttpGet]
-        [Route("model")]
+        [HttpPost]
+        public IHttpActionResult Providers()
+        {
+            try
+            {
+                var result = _discoverService.GetDataProviders();
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+        }
+
+        [HttpPost]
         public IHttpActionResult Model(int modelId, string perspective = null)
         {
             try
@@ -35,43 +49,38 @@ namespace Pentamic.SSBI.Controllers
         }
 
         [HttpPost]
-        [Route("catalogs/")]
-        public async Task<IHttpActionResult> Catalogs([FromBody]TableDiscoverModel model)
+        public async Task<IHttpActionResult> Catalogs(CatalogDiscoverModel model)
         {
-            var result = await _discoverService.DiscoverCatalogs(model.DataSourceId);
+            var result = await _discoverService.GetCatalogs(model.ConnectionId);
             return Ok(result);
         }
 
         [HttpPost]
-        [Route("tables")]
-        public async Task<IHttpActionResult> Tables([FromBody]TableDiscoverModel model)
+        public async Task<IHttpActionResult> Tables(TableDiscoverModel model)
         {
-            var result = await _discoverService.DiscoverTables(model.DataSourceId);
+            var result = await _discoverService.GetTables(model.ConnectionId, model.CatalogName);
             return Ok(result);
         }
 
         [HttpPost]
-        [Route("columns")]
-        public async Task<IHttpActionResult> Columns([FromBody]ColumnDiscoverModel model)
+        public async Task<IHttpActionResult> Columns(ColumnDiscoverModel model)
         {
             var result = await _discoverService.DiscoverColumns(model.DataSourceId, model.TableSchema, model.TableName);
             return Ok(result);
         }
 
         [HttpPost]
-        [Route("data")]
-        public async Task<IHttpActionResult> Data([FromBody]DataDiscoverModel model)
+        public async Task<IHttpActionResult> Data(DataDiscoverModel model)
         {
-            var result = await _discoverService.DiscoverTable(model.DataSourceId, model.TableSchema, model.TableName, model.Query);
+            var result = await _discoverService.GetTableInfo(model.DataSourceId, model.TableSchema, model.TableName, model.Query);
             return Ok(result);
         }
 
         [HttpPost]
-        [Route("relationships")]
-        public async Task<IHttpActionResult> Relationships([FromBody]RelationshipDiscoverModel model)
+        public async Task<IHttpActionResult> Relationships(RelationshipDiscoverModel model)
         {
-            var result = await _discoverService.DiscoverRelationships(model.DataSource, model.FkTableSchema, model.FkTableName);
-            return Ok(result);
+            //var result = await _discoverService.DiscoverRelationships(model.DataSource, model.FkTableSchema, model.FkTableName);
+            return Ok();
         }
     }
 }

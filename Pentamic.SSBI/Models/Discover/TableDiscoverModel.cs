@@ -7,6 +7,7 @@ namespace Pentamic.SSBI.Models.Discover
 {
     public class TableDiscoverModel
     {
-        public int DataSourceId { get; set; }
+        public int ConnectionId { get; set; }
+        public string CatalogName { get; set; }
     }
 }

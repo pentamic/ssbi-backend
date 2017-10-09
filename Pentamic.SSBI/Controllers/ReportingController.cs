@@ -1,15 +1,10 @@
 ﻿using Breeze.ContextProvider;
 using Breeze.WebApi2;
-using IdentityModel.Client;
 using Newtonsoft.Json.Linq;
 using Pentamic.SSBI.Models.Reporting;
 using Pentamic.SSBI.Models.Reporting.Query;
 using Pentamic.SSBI.Services;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Security.Claims;
 using System.Web.Http;
 
 namespace Pentamic.SSBI.Controllers
@@ -18,7 +13,7 @@ namespace Pentamic.SSBI.Controllers
     [BreezeController]
     public class ReportingController : ApiController
     {
-        private ReportingService _reportingService;
+        private readonly ReportingService _reportingService;
 
         public ReportingController()
         {

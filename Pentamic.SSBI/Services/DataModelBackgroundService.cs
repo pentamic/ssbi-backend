@@ -1,34 +1,16 @@
-﻿using Breeze.ContextProvider;
-using Breeze.ContextProvider.EF6;
-using Newtonsoft.Json.Linq;
-using Pentamic.SSBI.Models.DataModel;
-using Pentamic.SSBI.Models.DataModel.Objects;
+﻿using Pentamic.SSBI.Models.DataModel;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.OleDb;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 using AS = Microsoft.AnalysisServices.Tabular;
 using AC = Microsoft.AnalysisServices.AdomdClient;
-using System.Data.SqlClient;
-using System.Web;
 using AN = Microsoft.AnalysisServices;
-using System.Diagnostics;
-using Newtonsoft.Json;
-using System.ComponentModel;
-using System.Data;
-using Pentamic.SSBI.Models;
-using System.Security.Claims;
-using Hangfire;
 
 namespace Pentamic.SSBI.Services
 {
     public class DataModelBackgroundService
     {
-        private string _asConnectionString = System.Configuration.ConfigurationManager
+        private readonly string _asConnectionString = System.Configuration.ConfigurationManager
                 .ConnectionStrings["AnalysisServiceConnection"]
                 .ConnectionString;
 
@@ -58,6 +40,7 @@ namespace Pentamic.SSBI.Services
                 var tb = context.Tables.Where(x => x.Id == tableId)
                     .Include(x => x.Model)
                     .FirstOrDefault();
+                if (tb == null) return;
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
@@ -76,6 +59,10 @@ namespace Pentamic.SSBI.Services
                 var pa = context.Partitions.Where(x => x.Id == partitionId)
                     .Include(x => x.Table.Model)
                     .FirstOrDefault();
+                if (pa == null)
+                {
+                    return;
+                }
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);

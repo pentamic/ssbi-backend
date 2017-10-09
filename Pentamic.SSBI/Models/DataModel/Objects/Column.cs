@@ -4,14 +4,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pentamic.SSBI.Models.DataModel.Objects
 {
-    public class Column : IDataModelObject, IAuditable
+    public abstract class Column : IDataModelObject, IAuditable
     {
         public int Id { get; set; }
         public int TableId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public string OriginalName { get; set; }
-        public string SourceColumn { get; set; }
         public string DisplayFolder { get; set; }
         public string FormatString { get; set; }
         public int? SortByColumnId { get; set; }

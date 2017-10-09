@@ -12,6 +12,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using Pentamic.SSBI.Models.DataModel.Connections;
 
 namespace Pentamic.SSBI.Controllers
 {
@@ -19,7 +20,7 @@ namespace Pentamic.SSBI.Controllers
     [BreezeController]
     public class DataModelController : ApiController
     {
-        private DataModelService _dataModelService;
+        private readonly DataModelService _dataModelService;
 
         public DataModelController()
         {
@@ -52,6 +53,26 @@ namespace Pentamic.SSBI.Controllers
         public IQueryable<DataSource> DataSources()
         {
             return _dataModelService.DataSources;
+        }
+        [HttpGet]
+        public IQueryable<Connection> Connections()
+        {
+            return _dataModelService.Connections;
+        }
+        [HttpGet]
+        public IQueryable<ModelConnection> ModelConnections()
+        {
+            return _dataModelService.ModelConnections;
+        }
+        [HttpGet]
+        public IQueryable<SqlServerConnection> SqlServerConnections()
+        {
+            return _dataModelService.SqlServerConnections;
+        }
+        [HttpGet]
+        public IQueryable<ExcelConnection> ExcelConnections()
+        {
+            return _dataModelService.ExcelConnections;
         }
         [HttpGet]
         public IQueryable<Table> Tables()
@@ -93,7 +114,6 @@ namespace Pentamic.SSBI.Controllers
         {
             return _dataModelService.GetUserRecentModels();
         }
-
         [HttpGet]
         public IQueryable<UserFavoriteModel> UserFavoriteModels()
         {
