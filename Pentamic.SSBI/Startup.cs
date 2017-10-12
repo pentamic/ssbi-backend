@@ -32,10 +32,15 @@ namespace Pentamic.SSBI
                 .WriteTo.RollingFile("Logs/log-{Date}.txt")
                 .CreateLogger();
 
+#if DEBUG
+#else
             Hangfire.GlobalConfiguration.Configuration.UseSqlServerStorage("BackgroundServiceConnection");
             app.UseHangfireServer();
             app.UseHangfireDashboard();
             RecurringJob.AddOrUpdate<DataModelBackgroundService>(x => x.RunModelRefreshQueue(), Cron.Minutely);
+#endif
+
+
 
             //var c1 = new Migrations.ReportingContext.Configuration();
             //var c2 = new Migrations.DataModelContext.Configuration();

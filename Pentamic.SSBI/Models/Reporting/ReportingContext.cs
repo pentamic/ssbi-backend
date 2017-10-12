@@ -35,6 +35,8 @@ namespace Pentamic.SSBI.Models.Reporting
         public DbSet<UserFavoriteReport> UserFavoriteReports { get; set; }
         public DbSet<UserFavoriteDashboard> UserFavoriteDashboards { get; set; }
 
+        public DbSet<ReportTileRow> ReportTileRows { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

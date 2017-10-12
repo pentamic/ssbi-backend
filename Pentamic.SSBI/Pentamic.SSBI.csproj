@@ -54,6 +54,9 @@
     <Reference Include="Breeze.WebApi2, Version=1.6.0.0, Culture=neutral, PublicKeyToken=f6085f1a45e2ac59, processorArchitecture=MSIL">
       <HintPath>..\packages\Breeze.Server.WebApi2.1.6.5\lib\Breeze.WebApi2.dll</HintPath>
     </Reference>
+    <Reference Include="Ciloci.Flee">
+      <HintPath>G:\Code\Flee-0.9.26.0-lib\Flee-0.9.26.0\lib\Ciloci.Flee.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
       <Private>True</Private>
@@ -405,6 +408,14 @@
     <Compile Include="Migrations\ReportingContext\201709260814431_UpdateReporting18.Designer.cs">
       <DependentUpon>201709260814431_UpdateReporting18.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\ReportingContext\201710111054276_UpdateReporting19.cs" />
+    <Compile Include="Migrations\ReportingContext\201710111054276_UpdateReporting19.Designer.cs">
+      <DependentUpon>201710111054276_UpdateReporting19.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ReportingContext\201710120315370_UpdateReporting20.cs" />
+    <Compile Include="Migrations\ReportingContext\201710120315370_UpdateReporting20.Designer.cs">
+      <DependentUpon>201710120315370_UpdateReporting20.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ReportingContext\Configuration.cs" />
     <Compile Include="Models\AuthGroup.cs" />
     <Compile Include="Models\DataModel\DateData.cs" />
@@ -456,6 +467,9 @@
     <Compile Include="Models\IAuditable.cs" />
     <Compile Include="Models\IShareInfo.cs" />
     <Compile Include="Models\Reporting\DashboardComment.cs" />
+    <Compile Include="Models\Reporting\Query\FieldQueryModel.cs" />
+    <Compile Include="Models\Reporting\Query\QueryModel2.cs" />
+    <Compile Include="Models\Reporting\Query\ReportTileRowQueryResult.cs" />
     <Compile Include="Models\Reporting\ReportAction.cs" />
     <Compile Include="Models\Reporting\ReportComment.cs" />
     <Compile Include="Models\Reporting\Dashboard.cs" />
@@ -476,6 +490,7 @@
     <Compile Include="Models\Reporting\ReportSharing.cs" />
     <Compile Include="Models\Reporting\ReportTile.cs" />
     <Compile Include="Models\Reporting\DashboardView.cs" />
+    <Compile Include="Models\Reporting\ReportTileRow.cs" />
     <Compile Include="Models\Reporting\ReportView.cs" />
     <Compile Include="Models\Reporting\UserFavoriteDashboard.cs" />
     <Compile Include="Models\Reporting\UserFavoriteReport.cs" />
@@ -638,6 +653,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201709260814431_UpdateReporting18.resx">
       <DependentUpon>201709260814431_UpdateReporting18.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201710111054276_UpdateReporting19.resx">
+      <DependentUpon>201710111054276_UpdateReporting19.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201710120315370_UpdateReporting20.resx">
+      <DependentUpon>201710120315370_UpdateReporting20.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -3211,5 +3211,37 @@ namespace Pentamic.SSBI.Services
                 throw;
             }
         }
+
+        public string GetModelDateColumn(int modelId)
+        {
+            var model = Context.Models.Find(modelId);
+            if (model == null)
+            {
+                throw new Exception("Model not found");
+            }
+            using (var server = new AS.Server())
+            {
+                server.Connect(_asConnectionString);
+                var database = server.Databases.FindByName(model.DatabaseName);
+                if (database == null)
+                {
+                    throw new ArgumentException("Database not found");
+                }
+                foreach (var t in database.Model.Tables)
+                {
+                    if (t.DataCategory == "Time")
+                    {
+                        foreach (var c in t.Columns)
+                        {
+                            if (c.IsKey)
+                            {
+                                return $"'{t.Name}'[{c.Name}]";
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
     }
 }
