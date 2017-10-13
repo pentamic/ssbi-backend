@@ -647,6 +647,8 @@ namespace Pentamic.SSBI.Services
                                 result[i].YTD = ytdVal == null ? 0 : (decimal)ytdVal;
                                 result[i].PMTD = pmtdVal == null ? 0 : (decimal)pmtdVal;
                                 result[i].PYTD = pytdVal == null ? 0 : (decimal)pytdVal;
+                                result[i].MTDRate = result[i].PMTD == 0 ? 0 : result[i].MTD / result[i].PMTD;
+                                result[i].YTDRate = result[i].PYTD == 0 ? 0 : result[i].YTD / result[i].PYTD;
                                 result[i].IsCalculated = true;
                                 break;
                             }
@@ -661,7 +663,7 @@ namespace Pentamic.SSBI.Services
                     CalculateEntryFormula(r, result);
                 }
             }
-            return result.OrderBy(x=>int.Parse(x.Ordinal)).ToList();
+            return result.OrderBy(x => int.Parse(x.Ordinal)).ToList();
         }
 
         public string BuildTileRowQuery(ReportTileRow row, string mtd, string ytd, string pmtd, string pytd)
