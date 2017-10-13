@@ -327,6 +327,10 @@
     <Compile Include="Migrations\DataModelContext\201709210940115_UpdateDataModel13.Designer.cs">
       <DependentUpon>201709210940115_UpdateDataModel13.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\DataModelContext\201710130440241_UpdateDataModel14.cs" />
+    <Compile Include="Migrations\DataModelContext\201710130440241_UpdateDataModel14.Designer.cs">
+      <DependentUpon>201710130440241_UpdateDataModel14.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DataModelContext\Configuration.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.Designer.cs">
@@ -420,6 +424,7 @@
     <Compile Include="Models\AuthGroup.cs" />
     <Compile Include="Models\DataModel\DateData.cs" />
     <Compile Include="Models\DataModel\DateTableCreateModel.cs" />
+    <Compile Include="Models\DataModel\Enums\ColumnType.cs" />
     <Compile Include="Models\DataModel\Enums\ConnectionType.cs" />
     <Compile Include="Models\DataModel\Enums\PartitionSourceType.cs" />
     <Compile Include="Models\DataModel\ModelRefreshModel.cs" />
@@ -593,6 +598,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\DataModelContext\201709210940115_UpdateDataModel13.resx">
       <DependentUpon>201709210940115_UpdateDataModel13.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201710130440241_UpdateDataModel14.resx">
+      <DependentUpon>201710130440241_UpdateDataModel14.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201702080147015_InitReporting.resx">
       <DependentUpon>201702080147015_InitReporting.cs</DependentUpon>

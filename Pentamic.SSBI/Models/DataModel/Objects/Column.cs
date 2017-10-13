@@ -17,6 +17,7 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public int? SortByColumnId { get; set; }
         public bool IsHidden { get; set; }
         public ColumnDataType DataType { get; set; }
+        public ColumnType ColumnType { get; set; }
 
         public Table Table { get; set; }
         [InverseProperty("FromColumn")]

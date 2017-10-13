@@ -11,6 +11,7 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public string Description { get; set; }
         public string OriginalName { get; set; }
         public string Query { get; set; }
+        public string Expression { get; set; }
         public PartitionSourceType SourceType { get; set; }
 
         public DateTimeOffset ProcessedAt { get; set; }

@@ -2670,6 +2670,35 @@ namespace Pentamic.SSBI.Services
             }
         }
 
+        public AS.Table AddCalculatedTable(AS.Database database, int modelId, Table table)
+        {
+            var tb = new AS.Table
+            {
+                Name = table.Name,
+                Description = table.Description,
+            };
+            if (table.Partitions != null)
+            {
+                foreach (var par in table.Partitions)
+                {
+                    if (par.SourceType == PartitionSourceType.Calculated)
+                    {
+                        var p = new AS.Partition();
+                        tb.Partitions.Add(new AS.Partition
+                        {
+                            Name = par.Name,
+                            Source = new AS.CalculatedPartitionSource()
+                            {
+                                Expression = par.Expression
+                            }
+                        });
+                    }
+                }
+            }
+
+            database.Model.Tables.Add(tb);
+            return tb;
+        }
 
         public bool CheckDataSourceNamesExist(int modelId, List<string> names)
         {
@@ -2690,463 +2719,6 @@ namespace Pentamic.SSBI.Services
         public bool CheckMeasureNamesExist(int tableId, List<string> names)
         {
             return Context.Measures.Any(x => x.TableId == tableId && names.Contains(x.Name));
-        }
-
-        public void CreateDateTable(DateTableCreateModel model)
-        {
-            if (Context.Tables.Any(x => x.ModelId == model.ModelId && x.Name == model.TableName))
-            {
-                throw new Exception("Table exist");
-            }
-            var conStr = Context.Database.Connection.ConnectionString;
-            var sourceTable = CreateDateTableSource(model.FromDate, model.ToDate);
-            var dbName = Context.Models.Where(x => x.Id == model.ModelId).Select(x => x.DatabaseName).FirstOrDefault();
-            var table = new Table
-            {
-                Name = model.TableName,
-                ModelId = model.ModelId,
-                SourceTable = sourceTable,
-                SourceSchema = "dbo",
-                OriginalName = model.TableName,
-                Columns = new List<Column>(),
-                Partitions = new List<Partition>()
-            };
-            Context.Tables.Add(table);
-
-            table.Columns.Add(new Column
-            {
-                Name = "Date",
-                DataType = ColumnDataType.DateTime,
-                SourceColumn = "Date"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "DateKey",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "DateKey"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "DateName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "DateName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "Year",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "Year"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "YearName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "YearName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "Month",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "Month"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "MonthName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "MonthName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "Quarter",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "Quarter"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "QuarterName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "QuarterName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "HalfYear",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "HalfYear"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "HalfYearName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "HalfYearName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "DayOfMonth",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "DayOfMonth"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "DayOfMonthName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "DayOfMonthName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "DayOfWeek",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "DayOfWeek"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "DayOfWeekName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "DayOfWeekName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "MonthOfYear",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "MonthOfYear"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "MonthOfYearName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "MonthOfYearName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "QuarterOfYear",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "QuarterOfYear"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "QuarterOfYearName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "QuarterOfYearName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "HalfYearOfYear",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "HalfYearOfYear"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "HalfYearOfYearName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "HalfYearOfYearName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarDate",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "LunarDate"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarDateName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "LunarDateName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarMonth",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "LunarMonth"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarMonthName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "LunarMonthName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarQuarter",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "LunarQuarter"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarQuarterName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "LunarQuarterName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarYear",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "LunarYear"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarYearName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "LunarYearName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarDayOfWeek",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "LunarDayOfWeek"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarDayOfWeekName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "LunarDayOfWeekName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarDayOfMonth",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "LunarDayOfMonth"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarDayOfMonthName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "LunarDayOfMonthName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarMonthOfYear",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "LunarMonthOfYear"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarMonthOfYearName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "LunarMonthOfYearName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarQuarterOfYear",
-                DataType = ColumnDataType.Int64,
-                SourceColumn = "LunarQuarterOfYear"
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "LunarQuarterOfYearName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "LunarQuarterOfYearName",
-                SortByColumn = table.Columns.Last()
-            });
-            table.Columns.Add(new Column
-            {
-                Name = "EventName",
-                DataType = ColumnDataType.String,
-                SourceColumn = "EventName"
-            });
-            var dsName = "DS_" + dbName;
-            var ds = Context.DataSources.Where(x => x.ModelId == model.ModelId && x.Name == dsName).FirstOrDefault();
-            var scb = new SqlConnectionStringBuilder(conStr);
-            if (ds == null)
-            {
-                ds = new DataSource
-                {
-                    Name = dsName,
-                    OriginalName = dsName,
-                    ModelId = model.ModelId,
-                    ConnectionString = conStr,
-                    Catalog = scb.InitialCatalog,
-                    IntegratedSecurity = scb.IntegratedSecurity,
-                    Source = scb.DataSource,
-                    User = scb.UserID,
-                    Password = scb.Password,
-                    Type = DataSourceType.SqlServer
-                };
-                Context.DataSources.Add(ds);
-            }
-            table.Partitions.Add(new Partition
-            {
-                Name = "DefaultPartition",
-                Query = $"SELECT * FROM [dbo].[{sourceTable}]",
-                DataSourceId = ds.Id,
-                DataSource = ds
-            });
-            Context.SaveChanges();
-            try
-            {
-                using (var server = new AS.Server())
-                {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(dbName);
-                    if (database == null)
-                    {
-                        throw new ArgumentException("Database not found");
-                    }
-                    var dataSource = database.Model.DataSources.Find(ds.Name);
-                    if (dataSource == null)
-                    {
-                        AddDataSource(database, ds);
-                    }
-                    var tb = AddTable(database, model.ModelId, table);
-                    database.Update(AN.UpdateOptions.ExpandFull);
-                }
-            }
-            catch (AN.OperationException ex)
-            {
-                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
-                {
-                }
-                throw;
-            }
-        }
-
-        public string CreateDateTableSource(DateTime fromDate, DateTime toDate)
-        {
-            var conStr = _contextProvider.Context.Database.Connection.ConnectionString;
-            var i = 0;
-            var dates = new List<DateData>();
-            while (true)
-            {
-                var currentDate = fromDate.AddDays(i);
-                if (currentDate > toDate) { break; }
-                var date = new DateData(currentDate);
-                dates.Add(date);
-                i++;
-            }
-            var dateTable = dates.ToDataTable();
-            var tableName = $"TempDate_{fromDate.ToString("yyyyMMdd")}_{toDate.ToString("yyyyMMdd")}";
-            SqlConnection connection;
-            var exist = false;
-            using (connection = new SqlConnection(conStr))
-            {
-                var cmd = new SqlCommand($"IF EXISTS(SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '{tableName}') SELECT 1 ELSE SELECT 0", connection);
-                connection.Open();
-                var res = (int)cmd.ExecuteScalar();
-                exist = (res == 1);
-                connection.Close();
-            }
-            if (!exist)
-            {
-                using (connection = new SqlConnection(conStr))
-                {
-                    var sql = $"CREATE TABLE [dbo].[{tableName}](" +
-                                "[DateKey] [int] NOT NULL PRIMARY KEY," +
-                                "[Date] [datetime] NOT NULL," +
-                                "[DateName] [nvarchar] (64) NOT NULL," +
-                                "[Year] [int] NULL," +
-                                "[YearName] [nvarchar] (64) NULL," +
-                                "[Month] [int] NULL," +
-                                "[MonthName] [nvarchar] (64) NULL," +
-                                "[Quarter] [int] NULL," +
-                                "[QuarterName] [nvarchar] (64) NULL," +
-                                "[HalfYear] [int] NULL," +
-                                "[HalfYearName] [nvarchar] (64) NULL," +
-                                "[DayOfMonth] [int] NULL," +
-                                "[DayOfMonthName] [nvarchar] (64) NULL," +
-                                "[DayOfWeek] [int] NULL," +
-                                "[DayOfWeekName] [nvarchar] (64) NULL," +
-                                "[MonthOfYear] [int] NULL," +
-                                "[MonthOfYearName] [nvarchar] (64) NULL," +
-                                "[QuarterOfYear] [int] NULL," +
-                                "[QuarterOfYearName] [nvarchar] (64) NULL," +
-                                "[HalfYearOfYear] [int] NULL," +
-                                "[HalfYearOfYearName] [nvarchar] (64) NULL," +
-                                "[LunarDate] [int] NULL," +
-                                "[LunarDateName] [nvarchar] (64) NULL," +
-                                "[LunarMonth] [int] NULL," +
-                                "[LunarMonthName] [nvarchar] (64) NULL," +
-                                "[LunarQuarter] [int] NULL," +
-                                "[LunarQuarterName] [nvarchar] (64) NULL," +
-                                "[LunarYear] [int] NULL," +
-                                "[LunarYearName] [nvarchar] (64) NULL," +
-                                "[LunarDayOfWeek] [int] NULL," +
-                                "[LunarDayOfWeekName] [nvarchar] (64) NULL," +
-                                "[LunarDayOfMonth] [int] NULL," +
-                                "[LunarDayOfMonthName] [nvarchar] (64) NULL," +
-                                "[LunarMonthOfYear] [int] NULL," +
-                                "[LunarMonthOfYearName] [nvarchar] (64) NULL," +
-                                "[LunarQuarterOfYear] [int] NULL," +
-                                "[LunarQuarterOfYearName] [nvarchar] (64) NULL," +
-                                "[EventName] [nvarchar] (256) NULL)";
-                    var cmd = new SqlCommand(sql, connection);
-                    connection.Open();
-                    cmd.ExecuteNonQuery();
-                    connection.Close();
-                }
-                using (connection = new SqlConnection(conStr))
-                {
-                    var bulkCopy = new SqlBulkCopy
-                        (connection,
-                        SqlBulkCopyOptions.TableLock | SqlBulkCopyOptions.FireTriggers | SqlBulkCopyOptions.UseInternalTransaction,
-                        null)
-                    {
-                        DestinationTableName = tableName
-                    };
-                    foreach (DataColumn col in dateTable.Columns)
-                    {
-                        bulkCopy.ColumnMappings.Add(col.ColumnName, col.ColumnName);
-                    }
-                    connection.Open();
-                    bulkCopy.WriteToServer(dateTable);
-                    connection.Close();
-                }
-            }
-            else
-            {
-                var regen = false;
-                using (connection = new SqlConnection(conStr))
-                {
-                    var cmd = new SqlCommand($"SELECT COUNT(DateKey) FROM {tableName}", connection);
-                    connection.Open();
-                    var res = (int)cmd.ExecuteScalar();
-                    regen = (res != i);
-                    connection.Close();
-                }
-                if (regen)
-                {
-                    using (connection = new SqlConnection(conStr))
-                    {
-                        var cmd = new SqlCommand($"TRUNCATE TABLE  {tableName}", connection);
-                        connection.Open();
-                        cmd.ExecuteNonQuery();
-                        connection.Close();
-                    }
-                    using (connection = new SqlConnection(conStr))
-                    {
-                        var bulkCopy = new SqlBulkCopy
-                            (connection,
-                            SqlBulkCopyOptions.TableLock | SqlBulkCopyOptions.FireTriggers | SqlBulkCopyOptions.UseInternalTransaction,
-                            null)
-                        {
-                            DestinationTableName = tableName
-                        };
-                        foreach (DataColumn col in dateTable.Columns)
-                        {
-                            bulkCopy.ColumnMappings.Add(col.ColumnName, col.ColumnName);
-                        }
-                        connection.Open();
-                        bulkCopy.WriteToServer(dateTable);
-                        connection.Close();
-                    }
-                }
-            }
-            dateTable.Clear();
-            return tableName;
         }
 
         public void FixModelColumns(int modelId)
@@ -3242,6 +2814,156 @@ namespace Pentamic.SSBI.Services
                 }
             }
             return null;
+        }
+
+        public void CreateDateTable(DateTableCreateModel model)
+        {
+            if (Context.Tables.Any(x => x.ModelId == model.ModelId && x.Name == model.TableName))
+            {
+                throw new Exception("Table exist");
+            }
+            var dbName = Context.Models.Where(x => x.Id == model.ModelId).Select(x => x.DatabaseName).FirstOrDefault();
+            var table = new Table
+            {
+                Name = model.TableName,
+                ModelId = model.ModelId,
+                OriginalName = model.TableName,
+                Columns = new List<Column>(),
+                Partitions = new List<Partition>()
+            };
+            Context.Tables.Add(table);
+            var tmp = new[]
+                {
+                    "\"DateKey\"", "INTEGER",
+                    "\"Date\"", "DATETIME",
+                    "\"DateName\"","STRING",
+                    "\"Year\"","INTEGER",
+                    "\"YearName\"","STRING",
+                    "\"Month\"","INTEGER",
+                    "\"MonthName\"","STRING",
+                    "\"Quarter\"","INTEGER",
+                    "\"QuarterName\"","STRING",
+                    "\"HalfYear\"","INTEGER",
+                    "\"HalfYearName\"","STRING",
+                    "\"DayOfMonth\"","INTEGER",
+                    "\"DayOfMonthName\"","STRING",
+                    "\"DayOfWeek\"","INTEGER",
+                    "\"DayOfWeekName\"","STRING",
+                    "\"MonthOfYear\"","INTEGER",
+                    "\"MonthOfYearName\"","STRING",
+                    "\"QuarterOfYear\"","INTEGER",
+                    "\"QuarterOfYearName\"","STRING",
+                    "\"HalfYearOfYear\"","INTEGER",
+                    "\"HalfYearOfYearName\"","STRING",
+                    "\"LunarDate\"","INTEGER",
+                    "\"LunarDateName\"","STRING",
+                    "\"LunarMonth\"","INTEGER",
+                    "\"LunarMonthName\"","STRING",
+                    "\"LunarQuarter\"","INTEGER",
+                    "\"LunarQuarterName\"","STRING",
+                    "\"LunarYear\"","INTEGER",
+                    "\"LunarYearName\"","STRING",
+                    "\"LunarDayOfWeek\"","INTEGER",
+                    "\"LunarDayOfWeekName\"","STRING",
+                    "\"LunarDayOfMonth\"","INTEGER",
+                    "\"LunarDayOfMonthName\"","STRING",
+                    "\"LunarMonthOfYear\"","INTEGER",
+                    "\"LunarMonthOfYearName\"","STRING",
+                    "\"LunarQuarterOfYear\"","INTEGER",
+                    "\"LunarQuarterOfYearName\"","STRING",
+                    "\"EventName\"","STRING"
+                };
+            var dataExpr = BuildDateTableExpression(model.FromDate, model.ToDate);
+            var colExpr = string.Join(", ", tmp);
+            var par = new Partition
+            {
+                Name = "DefaultPartition",
+                Expression = $"DATATABLE ( {colExpr}, {dataExpr} )",
+                SourceType = PartitionSourceType.Calculated
+            };
+            table.Partitions.Add(par);
+            using (var server = new AS.Server())
+            {
+                server.Connect(_asConnectionString);
+                var database = server.Databases.FindByName(dbName);
+                if (database == null)
+                {
+                    throw new ArgumentException("Database not found");
+                }
+                var tb = AddCalculatedTable(database, model.ModelId, table);
+                database.Update(AN.UpdateOptions.ExpandFull);
+                foreach (var column in tb.Columns)
+                {
+                    if (column is AS.CalculatedTableColumn col)
+                    {
+                        table.Columns.Add(new Column()
+                        {
+                            Name = col.Name,
+                            DataType = (ColumnDataType)col.DataType,
+                            SourceColumn = col.SourceColumn,
+                            ColumnType = ColumnType.CalculatedTableColumn
+                        });
+                    }
+                }
+                Context.SaveChanges();
+            }
+
+        }
+
+        public string BuildDateTableExpression(DateTime fromDate, DateTime toDate)
+        {
+            var dataExpr = new List<string>();
+            var i = 0;
+            while (true)
+            {
+                var currentDate = fromDate.AddDays(i);
+                if (currentDate > toDate) { break; }
+                var date = new DateData(currentDate);
+                var tmp = new[]
+                {
+                    date.DateKey.ToString(),
+                    "\"" + date.Date.ToString("yyyy-MM-dd") + "\"",
+                    "\"" + date.DateName + "\"",
+                    date.Year.ToString(),
+                    "\"" +date.YearName + "\"",
+                    date.Month.ToString(),
+                    "\"" +date.MonthName + "\"",
+                    date.Quarter.ToString(),
+                    "\"" +date.QuarterName + "\"",
+                    date.HalfYear.ToString(),
+                    "\"" +date.HalfYearName + "\"",
+                    date.DayOfMonth.ToString(),
+                    "\"" +date.DayOfMonthName + "\"",
+                    date.DayOfWeek.ToString(),
+                    "\"" +date.DayOfWeekName + "\"",
+                    date.MonthOfYear.ToString(),
+                    "\"" +date.MonthOfYearName + "\"",
+                    date.QuarterOfYear.ToString(),
+                    "\"" +date.QuarterOfYearName + "\"",
+                    date.HalfYearOfYear.ToString(),
+                    "\"" +date.HalfYearOfYearName + "\"",
+                    date.LunarDate.ToString(),
+                    "\"" +date.LunarDateName + "\"",
+                    date.LunarMonth.ToString(),
+                    "\"" +date.LunarMonthName + "\"",
+                    date.LunarQuarter.ToString(),
+                    "\"" +date.LunarQuarterName + "\"",
+                    date.LunarYear.ToString(),
+                    "\"" +date.LunarYearName + "\"",
+                    date.LunarDayOfWeek.ToString(),
+                    "\"" +date.LunarDayOfWeekName + "\"",
+                    date.LunarDayOfMonth.ToString(),
+                    "\"" +date.LunarDayOfMonthName + "\"",
+                    date.LunarMonthOfYear.ToString(),
+                    "\"" +date.LunarMonthOfYearName + "\"",
+                    date.LunarQuarterOfYear.ToString(),
+                    "\"" +date.LunarQuarterOfYearName + "\"",
+                    "\"" +date.EventName + "\""
+                };
+                dataExpr.Add(" { " + string.Join(", ", tmp) + " } ");
+                i++;
+            }
+            return "{" + string.Join(", ", dataExpr) + "}";
         }
     }
 }
