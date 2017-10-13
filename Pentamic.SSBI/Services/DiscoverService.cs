@@ -378,27 +378,25 @@ namespace Pentamic.SSBI.Services
             {
                 tableSchema = null;
             }
-            OleDbConnection con = null;
-            DbDataReader reader = null;
-            try
+            using (var con = new OleDbConnection(conStr))
             {
-                using (con = new OleDbConnection(conStr))
+                using (var cmd = con.CreateCommand())
                 {
-                    using (var cmd = con.CreateCommand())
+                    if (query == null)
                     {
-                        if (query == null)
-                        {
-                            cmd.CommandText = string.IsNullOrEmpty(tableSchema) ?
-                                $"SELECT TOP 100 * FROM [{tableName}]" :
-                                $"SELECT TOP 100 * FROM [{tableSchema}].[{tableName}]";
-                        }
-                        else
-                        {
-                            cmd.CommandText = query;
-                        }
-                        await con.OpenAsync();
-                        var data = new List<dynamic>();
-                        reader = await cmd.ExecuteReaderAsync();
+                        cmd.CommandText = string.IsNullOrEmpty(tableSchema) ?
+                            $"SELECT TOP 100 * FROM [{tableName}]" :
+                            $"SELECT TOP 100 * FROM [{tableSchema}].[{tableName}]";
+                    }
+                    else
+                    {
+                        cmd.CommandText = query;
+                    }
+                    await con.OpenAsync();
+                    var data = new List<dynamic>();
+
+                    using (var reader = await cmd.ExecuteReaderAsync())
+                    {
                         while (reader.Read())
                         {
                             var row = new ExpandoObject() as IDictionary<string, object>;
@@ -428,17 +426,6 @@ namespace Pentamic.SSBI.Services
                     }
                 }
             }
-            finally
-            {
-                if (con != null)
-                {
-                    con.Close();
-                }
-                if (reader != null)
-                {
-                    reader.Close();
-                }
-            }
         }
 
         public ColumnDataType GetDataType(string typeName)
@@ -448,12 +435,12 @@ namespace Pentamic.SSBI.Services
                 case "Int16":
                 case "Int32":
                 case "Int64":
+                case "Byte":
                     return ColumnDataType.Int64;
                 case "String":
                     return ColumnDataType.String;
                 case "DateTime":
                     return ColumnDataType.DateTime;
-                case "Byte":
                 case "Byte[]":
                     return ColumnDataType.Binary;
                 case "Decimal":

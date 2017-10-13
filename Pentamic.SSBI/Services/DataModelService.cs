@@ -581,7 +581,7 @@ namespace Pentamic.SSBI.Services
         {
             var model = Context.Models.Find(queryModel.ModelId);
             if (model == null) { throw new Exception("Model not found"); }
-            var query = $" EVALUATE TOPN(1000,'{queryModel.TableName}' ";
+            var query = $" EVALUATE TOPN(100,'{queryModel.TableName}' ";
             if (!string.IsNullOrEmpty(queryModel.OrderBy))
             {
                 query += $",[{queryModel.OrderBy}]";
