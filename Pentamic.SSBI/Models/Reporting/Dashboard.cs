@@ -23,5 +23,6 @@ namespace Pentamic.SSBI.Models.Reporting
         public List<DashboardComment> DashboardComments { get; set; }
         public List<DashboardView> DashboardViews { get; set; }
         public List<DashboardSharing> DashboardSharings { get; set; }
+        public List<DashboardFilter> DashboardFilters { get; set; }
     }
 }

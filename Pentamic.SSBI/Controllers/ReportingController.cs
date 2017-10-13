@@ -51,6 +51,11 @@ namespace Pentamic.SSBI.Controllers
             return _reportingService.ReportTiles;
         }
         [HttpGet]
+        public IQueryable<ReportTileRow> ReportTileRows()
+        {
+            return _reportingService.ReportTileRows;
+        }
+        [HttpGet]
         public IQueryable<DisplayType> DisplayTypes()
         {
             return _reportingService.DisplayTypes;
@@ -121,9 +126,23 @@ namespace Pentamic.SSBI.Controllers
         }
 
         [HttpPost]
+        public IHttpActionResult FieldValues(FieldQueryModel queryModel)
+        {
+            var result = _reportingService.GetFieldValues(queryModel);
+            return Ok(result);
+        }
+
+        [HttpPost]
         public IHttpActionResult Data(QueryModel queryModel)
         {
             var result = _reportingService.Query(queryModel);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public IHttpActionResult Data2(QueryModel2 queryModel)
+        {
+            var result = _reportingService.QueryRowTile(queryModel);
             return Ok(result);
         }
 
