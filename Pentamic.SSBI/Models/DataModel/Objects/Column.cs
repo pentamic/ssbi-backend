@@ -18,7 +18,7 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public bool IsHidden { get; set; }
         public ColumnDataType DataType { get; set; }
         public ColumnType ColumnType { get; set; }
-
+        public bool IsKey { get; set; }
         public Table Table { get; set; }
         [InverseProperty("FromColumn")]
         public List<Relationship> RelationshipFrom { get; set; }

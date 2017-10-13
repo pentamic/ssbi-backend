@@ -2829,7 +2829,8 @@ namespace Pentamic.SSBI.Services
                 ModelId = model.ModelId,
                 OriginalName = model.TableName,
                 Columns = new List<Column>(),
-                Partitions = new List<Partition>()
+                Partitions = new List<Partition>(),
+                DataCategory = "Time"
             };
             Context.Tables.Add(table);
             var tmp = new[]
@@ -2896,13 +2897,18 @@ namespace Pentamic.SSBI.Services
                 {
                     if (column is AS.CalculatedTableColumn col)
                     {
-                        table.Columns.Add(new Column()
+                        var c = new Column()
                         {
                             Name = col.Name,
                             DataType = (ColumnDataType)col.DataType,
                             SourceColumn = col.SourceColumn,
                             ColumnType = ColumnType.CalculatedTableColumn
-                        });
+                        };
+                        if (c.Name == "Date")
+                        {
+                            c.IsKey = true;
+                        }
+                        table.Columns.Add(c);
                     }
                 }
                 Context.SaveChanges();
