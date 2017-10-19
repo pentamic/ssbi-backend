@@ -10,7 +10,7 @@ namespace Pentamic.SSBI.Models.Reporting.Query
         public int Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
-        public string Ordinal { get; set; }
+        public int Ordinal { get; set; }
         public bool IsGroup { get; set; }
         public int? ParentId { get; set; }
         public bool IsFormula { get; set; }

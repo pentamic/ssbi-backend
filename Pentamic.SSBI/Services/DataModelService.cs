@@ -581,7 +581,7 @@ namespace Pentamic.SSBI.Services
         {
             var model = Context.Models.Find(queryModel.ModelId);
             if (model == null) { throw new Exception("Model not found"); }
-            var query = $" EVALUATE TOPN(100,'{queryModel.TableName}' ";
+            var query = $" EVALUATE TOPN(50,'{queryModel.TableName}' ";
             if (!string.IsNullOrEmpty(queryModel.OrderBy))
             {
                 query += $",[{queryModel.OrderBy}]";
@@ -2279,12 +2279,15 @@ namespace Pentamic.SSBI.Services
                         throw new ArgumentException("Database not found");
                     }
                     var tb = database.Model.Tables.Find(table.Name);
-                    if (tb == null)
+                    //if (tb == null)
+                    //{
+                    //    throw new ArgumentException("Table not found");
+                    //}
+                    if (tb != null)
                     {
-                        throw new ArgumentException("Table not found");
+                        database.Model.Tables.Remove(tb);
+                        database.Update(AN.UpdateOptions.ExpandFull);
                     }
-                    database.Model.Tables.Remove(tb);
-                    database.Update(AN.UpdateOptions.ExpandFull);
                 }
             }
             catch (AN.OperationException ex)
@@ -2440,14 +2443,32 @@ namespace Pentamic.SSBI.Services
                     {
                         throw new ArgumentException("Database not found");
                     }
-                    database.Model.Relationships.Add(new AS.SingleColumnRelationship
+                    var r = new AS.SingleColumnRelationship
                     {
                         Name = relationship.Name,
                         ToColumn = database.Model.Tables[info.ToTableName].Columns[info.ToColumnName],
                         FromColumn = database.Model.Tables[info.FromTableName].Columns[info.FromColumnName],
-                        FromCardinality = AS.RelationshipEndCardinality.Many,
-                        ToCardinality = AS.RelationshipEndCardinality.One
-                    });
+                        CrossFilteringBehavior = (AS.CrossFilteringBehavior)relationship.CrossFilteringBehavior,
+                        IsActive = relationship.IsActive,
+                        JoinOnDateBehavior = (AS.DateTimeRelationshipBehavior)relationship.DateBehavior,
+                        SecurityFilteringBehavior = (AS.SecurityFilteringBehavior)relationship.SecurityFilteringBehavior
+                    };
+                    switch (relationship.Cardinality)
+                    {
+                        case RelationshipCardinality.ManyToOne:
+                            r.FromCardinality = AS.RelationshipEndCardinality.Many;
+                            r.ToCardinality = AS.RelationshipEndCardinality.One;
+                            break;
+                        case RelationshipCardinality.OneToOne:
+                            r.FromCardinality = AS.RelationshipEndCardinality.One;
+                            r.ToCardinality = AS.RelationshipEndCardinality.One;
+                            break;
+                        case RelationshipCardinality.OneToMany:
+                            r.FromCardinality = AS.RelationshipEndCardinality.One;
+                            r.ToCardinality = AS.RelationshipEndCardinality.Many;
+                            break;
+                    }
+                    database.Model.Relationships.Add(r);
                     database.Update(AN.UpdateOptions.ExpandFull);
                 }
             }

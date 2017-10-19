@@ -11,7 +11,7 @@ namespace Pentamic.SSBI.Models.Reporting
         public int ReportTileId { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
-        public string Ordinal { get; set; }
+        public int Ordinal { get; set; }
         public bool IsGroup { get; set; }
         public int? ParentId { get; set; }
         public bool IsFormula { get; set; }

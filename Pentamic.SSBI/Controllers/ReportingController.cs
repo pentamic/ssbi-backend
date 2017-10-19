@@ -151,6 +151,27 @@ namespace Pentamic.SSBI.Controllers
             return Ok(result);
         }
 
+        [AllowAnonymous]
+        [HttpPost]
+        public IHttpActionResult Query(QueryModel3 queryModel)
+        {
+            try
+            {
+                var result = _reportingService.QueryCustom(queryModel);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                var message = e.Message;
+                Exception ie = e.InnerException;
+                while (ie != null)
+                {
+                    message += "-----" + ie.Message;
+                    ie = ie.InnerException;
+                }
+                return BadRequest(message);
+            }
+        }
 
         [HttpPost]
         public SaveResult SaveChanges(JObject saveBundle)

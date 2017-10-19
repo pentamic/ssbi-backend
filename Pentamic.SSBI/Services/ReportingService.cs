@@ -663,8 +663,48 @@ namespace Pentamic.SSBI.Services
                     CalculateEntryFormula(r, result);
                 }
             }
-            return result.OrderBy(x => int.Parse(x.Ordinal)).ToList();
+            return result.OrderBy(x => x.Ordinal).ToList();
         }
+
+        public List<Dictionary<string, object>> QueryCustom(QueryModel3 queryModel)
+        {
+            var dmContext = new DataModelContext();
+            var model = dmContext.Models.Find(queryModel.ModelId);
+            if (model == null)
+            {
+                throw new Exception("Model not found");
+            }      
+            var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
+            {
+                ["Catalog"] = model.DatabaseName
+            };
+            using (var conn = new AdomdConnection(conStrBuilder.ToString()))
+            {
+                conn.Open();
+                var command = conn.CreateCommand();
+                command.CommandText = queryModel.Query;
+                using (var reader = command.ExecuteReader())
+                {
+                    var result = new List<Dictionary<string, object>>();
+                    while (reader.Read())
+                    {
+                        var row = new Dictionary<string, object>();
+                        var columns = new List<string>();
+                        for (var i = 0; i < reader.FieldCount; ++i)
+                        {
+                            columns.Add(reader.GetName(i));
+                        }
+                        for (var i = 0; i < reader.FieldCount; ++i)
+                        {
+                            row[columns[i]] = reader.GetValue(i);
+                        }
+                        result.Add(row);
+                    }
+                    return result;
+                }
+            }
+        }
+
 
         public string BuildTileRowQuery(ReportTileRow row, string mtd, string ytd, string pmtd, string pytd)
         {

@@ -335,6 +335,10 @@
     <Compile Include="Migrations\DataModelContext\201710130757135_UpdateDataModel15.Designer.cs">
       <DependentUpon>201710130757135_UpdateDataModel15.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\DataModelContext\201710190908254_UpdateDataModel16.cs" />
+    <Compile Include="Migrations\DataModelContext\201710190908254_UpdateDataModel16.Designer.cs">
+      <DependentUpon>201710190908254_UpdateDataModel16.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DataModelContext\Configuration.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.Designer.cs">
@@ -424,13 +428,21 @@
     <Compile Include="Migrations\ReportingContext\201710120315370_UpdateReporting20.Designer.cs">
       <DependentUpon>201710120315370_UpdateReporting20.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\ReportingContext\201710160320467_UpdateReporting21.cs" />
+    <Compile Include="Migrations\ReportingContext\201710160320467_UpdateReporting21.Designer.cs">
+      <DependentUpon>201710160320467_UpdateReporting21.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ReportingContext\Configuration.cs" />
     <Compile Include="Models\AuthGroup.cs" />
     <Compile Include="Models\DataModel\DateData.cs" />
     <Compile Include="Models\DataModel\DateTableCreateModel.cs" />
+    <Compile Include="Models\DataModel\Enums\CrossFilteringBehavior.cs" />
     <Compile Include="Models\DataModel\Enums\ColumnType.cs" />
     <Compile Include="Models\DataModel\Enums\ConnectionType.cs" />
     <Compile Include="Models\DataModel\Enums\PartitionSourceType.cs" />
+    <Compile Include="Models\DataModel\Enums\SecurityFilteringBehavior.cs" />
+    <Compile Include="Models\DataModel\Enums\RelationshipDateBehavior.cs" />
+    <Compile Include="Models\DataModel\Enums\RelationshipCardinality.cs" />
     <Compile Include="Models\DataModel\ModelRefreshModel.cs" />
     <Compile Include="Models\DataModel\Objects\Connection.cs" />
     <Compile Include="Models\DataModel\Objects\ConnectionSharing.cs" />
@@ -477,6 +489,7 @@
     <Compile Include="Models\IShareInfo.cs" />
     <Compile Include="Models\Reporting\DashboardComment.cs" />
     <Compile Include="Models\Reporting\Query\FieldQueryModel.cs" />
+    <Compile Include="Models\Reporting\Query\QueryModel3.cs" />
     <Compile Include="Models\Reporting\Query\QueryModel2.cs" />
     <Compile Include="Models\Reporting\Query\ReportTileRowQueryResult.cs" />
     <Compile Include="Models\Reporting\ReportAction.cs" />
@@ -609,6 +622,9 @@
     <EmbeddedResource Include="Migrations\DataModelContext\201710130757135_UpdateDataModel15.resx">
       <DependentUpon>201710130757135_UpdateDataModel15.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201710190908254_UpdateDataModel16.resx">
+      <DependentUpon>201710190908254_UpdateDataModel16.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201702080147015_InitReporting.resx">
       <DependentUpon>201702080147015_InitReporting.cs</DependentUpon>
     </EmbeddedResource>
@@ -674,6 +690,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201710120315370_UpdateReporting20.resx">
       <DependentUpon>201710120315370_UpdateReporting20.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201710160320467_UpdateReporting21.resx">
+      <DependentUpon>201710160320467_UpdateReporting21.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
