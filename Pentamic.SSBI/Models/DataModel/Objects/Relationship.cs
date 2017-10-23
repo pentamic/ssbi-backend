@@ -14,7 +14,7 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public bool IsActive { get; set; }
         public CrossFilteringBehavior CrossFilteringBehavior { get; set; }
         public RelationshipCardinality Cardinality { get; set; }
-        public RelationshipDateBehavior DateBehavior { get; set; }
+        public RelationshipDateBehavior? DateBehavior { get; set; }
         public SecurityFilteringBehavior SecurityFilteringBehavior { get; set; }
         //public string FromTableName { get; set; }
         //public string FromColumnName { get; set; }

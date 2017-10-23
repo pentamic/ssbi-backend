@@ -385,12 +385,12 @@ namespace Pentamic.SSBI.Services
                     if (query == null)
                     {
                         cmd.CommandText = string.IsNullOrEmpty(tableSchema) ?
-                            $"SELECT TOP 100 * FROM [{tableName}]" :
-                            $"SELECT TOP 100 * FROM [{tableSchema}].[{tableName}]";
+                            $"SELECT TOP 50 * FROM [{tableName}]" :
+                            $"SELECT TOP 50 * FROM [{tableSchema}].[{tableName}]";
                     }
                     else
                     {
-                        cmd.CommandText = query;
+                        cmd.CommandText = $"SELECT TOP 50 * FROM ( {query} ) tmp{DateTime.Now.ToString("yyyyMMddhhmmss")}";
                     }
                     await con.OpenAsync();
                     var data = new List<dynamic>();

@@ -46,32 +46,88 @@ namespace Pentamic.SSBI.Controllers
         [Route("tables")]
         public async Task<IHttpActionResult> Tables([FromBody]TableDiscoverModel model)
         {
-            var result = await _discoverService.DiscoverTables(model.DataSourceId);
-            return Ok(result);
+            try
+            {
+                var result = await _discoverService.DiscoverTables(model.DataSourceId);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                var message = e.Message;
+                var ie = e.InnerException;
+                while (ie != null)
+                {
+                    message += " | " + ie.Message;
+                    ie = ie.InnerException;
+                }
+                return BadRequest(message);
+            }
         }
 
         [HttpPost]
         [Route("columns")]
         public async Task<IHttpActionResult> Columns([FromBody]ColumnDiscoverModel model)
         {
-            var result = await _discoverService.DiscoverColumns(model.DataSourceId, model.TableSchema, model.TableName);
-            return Ok(result);
+            try
+            {
+                var result = await _discoverService.DiscoverColumns(model.DataSourceId, model.TableSchema, model.TableName);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                var message = e.Message;
+                var ie = e.InnerException;
+                while (ie != null)
+                {
+                    message += " | " + ie.Message;
+                    ie = ie.InnerException;
+                }
+                return BadRequest(message);
+            }
         }
 
         [HttpPost]
         [Route("data")]
         public async Task<IHttpActionResult> Data([FromBody]DataDiscoverModel model)
         {
-            var result = await _discoverService.DiscoverTable(model.DataSourceId, model.TableSchema, model.TableName, model.Query);
-            return Ok(result);
+            try
+            {
+                var result = await _discoverService.DiscoverTable(model.DataSourceId, model.TableSchema, model.TableName, model.Query);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                var message = e.Message;
+                var ie = e.InnerException;
+                while (ie != null)
+                {
+                    message += " | " + ie.Message;
+                    ie = ie.InnerException;
+                }
+                return BadRequest(message);
+            }
         }
 
         [HttpPost]
         [Route("relationships")]
         public async Task<IHttpActionResult> Relationships([FromBody]RelationshipDiscoverModel model)
         {
-            var result = await _discoverService.DiscoverRelationships(model.DataSource, model.FkTableSchema, model.FkTableName);
-            return Ok(result);
+            try
+            {
+                var result = await _discoverService.DiscoverRelationships(model.DataSource, model.FkTableSchema, model.FkTableName);
+                return Ok(result);
+            }
+            catch (Exception e)
+            {
+                var message = e.Message;
+                var ie = e.InnerException;
+                while (ie != null)
+                {
+                    message += " | " + ie.Message;
+                    ie = ie.InnerException;
+                }
+                return BadRequest(message);
+            }
         }
     }
 }

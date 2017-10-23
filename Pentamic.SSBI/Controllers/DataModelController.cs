@@ -166,7 +166,7 @@ namespace Pentamic.SSBI.Controllers
         {
             try
             {
-                _dataModelService.EnqueueRefreshModel(modelId);
+                _dataModelService.RefreshModel(modelId);
                 return Ok();
             }
             catch (Exception e)
@@ -175,6 +175,23 @@ namespace Pentamic.SSBI.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPost]
+        [Route("breeze/datamodel/refreshtable/{tableId}")]
+        public IHttpActionResult RefreshTable(int tableId)
+        {
+            try
+            {
+                _dataModelService.RefreshTable(tableId);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                Serilog.Log.Logger.Error(e, e.Message);
+                return BadRequest(e.Message);
+            }
+        }
+
 
         [HttpPost]
         [Route("breeze/datamodel/createdatetable")]

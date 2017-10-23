@@ -552,11 +552,19 @@ namespace Pentamic.SSBI.Services
             var tb = Context.Tables.Where(x => x.Id == tableId)
                 .Include(x => x.Model)
                 .FirstOrDefault();
+            if (tb == null)
+            {
+                throw new Exception("Table not found");
+            }
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
                 var database = server.Databases[tb.Model.DatabaseName];
                 var table = database.Model.Tables[tb.Name];
+                if (table == null)
+                {
+                    throw new Exception("Table not found");
+                }
                 table.RequestRefresh(AS.RefreshType.Full);
                 database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
             }
@@ -1102,6 +1110,12 @@ namespace Pentamic.SSBI.Services
                         break;
                 }
             }
+            if (info.Entity is Relationship && info.EntityState == Breeze.ContextProvider.EntityState.Added)
+            {
+                var entity = info.Entity as Relationship;
+                entity.Name = Guid.NewGuid().ToString();
+                entity.OriginalName = entity.Name;
+            }
             if (info.Entity is UserFavoriteModel && info.EntityState == Breeze.ContextProvider.EntityState.Added)
             {
                 var entity = info.Entity as UserFavoriteModel;
@@ -1358,6 +1372,25 @@ namespace Pentamic.SSBI.Services
                     }
                 }
             }
+            if (saveMap.TryGetValue(typeof(Measure), out eis))
+            {
+                foreach (var ei in eis)
+                {
+                    var e = ei.Entity as Measure;
+                    if (ei.EntityState == Breeze.ContextProvider.EntityState.Added)
+                    {
+                        CreateMeasure(e);
+                    }
+                    if (ei.EntityState == Breeze.ContextProvider.EntityState.Modified)
+                    {
+                        UpdateMeasure(e);
+                    }
+                    if (ei.EntityState == Breeze.ContextProvider.EntityState.Deleted)
+                    {
+                        DeleteMeasure(e);
+                    }
+                }
+            }
         }
 
         public string GetDataSourceConnectionString(DataSource ds)
@@ -1449,6 +1482,10 @@ namespace Pentamic.SSBI.Services
                 if (req.Type == typeof(Partition))
                 {
                     RenamePartition(req.Id, req.OriginalName, req.Name);
+                }
+                if (req.Type == typeof(Measure))
+                {
+                    RenameMeasure(req.Id, req.OriginalName, req.Name);
                 }
             }
         }
@@ -2433,52 +2470,40 @@ namespace Pentamic.SSBI.Services
             {
                 throw new ArgumentException("Model not found");
             }
-            try
+            using (var server = new AS.Server())
             {
-                using (var server = new AS.Server())
+                server.Connect(_asConnectionString);
+                var database = server.Databases.FindByName(dbName);
+                if (database == null)
                 {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(dbName);
-                    if (database == null)
-                    {
-                        throw new ArgumentException("Database not found");
-                    }
-                    var r = new AS.SingleColumnRelationship
-                    {
-                        Name = relationship.Name,
-                        ToColumn = database.Model.Tables[info.ToTableName].Columns[info.ToColumnName],
-                        FromColumn = database.Model.Tables[info.FromTableName].Columns[info.FromColumnName],
-                        CrossFilteringBehavior = (AS.CrossFilteringBehavior)relationship.CrossFilteringBehavior,
-                        IsActive = relationship.IsActive,
-                        JoinOnDateBehavior = (AS.DateTimeRelationshipBehavior)relationship.DateBehavior,
-                        SecurityFilteringBehavior = (AS.SecurityFilteringBehavior)relationship.SecurityFilteringBehavior
-                    };
-                    switch (relationship.Cardinality)
-                    {
-                        case RelationshipCardinality.ManyToOne:
-                            r.FromCardinality = AS.RelationshipEndCardinality.Many;
-                            r.ToCardinality = AS.RelationshipEndCardinality.One;
-                            break;
-                        case RelationshipCardinality.OneToOne:
-                            r.FromCardinality = AS.RelationshipEndCardinality.One;
-                            r.ToCardinality = AS.RelationshipEndCardinality.One;
-                            break;
-                        case RelationshipCardinality.OneToMany:
-                            r.FromCardinality = AS.RelationshipEndCardinality.One;
-                            r.ToCardinality = AS.RelationshipEndCardinality.Many;
-                            break;
-                    }
-                    database.Model.Relationships.Add(r);
-                    database.Update(AN.UpdateOptions.ExpandFull);
+                    throw new ArgumentException("Database not found");
                 }
-            }
-            catch (AN.OperationException ex)
-            {
-                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
+                var r = new AS.SingleColumnRelationship
                 {
+                    Name = relationship.Name,
+                    FromColumn = database.Model.Tables[info.FromTableName].Columns[info.FromColumnName],
+                    ToColumn = database.Model.Tables[info.ToTableName].Columns[info.ToColumnName],
+                    CrossFilteringBehavior = (AS.CrossFilteringBehavior)relationship.CrossFilteringBehavior,
+                    SecurityFilteringBehavior = (AS.SecurityFilteringBehavior)relationship.SecurityFilteringBehavior,
+                    ToCardinality = AS.RelationshipEndCardinality.One,
+                    IsActive = relationship.IsActive
+                };
+                if (relationship.DateBehavior != null)
+                {
+                    r.JoinOnDateBehavior = (AS.DateTimeRelationshipBehavior)relationship.DateBehavior;
                 }
-                throw;
+                if (relationship.Cardinality == RelationshipCardinality.OneToOne)
+                {
+                    r.FromCardinality = AS.RelationshipEndCardinality.One;
+                }
+                else
+                {
+                    r.FromCardinality = AS.RelationshipEndCardinality.Many;
+                }
+                database.Model.Relationships.Add(r);
+                database.Update(AN.UpdateOptions.ExpandFull);
             }
+
         }
 
         public void UpdateRelationship(Relationship relationship)
@@ -2495,33 +2520,40 @@ namespace Pentamic.SSBI.Services
             {
                 throw new ArgumentException("Model not found");
             }
-            try
+            using (var server = new AS.Server())
             {
-                using (var server = new AS.Server())
+                server.Connect(_asConnectionString);
+                var database = server.Databases.FindByName(dbName);
+                if (database == null)
                 {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(dbName);
-                    if (database == null)
-                    {
-                        throw new ArgumentException("Database not found");
-                    }
-                    var re = database.Model.Relationships.Find(relationship.Name) as AS.SingleColumnRelationship;
-                    if (re == null)
-                    {
-                        throw new ArgumentException("Relationship not found");
-                    }
-                    re.ToColumn = database.Model.Tables[info.ToTableName].Columns[info.ToColumnName];
-                    re.FromColumn = database.Model.Tables[info.FromTableName].Columns[info.FromColumnName];
-                    database.Model.Relationships.Remove(re);
-                    database.Update(AN.UpdateOptions.ExpandFull);
+                    throw new ArgumentException("Database not found");
                 }
-            }
-            catch (AN.OperationException ex)
-            {
-                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
+                var re = database.Model.Relationships.Find(relationship.Name) as AS.SingleColumnRelationship;
+                if (re == null)
                 {
+                    throw new ArgumentException("Relationship not found");
                 }
-                throw;
+                re.FromColumn = database.Model.Tables[info.FromTableName].Columns[info.FromColumnName];
+                re.ToColumn = database.Model.Tables[info.ToTableName].Columns[info.ToColumnName];
+                re.CrossFilteringBehavior = (AS.CrossFilteringBehavior)relationship.CrossFilteringBehavior;
+                re.SecurityFilteringBehavior = (AS.SecurityFilteringBehavior)relationship.SecurityFilteringBehavior;
+                re.ToCardinality = AS.RelationshipEndCardinality.One;
+                re.IsActive = relationship.IsActive;
+                if (relationship.DateBehavior != null)
+                {
+                    re.JoinOnDateBehavior = (AS.DateTimeRelationshipBehavior)relationship.DateBehavior;
+                }
+                if (relationship.Cardinality == RelationshipCardinality.OneToOne)
+                {
+                    re.FromCardinality = AS.RelationshipEndCardinality.One;
+                }
+                else
+                {
+                    re.FromCardinality = AS.RelationshipEndCardinality.Many;
+                }
+                re.ToColumn = database.Model.Tables[info.ToTableName].Columns[info.ToColumnName];
+                re.FromColumn = database.Model.Tables[info.FromTableName].Columns[info.FromColumnName];
+                database.Update(AN.UpdateOptions.ExpandFull);
             }
         }
 
@@ -2533,22 +2565,165 @@ namespace Pentamic.SSBI.Services
             {
                 throw new ArgumentException("Model not found");
             }
+            using (var server = new AS.Server())
+            {
+                server.Connect(_asConnectionString);
+                var database = server.Databases.FindByName(dbName);
+                if (database == null)
+                {
+                    throw new ArgumentException("Database not found");
+                }
+                var re = database.Model.Relationships.Find(relationship.Name);
+                if (re != null)
+                {
+                    database.Model.Relationships.Remove(re);
+                    database.Update(AN.UpdateOptions.ExpandFull);
+                }
+            }
+        }
+
+        public void CreateMeasure(Measure measure)
+        {
+            var info = Context.Measures.Where(x => x.Id == measure.Id).Select(x => new
+            {
+                TableName = x.Table.Name,
+                DatabaseName = x.Table.Model.DatabaseName
+            }).FirstOrDefault();
+            using (var server = new AS.Server())
+            {
+                server.Connect(_asConnectionString);
+                var database = server.Databases.FindByName(info.DatabaseName);
+                if (database == null)
+                {
+                    throw new ArgumentException("Database not found");
+                }
+                var t = database.Model.Tables[info.TableName];
+                if (t == null)
+                {
+                    throw new ArgumentException("Table not found");
+                }
+                var m = new AS.Measure
+                {
+                    Name = measure.Name,
+                    Expression = measure.Expression
+                };
+                t.Measures.Add(m);
+                database.Update(AN.UpdateOptions.ExpandFull);
+            }
+
+        }
+
+        public void UpdateMeasure(Measure measure)
+        {
+            var info = Context.Measures.Where(x => x.Id == measure.Id).Select(x => new
+            {
+                TableName = x.Table.Name,
+                DatabaseName = x.Table.Model.DatabaseName
+            }).FirstOrDefault();
+            using (var server = new AS.Server())
+            {
+                server.Connect(_asConnectionString);
+                var database = server.Databases.FindByName(info.DatabaseName);
+                if (database == null)
+                {
+                    throw new ArgumentException("Database not found");
+                }
+                var t = database.Model.Tables[info.TableName];
+                if (t == null)
+                {
+                    throw new ArgumentException("Table not found");
+                }
+                var m = t.Measures[measure.Name];
+                if (m == null)
+                {
+                    throw new ArgumentException("Measure not found");
+                }
+                m.Expression = measure.Expression;
+                database.Update(AN.UpdateOptions.ExpandFull);
+            }
+        }
+
+        public void DeleteMeasure(Measure measure)
+        {
+            var info = Context.Measures.Where(x => x.Id == measure.Id).Select(x => new
+            {
+                TableName = x.Table.Name,
+                DatabaseName = x.Table.Model.DatabaseName
+            }).FirstOrDefault();
+            using (var server = new AS.Server())
+            {
+                server.Connect(_asConnectionString);
+                var database = server.Databases.FindByName(info.TableName);
+                if (database == null)
+                {
+                    throw new ArgumentException("Database not found");
+                }
+                var t = database.Model.Tables[info.TableName];
+                var m = t.Measures[measure.Name];
+                if (m != null)
+                {
+                    t.Measures.Remove(m);
+                    database.Update(AN.UpdateOptions.ExpandFull);
+                }
+            }
+        }
+
+        public void CreateColumn(Column column)
+        {
+            var info = Context.Columns.Where(x => x.Id == column.Id).Select(x => new
+            {
+                DatabaseName = x.Table.Model.DatabaseName,
+                TableName = x.Table.Name,
+                Name = x.Name
+            }).FirstOrDefault();
+            if (info == null || info.DatabaseName == null)
+            {
+                throw new ArgumentException("Model not found");
+            }
             try
             {
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(dbName);
+                    var database = server.Databases.FindByName(info.DatabaseName);
                     if (database == null)
                     {
                         throw new ArgumentException("Database not found");
                     }
-                    var re = database.Model.Relationships.Find(relationship.Name);
-                    if (re == null)
+                    var tb = database.Model.Tables.Find(info.TableName);
+                    if (tb == null)
                     {
-                        throw new ArgumentException("Relationship not found");
+                        throw new ArgumentException("Table not found");
                     }
-                    database.Model.Relationships.Remove(re);
+                    if (column.ColumnType == ColumnType.Calculated)
+                    {
+                        var co = new AS.CalculatedColumn
+                        {
+                            Name = column.Name,
+                            Description = column.Description,
+                            DataType = column.DataType.ToDataType(),
+                            DisplayFolder = column.DisplayFolder,
+                            FormatString = column.FormatString,
+                            IsHidden = column.IsHidden,
+                            Expression = column.Expression
+                        };
+                        tb.Columns.Add(co);
+                    }
+                    if (column.ColumnType == ColumnType.Data)
+                    {
+                        var co = new AS.DataColumn
+                        {
+                            Name = column.Name,
+                            Description = column.Description,
+                            DataType = column.DataType.ToDataType(),
+                            DisplayFolder = column.DisplayFolder,
+                            FormatString = column.FormatString,
+                            IsHidden = column.IsHidden,
+                            SourceColumn = column.SourceColumn
+                        };
+                        tb.Columns.Add(co);
+                    }
+
                     database.Update(AN.UpdateOptions.ExpandFull);
                 }
             }
@@ -2588,17 +2763,35 @@ namespace Pentamic.SSBI.Services
                     {
                         throw new ArgumentException("Table not found");
                     }
-                    var co = tb.Columns.Find(info.Name) as AS.DataColumn;
-                    if (co == null)
+                    if (column.ColumnType == ColumnType.Data)
                     {
-                        throw new ArgumentException("Column not found");
+                        var co = tb.Columns.Find(info.Name) as AS.DataColumn;
+                        if (co == null)
+                        {
+                            throw new ArgumentException("Column not found");
+                        }
+                        co.Description = column.Description;
+                        co.DataType = column.DataType.ToDataType();
+                        co.DisplayFolder = column.DisplayFolder;
+                        co.FormatString = column.FormatString;
+                        co.IsHidden = column.IsHidden;
+                        co.SourceColumn = column.SourceColumn;
                     }
-                    co.Description = column.Description;
-                    co.DataType = column.DataType.ToDataType();
-                    co.DisplayFolder = column.DisplayFolder;
-                    co.FormatString = column.FormatString;
-                    co.IsHidden = column.IsHidden;
-                    co.SourceColumn = column.SourceColumn;
+                    if (column.ColumnType == ColumnType.Calculated)
+                    {
+                        var co = tb.Columns.Find(info.Name) as AS.CalculatedColumn;
+                        if (co == null)
+                        {
+                            throw new ArgumentException("Column not found");
+                        }
+                        co.Description = column.Description;
+                        co.DataType = column.DataType.ToDataType();
+                        co.DisplayFolder = column.DisplayFolder;
+                        co.FormatString = column.FormatString;
+                        co.IsHidden = column.IsHidden;
+                        co.Expression = column.Expression;
+                    }
+
                     database.Update(AN.UpdateOptions.ExpandFull);
                 }
             }
