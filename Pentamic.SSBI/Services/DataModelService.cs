@@ -1351,6 +1351,10 @@ namespace Pentamic.SSBI.Services
                 foreach (var ei in eis)
                 {
                     var e = ei.Entity as Column;
+                    if (ei.EntityState == Breeze.ContextProvider.EntityState.Added)
+                    {
+                        CreateColumn(e);
+                    }
                     if (ei.EntityState == Breeze.ContextProvider.EntityState.Modified)
                     {
                         UpdateColumn(e);
@@ -1770,6 +1774,8 @@ namespace Pentamic.SSBI.Services
             }
         }
 
+        //Model-----------------------------------------------------------
+
         public void CreateModel(Model model)
         {
             try
@@ -1855,6 +1861,8 @@ namespace Pentamic.SSBI.Services
                 throw;
             }
         }
+
+        //Data Source---------------------------------------------------
 
         public void CreateDataSource(DataSource dataSource)
         {
@@ -1962,6 +1970,8 @@ namespace Pentamic.SSBI.Services
                 throw;
             }
         }
+
+        //Table--------------------------------------------------------
 
         public void CreateTable(Table table)
         {
@@ -2336,6 +2346,8 @@ namespace Pentamic.SSBI.Services
             }
         }
 
+        //Partition-------------------------------------------------
+
         public void CreatePartition(Partition partition)
         {
             var info = Context.Partitions.Where(x => x.Id == partition.Id)
@@ -2455,6 +2467,52 @@ namespace Pentamic.SSBI.Services
                 throw;
             }
         }
+
+        public void DeletePartition(Partition partition)
+        {
+            var info = Context.Tables.Where(x => x.Id == partition.TableId)
+                .Select(x => new
+                {
+                    DatabaseName = x.Model.DatabaseName,
+                    TableName = x.Name
+                }).FirstOrDefault();
+            if (info == null || info.DatabaseName == null)
+            {
+                throw new ArgumentException("Model not found");
+            }
+            try
+            {
+                using (var server = new AS.Server())
+                {
+                    server.Connect(_asConnectionString);
+                    var database = server.Databases.FindByName(info.DatabaseName);
+                    if (database == null)
+                    {
+                        throw new ArgumentException("Database not found");
+                    }
+                    var tb = database.Model.Tables.Find(info.TableName);
+                    if (tb == null)
+                    {
+                        throw new ArgumentException("Table not found");
+                    }
+                    var pa = tb.Partitions.Find(partition.Name);
+                    if (pa != null)
+                    {
+                        tb.Partitions.Remove(pa);
+                    }
+                    database.Update(AN.UpdateOptions.ExpandFull);
+                }
+            }
+            catch (AN.OperationException ex)
+            {
+                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
+                {
+                }
+                throw;
+            }
+        }
+
+        //Relationship---------------------------------------------
 
         public void CreateRelationship(Relationship relationship)
         {
@@ -2582,6 +2640,8 @@ namespace Pentamic.SSBI.Services
             }
         }
 
+        //Measure--------------------------------------------------
+
         public void CreateMeasure(Measure measure)
         {
             var info = Context.Measures.Where(x => x.Id == measure.Id).Select(x => new
@@ -2668,6 +2728,8 @@ namespace Pentamic.SSBI.Services
             }
         }
 
+        //Column--------------------------------------------------
+
         public void CreateColumn(Column column)
         {
             var info = Context.Columns.Where(x => x.Id == column.Id).Select(x => new
@@ -2680,60 +2742,51 @@ namespace Pentamic.SSBI.Services
             {
                 throw new ArgumentException("Model not found");
             }
-            try
+            using (var server = new AS.Server())
             {
-                using (var server = new AS.Server())
+                server.Connect(_asConnectionString);
+                var database = server.Databases.FindByName(info.DatabaseName);
+                if (database == null)
                 {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(info.DatabaseName);
-                    if (database == null)
+                    throw new ArgumentException("Database not found");
+                }
+                var tb = database.Model.Tables.Find(info.TableName);
+                if (tb == null)
+                {
+                    throw new ArgumentException("Table not found");
+                }
+                if (column.ColumnType == ColumnType.Calculated)
+                {
+                    var co = new AS.CalculatedColumn
                     {
-                        throw new ArgumentException("Database not found");
-                    }
-                    var tb = database.Model.Tables.Find(info.TableName);
-                    if (tb == null)
+                        Name = column.Name,
+                        Description = column.Description,
+                        DataType = column.DataType.ToDataType(),
+                        DisplayFolder = column.DisplayFolder,
+                        FormatString = column.FormatString,
+                        IsHidden = column.IsHidden,
+                        Expression = column.Expression
+                    };
+                    tb.Columns.Add(co);
+                }
+                if (column.ColumnType == ColumnType.Data)
+                {
+                    var co = new AS.DataColumn
                     {
-                        throw new ArgumentException("Table not found");
-                    }
-                    if (column.ColumnType == ColumnType.Calculated)
-                    {
-                        var co = new AS.CalculatedColumn
-                        {
-                            Name = column.Name,
-                            Description = column.Description,
-                            DataType = column.DataType.ToDataType(),
-                            DisplayFolder = column.DisplayFolder,
-                            FormatString = column.FormatString,
-                            IsHidden = column.IsHidden,
-                            Expression = column.Expression
-                        };
-                        tb.Columns.Add(co);
-                    }
-                    if (column.ColumnType == ColumnType.Data)
-                    {
-                        var co = new AS.DataColumn
-                        {
-                            Name = column.Name,
-                            Description = column.Description,
-                            DataType = column.DataType.ToDataType(),
-                            DisplayFolder = column.DisplayFolder,
-                            FormatString = column.FormatString,
-                            IsHidden = column.IsHidden,
-                            SourceColumn = column.SourceColumn
-                        };
-                        tb.Columns.Add(co);
-                    }
+                        Name = column.Name,
+                        Description = column.Description,
+                        DataType = column.DataType.ToDataType(),
+                        DisplayFolder = column.DisplayFolder,
+                        FormatString = column.FormatString,
+                        IsHidden = column.IsHidden,
+                        SourceColumn = column.SourceColumn
+                    };
+                    tb.Columns.Add(co);
+                }
 
-                    database.Update(AN.UpdateOptions.ExpandFull);
-                }
+                database.Update(AN.UpdateOptions.ExpandFull);
             }
-            catch (AN.OperationException ex)
-            {
-                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
-                {
-                }
-                throw;
-            }
+
         }
 
         public void UpdateColumn(Column column)
@@ -2831,12 +2884,11 @@ namespace Pentamic.SSBI.Services
                         throw new ArgumentException("Table not found");
                     }
                     var co = tb.Columns.Find(column.Name);
-                    if (co == null)
+                    if (co != null)
                     {
-                        throw new ArgumentException("Column not found");
+                        tb.Columns.Remove(co);
+                        database.Update(AN.UpdateOptions.ExpandFull);
                     }
-                    tb.Columns.Remove(co);
-                    database.Update(AN.UpdateOptions.ExpandFull);
                 }
             }
             catch (AN.OperationException ex)
@@ -2847,6 +2899,8 @@ namespace Pentamic.SSBI.Services
                 throw;
             }
         }
+
+        //Role----------------------------------------------------
 
         public void CreateRole()
         {
@@ -3106,6 +3160,7 @@ namespace Pentamic.SSBI.Services
                     throw new ArgumentException("Database not found");
                 }
                 var tb = AddCalculatedTable(database, model.ModelId, table);
+                tb.RequestRefresh(AS.RefreshType.Full);
                 database.Update(AN.UpdateOptions.ExpandFull);
                 foreach (var column in tb.Columns)
                 {
