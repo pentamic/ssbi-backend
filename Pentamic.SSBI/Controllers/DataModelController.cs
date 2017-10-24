@@ -122,6 +122,13 @@ namespace Pentamic.SSBI.Controllers
         }
 
         [HttpPost]
+        public SaveResult SaveImport(JObject saveBundle)
+        {
+            return _dataModelService.SaveImport(saveBundle);
+        }
+
+
+        [HttpPost]
         public async Task<IHttpActionResult> Import()
         {
             if (!Request.Content.IsMimeMultipartContent())

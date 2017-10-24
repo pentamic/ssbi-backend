@@ -1038,6 +1038,15 @@ namespace Pentamic.SSBI.Services
             return _contextProvider.SaveChanges(saveBundle, txSettings);
         }
 
+        public SaveResult SaveImport(JObject saveBundle)
+        {
+            var txSettings = new TransactionSettings { TransactionType = TransactionType.TransactionScope };
+            _contextProvider.BeforeSaveEntityDelegate += BeforeSaveEntity;
+            _contextProvider.BeforeSaveEntitiesDelegate += BeforeSaveEntities;
+            _contextProvider.AfterSaveEntitiesDelegate += AfterSaveImport;
+            return _contextProvider.SaveChanges(saveBundle, txSettings);
+        }
+
         protected bool BeforeSaveEntity(EntityInfo info)
         {
             if (info.Entity is IAuditable)
@@ -1393,6 +1402,25 @@ namespace Pentamic.SSBI.Services
                     {
                         DeleteMeasure(e);
                     }
+                }
+            }
+        }
+
+        protected void AfterSaveImport(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings)
+        {
+            List<EntityInfo> eis;
+            if (saveMap.TryGetValue(typeof(Table), out eis))
+            {
+                var newTables = eis.Where(x => x.EntityState == Breeze.ContextProvider.EntityState.Added)
+                    .Select(x => x.Entity as Table)
+                    .GroupBy(x => x.ModelId).Select(x => new
+                    {
+                        ModelId = x.Key,
+                        Tables = x.ToList()
+                    });
+                foreach (var group in newTables)
+                {
+                    CreateTables(group.ModelId, group.Tables);
                 }
             }
         }
@@ -2081,39 +2109,68 @@ namespace Pentamic.SSBI.Services
                         {
                             foreach (var col in table.Columns)
                             {
-                                tb.Columns.Add(new AS.DataColumn
+                                if (col.ColumnType == ColumnType.Data)
                                 {
-                                    Name = col.Name,
-                                    DataType = col.DataType.ToDataType(),
-                                    SourceColumn = col.SourceColumn,
-                                    IsHidden = col.IsHidden,
-                                    DisplayFolder = col.DisplayFolder,
-                                    FormatString = col.FormatString
-                                });
+                                    tb.Columns.Add(new AS.DataColumn
+                                    {
+                                        Name = col.Name,
+                                        DataType = col.DataType.ToDataType(),
+                                        SourceColumn = col.SourceColumn,
+                                        IsHidden = col.IsHidden,
+                                        DisplayFolder = col.DisplayFolder,
+                                        FormatString = col.FormatString
+                                    });
+                                }
+                                if (col.ColumnType == ColumnType.Calculated)
+                                {
+                                    tb.Columns.Add(new AS.CalculatedColumn
+                                    {
+                                        Name = col.Name,
+                                        DataType = col.DataType.ToDataType(),
+                                        Expression = col.Expression,
+                                        IsHidden = col.IsHidden,
+                                        DisplayFolder = col.DisplayFolder,
+                                        FormatString = col.FormatString
+                                    });
+                                }
                             }
                         }
                         if (table.Partitions != null)
                         {
                             foreach (var par in table.Partitions)
                             {
-                                DataSource ds;
-                                if (par.DataSource == null)
+                                if (par.SourceType == PartitionSourceType.Query)
                                 {
-                                    ds = Context.DataSources.Find(par.DataSourceId);
-                                }
-                                else
-                                {
-                                    ds = par.DataSource;
-                                }
-                                tb.Partitions.Add(new AS.Partition
-                                {
-                                    Name = par.Name,
-                                    Source = new AS.QueryPartitionSource()
+                                    DataSource ds;
+                                    if (par.DataSource == null)
                                     {
-                                        DataSource = database.Model.DataSources[ds.Name],
-                                        Query = par.Query
+                                        ds = Context.DataSources.Find(par.DataSourceId);
                                     }
-                                });
+                                    else
+                                    {
+                                        ds = par.DataSource;
+                                    }
+                                    tb.Partitions.Add(new AS.Partition
+                                    {
+                                        Name = par.Name,
+                                        Source = new AS.QueryPartitionSource()
+                                        {
+                                            DataSource = database.Model.DataSources[ds.Name],
+                                            Query = par.Query
+                                        }
+                                    });
+                                }
+                                if (par.SourceType == PartitionSourceType.Calculated)
+                                {
+                                    tb.Partitions.Add(new AS.Partition
+                                    {
+                                        Name = par.Name,
+                                        Source = new AS.CalculatedPartitionSource()
+                                        {
+                                            Expression = par.Expression
+                                        }
+                                    });
+                                }
                             }
                         }
                         if (table.Measures != null)
