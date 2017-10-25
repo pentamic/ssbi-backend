@@ -158,6 +158,11 @@ namespace Pentamic.SSBI.Services
                 .Include(x => x.Model);
         }
 
+        public string GetModelDatabaseName(int modelId)
+        {
+            return Context.Models.Where(x => x.Id == modelId).Select(x => x.DatabaseName).FirstOrDefault();
+        }
+
         public void EnqueueRefreshModel(int modelId)
         {
             var model = Context.Models.Find(modelId);

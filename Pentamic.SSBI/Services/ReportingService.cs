@@ -576,7 +576,7 @@ namespace Pentamic.SSBI.Services
                 throw new Exception("Report Tile not found");
             }
             var dms = new DataModelService();
-            var model = dms.Models.Where(x => x.Id == tile.ModelId).FirstOrDefault();
+            var dbName = dms.GetModelDatabaseName(tile.ModelId);
             var dateCol = dms.GetModelDateColumn(tile.ModelId);
             if (string.IsNullOrEmpty(dateCol))
             {
@@ -622,7 +622,7 @@ namespace Pentamic.SSBI.Services
             }
             var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
             {
-                ["Catalog"] = model.DatabaseName
+                ["Catalog"] = dbName
             };
             var result = tileRows.Select(x => new ReportTileRowQueryResult(x)).ToList();
             using (var conn = new AdomdConnection(conStrBuilder.ToString()))
