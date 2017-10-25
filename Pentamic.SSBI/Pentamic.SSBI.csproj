@@ -347,6 +347,10 @@
     <Compile Include="Migrations\DataModelContext\201710231126298_UpdateDataModel18.Designer.cs">
       <DependentUpon>201710231126298_UpdateDataModel18.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\DataModelContext\201710250934395_UpdateDataModel19.cs" />
+    <Compile Include="Migrations\DataModelContext\201710250934395_UpdateDataModel19.Designer.cs">
+      <DependentUpon>201710250934395_UpdateDataModel19.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\DataModelContext\Configuration.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.cs" />
     <Compile Include="Migrations\ReportingContext\201702080147015_InitReporting.Designer.cs">
@@ -454,6 +458,7 @@
     <Compile Include="Models\DataModel\ModelRefreshModel.cs" />
     <Compile Include="Models\DataModel\Objects\Connection.cs" />
     <Compile Include="Models\DataModel\Objects\ConnectionSharing.cs" />
+    <Compile Include="Models\DataModel\Objects\DataModelObjectBase.cs" />
     <Compile Include="Models\DataModel\Objects\ModelRefreshQueue.cs" />
     <Compile Include="Models\DataModel\Objects\ModelSharing.cs" />
     <Compile Include="Models\DataModel\Objects\Role.cs" />
@@ -638,6 +643,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\DataModelContext\201710231126298_UpdateDataModel18.resx">
       <DependentUpon>201710231126298_UpdateDataModel18.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\DataModelContext\201710250934395_UpdateDataModel19.resx">
+      <DependentUpon>201710250934395_UpdateDataModel19.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201702080147015_InitReporting.resx">
       <DependentUpon>201702080147015_InitReporting.cs</DependentUpon>

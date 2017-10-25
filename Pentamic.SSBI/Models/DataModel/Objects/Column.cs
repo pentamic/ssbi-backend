@@ -4,11 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pentamic.SSBI.Models.DataModel.Objects
 {
-    public class Column : IDataModelObject, IAuditable
+    public class Column : DataModelObjectBase
     {
-        public int Id { get; set; }
+        public int ModelId { get; set; }
         public int TableId { get; set; }
-        public string Name { get; set; }
         public string Description { get; set; }
         public string SourceColumn { get; set; }
         public string DisplayFolder { get; set; }
@@ -19,16 +18,13 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public ColumnDataType DataType { get; set; }
         public ColumnType ColumnType { get; set; }
         public bool IsKey { get; set; }
+
+
         public Table Table { get; set; }
         [InverseProperty("FromColumn")]
         public List<Relationship> RelationshipFrom { get; set; }
         [InverseProperty("ToColumn")]
         public List<Relationship> RelationshipTo { get; set; }
         public Column SortByColumn { get; set; }
-
-        public string CreatedBy { get; set; }
-        public DateTimeOffset CreatedAt { get; set; }
-        public string ModifiedBy { get; set; }
-        public DateTimeOffset ModifiedAt { get; set; }
     }
 }

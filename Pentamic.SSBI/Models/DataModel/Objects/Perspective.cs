@@ -5,14 +5,9 @@ using System.Web;
 
 namespace Pentamic.SSBI.Models.DataModel.Objects
 {
-    public class Perspective : IDataModelObject, IAuditable
+    public class Perspective : DataModelObjectBase
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public int ModelId { get; set; }
         public string Description { get; set; }
-        public string CreatedBy { get; set; }
-        public DateTimeOffset CreatedAt { get; set; }
-        public string ModifiedBy { get; set; }
-        public DateTimeOffset ModifiedAt { get; set; }
     }
 }

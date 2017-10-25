@@ -30,146 +30,146 @@ namespace Pentamic.SSBI.Services
 
         public JArray DiscoverModel(int modelId, string perspective)
         {
-            var model = _dataModelContext.Models.Find(modelId);
-            if (model == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
-            using (var server = new AS.Server())
-            {
-                server.Connect(_asConnectionString);
-                var db = server.Databases.FindByName(model.DatabaseName);
-                if (string.IsNullOrEmpty(perspective))
-                {
-                    var tables = new JArray();
-                    foreach (var tb in db.Model.Tables)
-                    {
-                        if (tb.IsHidden) continue;
-                        var table = new JObject
-                        {
-                            ["name"] = tb.Name
-                        };
-                        var fields = new JArray();
-                        foreach (var co in tb.Columns)
-                        {
-                            if (co.IsHidden) continue;
-                            var field = new JObject
-                            {
-                                ["tableName"] = tb.Name,
-                                ["name"] = co.Name,
-                                ["dataType"] = (int)co.DataType,
-                                ["displayFolder"] = co.DisplayFolder
-                            };
-                            fields.Add(field);
-                        }
-                        foreach (var me in tb.Measures)
-                        {
-                            if (me.IsHidden) continue;
-                            var field = new JObject
-                            {
-                                ["tableName"] = tb.Name,
-                                ["name"] = me.Name,
-                                ["dataType"] = (int)me.DataType,
-                                ["displayFolder"] = me.DisplayFolder,
-                                ["isMeasure"] = true
-                            };
-                            fields.Add(field);
-                        }
-                        foreach (var hi in tb.Hierarchies)
-                        {
-                            if (hi.IsHidden) continue;
-                            var field = new JObject
-                            {
-                                ["tableName"] = tb.Name,
-                                ["name"] = hi.Name,
-                                ["displayFolder"] = hi.DisplayFolder,
-                                ["isHierarchy"] = true
-                            };
-                            var levels = new JArray();
-                            foreach (var le in hi.Levels)
-                            {
-                                var level = new JObject
-                                {
-                                    ["name"] = le.Name,
-                                    ["ordinal"] = le.Ordinal
-                                };
-                                levels.Add(level);
-                            }
-                            field["levels"] = levels;
-                            fields.Add(field);
-                        }
-                        table["fields"] = fields;
-                        tables.Add(table);
-                    }
-                    return tables;
-                }
-                else
-                {
-                    var per = db.Model.Perspectives.Find(perspective);
-                    var tables = new JArray();
-                    foreach (var tb in per.PerspectiveTables)
-                    {
-                        if (tb.Table.IsHidden) continue;
-                        var table = new JObject
-                        {
-                            ["name"] = tb.Name
-                        };
-                        var fields = new JArray();
-                        foreach (var co in tb.PerspectiveColumns)
-                        {
-                            if (co.Column.IsHidden) continue;
-                            var field = new JObject
-                            {
-                                ["tableName"] = tb.Name,
-                                ["name"] = co.Name,
-                                ["dataType"] = (int)co.Column.DataType,
-                                ["displayFolder"] = co.Column.DisplayFolder
-                            };
-                            fields.Add(field);
-                        }
-                        foreach (var me in tb.PerspectiveMeasures)
-                        {
-                            if (me.Measure.IsHidden) continue;
-                            var field = new JObject
-                            {
-                                ["tableName"] = tb.Name,
-                                ["name"] = me.Name,
-                                ["dataType"] = (int)me.Measure.DataType,
-                                ["displayFolder"] = me.Measure.DisplayFolder,
-                                ["isMeasure"] = true
-                            };
-                            fields.Add(field);
-                        }
-                        foreach (var hi in tb.PerspectiveHierarchies)
-                        {
-                            if (hi.Hierarchy.IsHidden) continue;
-                            var field = new JObject
-                            {
-                                ["tableName"] = tb.Name,
-                                ["name"] = hi.Name,
-                                ["displayFolder"] = hi.Hierarchy.DisplayFolder,
-                                ["isHierarchy"] = true
-                            };
-                            var levels = new JArray();
-                            foreach (var le in hi.Hierarchy.Levels)
-                            {
-                                var level = new JObject
-                                {
-                                    ["name"] = le.Name,
-                                    ["ordinal"] = le.Ordinal
-                                };
-                                levels.Add(level);
-                            }
-                            field["levels"] = levels;
-                            fields.Add(field);
-                        }
-                        table["fields"] = fields;
-                        tables.Add(table);
-                    }
-                    return tables;
-                }
-
-            }
+            return null;
+            //var model = _dataModelContext.Models.Find(modelId);
+            //if (model == null)
+            //{
+            //    throw new ArgumentException("Model not found");
+            //}
+            //using (var server = new AS.Server())
+            //{
+            //    server.Connect(_asConnectionString);
+            //    var db = server.Databases.FindByName(model.DatabaseName);
+            //    if (string.IsNullOrEmpty(perspective))
+            //    {
+            //        var tables = new JArray();
+            //        foreach (var tb in db.Model.Tables)
+            //        {
+            //            if (tb.IsHidden) continue;
+            //            var table = new JObject
+            //            {
+            //                ["name"] = tb.Name
+            //            };
+            //            var fields = new JArray();
+            //            foreach (var co in tb.Columns)
+            //            {
+            //                if (co.IsHidden) continue;
+            //                var field = new JObject
+            //                {
+            //                    ["tableName"] = tb.Name,
+            //                    ["name"] = co.Name,
+            //                    ["dataType"] = (int)co.DataType,
+            //                    ["displayFolder"] = co.DisplayFolder
+            //                };
+            //                fields.Add(field);
+            //            }
+            //            foreach (var me in tb.Measures)
+            //            {
+            //                if (me.IsHidden) continue;
+            //                var field = new JObject
+            //                {
+            //                    ["tableName"] = tb.Name,
+            //                    ["name"] = me.Name,
+            //                    ["dataType"] = (int)me.DataType,
+            //                    ["displayFolder"] = me.DisplayFolder,
+            //                    ["isMeasure"] = true
+            //                };
+            //                fields.Add(field);
+            //            }
+            //            foreach (var hi in tb.Hierarchies)
+            //            {
+            //                if (hi.IsHidden) continue;
+            //                var field = new JObject
+            //                {
+            //                    ["tableName"] = tb.Name,
+            //                    ["name"] = hi.Name,
+            //                    ["displayFolder"] = hi.DisplayFolder,
+            //                    ["isHierarchy"] = true
+            //                };
+            //                var levels = new JArray();
+            //                foreach (var le in hi.Levels)
+            //                {
+            //                    var level = new JObject
+            //                    {
+            //                        ["name"] = le.Name,
+            //                        ["ordinal"] = le.Ordinal
+            //                    };
+            //                    levels.Add(level);
+            //                }
+            //                field["levels"] = levels;
+            //                fields.Add(field);
+            //            }
+            //            table["fields"] = fields;
+            //            tables.Add(table);
+            //        }
+            //        return tables;
+            //    }
+            //    else
+            //    {
+            //        var per = db.Model.Perspectives.Find(perspective);
+            //        var tables = new JArray();
+            //        foreach (var tb in per.PerspectiveTables)
+            //        {
+            //            if (tb.Table.IsHidden) continue;
+            //            var table = new JObject
+            //            {
+            //                ["name"] = tb.Name
+            //            };
+            //            var fields = new JArray();
+            //            foreach (var co in tb.PerspectiveColumns)
+            //            {
+            //                if (co.Column.IsHidden) continue;
+            //                var field = new JObject
+            //                {
+            //                    ["tableName"] = tb.Name,
+            //                    ["name"] = co.Name,
+            //                    ["dataType"] = (int)co.Column.DataType,
+            //                    ["displayFolder"] = co.Column.DisplayFolder
+            //                };
+            //                fields.Add(field);
+            //            }
+            //            foreach (var me in tb.PerspectiveMeasures)
+            //            {
+            //                if (me.Measure.IsHidden) continue;
+            //                var field = new JObject
+            //                {
+            //                    ["tableName"] = tb.Name,
+            //                    ["name"] = me.Name,
+            //                    ["dataType"] = (int)me.Measure.DataType,
+            //                    ["displayFolder"] = me.Measure.DisplayFolder,
+            //                    ["isMeasure"] = true
+            //                };
+            //                fields.Add(field);
+            //            }
+            //            foreach (var hi in tb.PerspectiveHierarchies)
+            //            {
+            //                if (hi.Hierarchy.IsHidden) continue;
+            //                var field = new JObject
+            //                {
+            //                    ["tableName"] = tb.Name,
+            //                    ["name"] = hi.Name,
+            //                    ["displayFolder"] = hi.Hierarchy.DisplayFolder,
+            //                    ["isHierarchy"] = true
+            //                };
+            //                var levels = new JArray();
+            //                foreach (var le in hi.Hierarchy.Levels)
+            //                {
+            //                    var level = new JObject
+            //                    {
+            //                        ["name"] = le.Name,
+            //                        ["ordinal"] = le.Ordinal
+            //                    };
+            //                    levels.Add(level);
+            //                }
+            //                field["levels"] = levels;
+            //                fields.Add(field);
+            //            }
+            //            table["fields"] = fields;
+            //            tables.Add(table);
+            //        }
+            //        return tables;
+            //    }
+            //}
         }
 
         public async Task<List<CatalogDiscoverResult>> DiscoverCatalogs(int dsId)

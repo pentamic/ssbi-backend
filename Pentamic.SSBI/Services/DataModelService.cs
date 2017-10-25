@@ -27,10 +27,7 @@ namespace Pentamic.SSBI.Services
     {
         private readonly EFContextProvider<DataModelContext> _contextProvider;
         private readonly string _asConnectionString = System.Configuration.ConfigurationManager
-                .ConnectionStrings["AnalysisServiceConnection"]
-                .ConnectionString;
-
-        private List<RenameRequest> _renameRequests;
+                .ConnectionStrings["AnalysisServiceConnection"].ConnectionString;
 
         private string _userId = null;
         private string _userName = null;
@@ -156,11 +153,6 @@ namespace Pentamic.SSBI.Services
                 .Take(10)
                 .Select(x => x.OrderByDescending(y => y.CreatedAt).FirstOrDefault())
                 .Include(x => x.Model);
-        }
-
-        public string GetModelDatabaseName(int modelId)
-        {
-            return Context.Models.Where(x => x.Id == modelId).Select(x => x.DatabaseName).FirstOrDefault();
         }
 
         public void EnqueueRefreshModel(int modelId)
@@ -546,7 +538,7 @@ namespace Pentamic.SSBI.Services
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
-                var database = server.Databases[mo.DatabaseName];
+                var database = server.Databases[mo.IdStr];
                 database.Model.RequestRefresh(AS.RefreshType.Full);
                 database.Update(AN.UpdateOptions.ExpandFull);
             }
@@ -564,8 +556,8 @@ namespace Pentamic.SSBI.Services
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
-                var database = server.Databases[tb.Model.DatabaseName];
-                var table = database.Model.Tables[tb.Name];
+                var database = server.Databases[tb.Model.IdStr];
+                var table = database.Model.Tables[tb.IdStr];
                 if (table == null)
                 {
                     throw new Exception("Table not found");
@@ -583,7 +575,7 @@ namespace Pentamic.SSBI.Services
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
-                var database = server.Databases[pa.Table.Model.DatabaseName];
+                var database = server.Databases[pa.Table.Model.IdStr];
                 var partition = database.Model.Tables[pa.Table.Name].Partitions[pa.Name];
                 partition.RequestRefresh(AS.RefreshType.Full);
                 database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
@@ -594,7 +586,7 @@ namespace Pentamic.SSBI.Services
         {
             var model = Context.Models.Find(queryModel.ModelId);
             if (model == null) { throw new Exception("Model not found"); }
-            var query = $" EVALUATE TOPN(50,'{queryModel.TableName}' ";
+            var query = $" EVALUATE TOPN(50,'{queryModel.TableId}' ";
             if (!string.IsNullOrEmpty(queryModel.OrderBy))
             {
                 query += $",[{queryModel.OrderBy}]";
@@ -611,7 +603,7 @@ namespace Pentamic.SSBI.Services
 
             var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
             {
-                ["Catalog"] = model.DatabaseName
+                ["Catalog"] = model.IdStr
             };
             using (var conn = new AC.AdomdConnection(conStrBuilder.ToString()))
             {
@@ -664,7 +656,7 @@ namespace Pentamic.SSBI.Services
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
-                AS.Database database = server.Databases.Find(fromModel.DatabaseName);
+                AS.Database database = server.Databases.Find(fromModel.IdStr);
                 if (database == null)
                 {
                     throw new Exception("Database not found");
@@ -674,10 +666,10 @@ namespace Pentamic.SSBI.Services
                     throw new Exception("Database not supported");
                 }
                 var newDb = database.Clone();
-                newDb.ID = mo.DatabaseName;
-                newDb.Name = mo.DatabaseName;
+                newDb.ID = mo.IdStr;
+                newDb.Name = mo.IdStr;
                 newDb.Model = database.Model.Clone();
-                newDb.Model.Name = mo.Name;
+                newDb.Model.Name = mo.IdStr;
                 newDb.Model.Description = mo.Description;
                 server.Databases.Add(newDb);
                 mo.DataSources = new List<DataSource>();
@@ -854,10 +846,10 @@ namespace Pentamic.SSBI.Services
                     throw new Exception("Database not supported");
                 }
                 var newDb = database.Clone();
-                newDb.ID = mo.DatabaseName;
-                newDb.Name = mo.DatabaseName;
+                newDb.ID = mo.IdStr;
+                newDb.Name = mo.IdStr;
                 newDb.Model = database.Model.Clone();
-                newDb.Model.Name = mo.Name;
+                newDb.Model.Name = mo.IdStr;
                 newDb.Model.Description = mo.Description;
                 server.Databases.Add(newDb);
                 mo.DataSources = new List<DataSource>();
@@ -1021,10 +1013,8 @@ namespace Pentamic.SSBI.Services
 
         public SaveResult SaveChanges(JObject saveBundle)
         {
-            _renameRequests = new List<RenameRequest>();
             var txSettings = new TransactionSettings { TransactionType = TransactionType.TransactionScope };
             _contextProvider.BeforeSaveEntityDelegate += BeforeSaveEntity;
-            _contextProvider.BeforeSaveEntitiesDelegate += BeforeSaveEntities;
             _contextProvider.AfterSaveEntitiesDelegate += AfterSaveEntities;
             return _contextProvider.SaveChanges(saveBundle, txSettings);
         }
@@ -1033,21 +1023,30 @@ namespace Pentamic.SSBI.Services
         {
             var txSettings = new TransactionSettings { TransactionType = TransactionType.TransactionScope };
             _contextProvider.BeforeSaveEntityDelegate += BeforeSaveEntity;
-            _contextProvider.BeforeSaveEntitiesDelegate += BeforeSaveEntities;
-            _contextProvider.AfterSaveEntitiesDelegate += AfterSaveImport;
-            return _contextProvider.SaveChanges(saveBundle, txSettings);
-        }
-
-        public SaveResult SaveRename(JObject saveBundle)
-        {
-            var txSettings = new TransactionSettings { TransactionType = TransactionType.TransactionScope };
-            _contextProvider.BeforeSaveEntityDelegate += BeforeSaveEntity;
-            _contextProvider.BeforeSaveEntitiesDelegate += BeforeSaveEntities;
             _contextProvider.AfterSaveEntitiesDelegate += AfterSaveImport;
             return _contextProvider.SaveChanges(saveBundle, txSettings);
         }
 
         protected bool BeforeSaveEntity(EntityInfo info)
+        {
+            AddAuditInfo(info);
+            AddShareInfo(info);
+
+            if (info.Entity is UserFavoriteModel && info.EntityState == Breeze.ContextProvider.EntityState.Added)
+            {
+                var entity = info.Entity as UserFavoriteModel;
+                entity.UserId = UserId;
+            }
+            if (info.Entity is UserModelActivity && info.EntityState == Breeze.ContextProvider.EntityState.Added)
+            {
+                var entity = info.Entity as UserModelActivity;
+                entity.UserId = UserId;
+            }
+
+            return true;
+        }
+
+        public void AddAuditInfo(EntityInfo info)
         {
             if (info.Entity is IAuditable)
             {
@@ -1068,25 +1067,11 @@ namespace Pentamic.SSBI.Services
                         break;
                 }
             }
-            if (info.Entity is IDataModelObject)
-            {
-                var entity = info.Entity as IDataModelObject;
-                switch (info.EntityState)
-                {
-                    case Breeze.ContextProvider.EntityState.Added:
-                        if (info.Entity is Model)
-                        {
-                            if (info.Entity is Model mo)
-                            {
-                                mo.DatabaseName = Guid.NewGuid().ToString();
-                                info.OriginalValuesMap["DatabaseName"] = null;
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
+
+        }
+
+        public void AddShareInfo(EntityInfo info)
+        {
             if (info.Entity is IShareInfo)
             {
                 var entity = info.Entity as IShareInfo;
@@ -1103,115 +1088,11 @@ namespace Pentamic.SSBI.Services
                         break;
                 }
             }
-            if (info.Entity is Relationship && info.EntityState == Breeze.ContextProvider.EntityState.Added)
-            {
-                var entity = info.Entity as Relationship;
-                entity.Name = Guid.NewGuid().ToString();
-            }
-            if (info.Entity is UserFavoriteModel && info.EntityState == Breeze.ContextProvider.EntityState.Added)
-            {
-                var entity = info.Entity as UserFavoriteModel;
-                entity.UserId = UserId;
-            }
-            if (info.Entity is UserModelActivity && info.EntityState == Breeze.ContextProvider.EntityState.Added)
-            {
-                var entity = info.Entity as UserModelActivity;
-                entity.UserId = UserId;
-            }
 
-            return true;
-        }
-
-        protected Dictionary<Type, List<EntityInfo>> BeforeSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap)
-        {
-            List<EntityInfo> eis;
-            if (saveMap.TryGetValue(typeof(DataSource), out eis))
-            {
-                var names = eis.Where(x => x.EntityState == Breeze.ContextProvider.EntityState.Added).Select(x => x.Entity as DataSource)
-                    .GroupBy(x => x.ModelId).Select(x => new
-                    {
-                        ModelId = x.Key,
-                        Names = x.Select(y => y.Name).ToList()
-                    });
-                foreach (var group in names)
-                {
-                    if (CheckDataSourceNamesExist(group.ModelId, group.Names))
-                    {
-                        throw new Exception("Data source name exist");
-                    }
-                }
-            }
-            if (saveMap.TryGetValue(typeof(Table), out eis))
-            {
-                var names = eis.Where(x => x.EntityState == Breeze.ContextProvider.EntityState.Added).Select(x => x.Entity as Table)
-                   .GroupBy(x => x.ModelId).Select(x => new
-                   {
-                       ModelId = x.Key,
-                       Names = x.Select(y => y.Name).ToList()
-                   });
-                foreach (var group in names)
-                {
-                    if (CheckTableNamesExist(group.ModelId, group.Names))
-                    {
-                        throw new Exception("Table name exist");
-                    }
-                }
-            }
-            if (saveMap.TryGetValue(typeof(Column), out eis))
-            {
-                var names = eis.Where(x => x.EntityState == Breeze.ContextProvider.EntityState.Added).Select(x => x.Entity as Column)
-                   .GroupBy(x => x.TableId).Select(x => new
-                   {
-                       TableId = x.Key,
-                       Names = x.Select(y => y.Name).ToList()
-                   });
-                foreach (var group in names)
-                {
-                    if (CheckColumnNamesExist(group.TableId, group.Names))
-                    {
-                        throw new Exception("Column name exist");
-                    }
-                }
-            }
-            if (saveMap.TryGetValue(typeof(Partition), out eis))
-            {
-                var names = eis.Where(x => x.EntityState == Breeze.ContextProvider.EntityState.Added).Select(x => x.Entity as Partition)
-                   .GroupBy(x => x.TableId).Select(x => new
-                   {
-                       TableId = x.Key,
-                       Names = x.Select(y => y.Name).ToList()
-                   });
-                foreach (var group in names)
-                {
-                    if (CheckPartitionNamesExist(group.TableId, group.Names))
-                    {
-                        throw new Exception("Partition name exist");
-                    }
-                }
-            }
-            if (saveMap.TryGetValue(typeof(Measure), out eis))
-            {
-                var names = eis.Where(x => x.EntityState == Breeze.ContextProvider.EntityState.Added).Select(x => x.Entity as Measure)
-                   .GroupBy(x => x.TableId).Select(x => new
-                   {
-                       TableId = x.Key,
-                       Names = x.Select(y => y.Name).ToList()
-                   });
-                foreach (var group in names)
-                {
-                    if (CheckMeasureNamesExist(group.TableId, group.Names))
-                    {
-                        throw new Exception("Measure name exist");
-                    }
-                }
-            }
-
-            return saveMap;
         }
 
         protected void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings)
         {
-            ProcessRenameRequests();
             List<EntityInfo> eis;
             if (saveMap.TryGetValue(typeof(Model), out eis))
             {
@@ -1408,33 +1289,6 @@ namespace Pentamic.SSBI.Services
             }
         }
 
-        protected void AfterSaveRename(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings)
-        {
-            List<EntityInfo> eis;
-            foreach (var item in saveMap)
-            {
-                if (item.Key == typeof(Table))
-                {
-
-                }
-            }
-            if (saveMap.TryGetValue(typeof(Table), out eis))
-            {
-                var newTables = eis.Where(x => x.EntityState == Breeze.ContextProvider.EntityState.Added)
-                    .Select(x => x.Entity as Table)
-                    .GroupBy(x => x.ModelId).Select(x => new
-                    {
-                        ModelId = x.Key,
-                        Tables = x.ToList()
-                    });
-                foreach (var group in newTables)
-                {
-                    CreateTables(group.ModelId, group.Tables);
-                }
-            }
-        }
-
-
         public string GetDataSourceConnectionString(DataSource ds)
         {
             string cs;
@@ -1493,324 +1347,6 @@ namespace Pentamic.SSBI.Services
             return cs;
         }
 
-        public void ProcessRenameRequests()
-        {
-            //foreach (var req in _renameRequests)
-            //{
-            //    if (req.Type == typeof(Model))
-            //    {
-            //        RenameModel(req.Id, req.OriginalName, req.Name);
-            //    }
-            //    if (req.Type == typeof(DataSource))
-            //    {
-            //        RenameDataSource(req.Id, req.OriginalName, req.Name);
-            //    }
-            //    if (req.Type == typeof(Table))
-            //    {
-            //        RenameTable(req.Id, req.OriginalName, req.Name);
-            //    }
-            //    if (req.Type == typeof(Relationship))
-            //    {
-            //        RenameRelationship(req.Id, req.OriginalName, req.Name);
-            //    }
-            //    if (req.Type == typeof(Column))
-            //    {
-            //        RenameColumn(req.Id, req.OriginalName, req.Name);
-            //    }
-            //    if (req.Type == typeof(Measure))
-            //    {
-            //        RenameMeasure(req.Id, req.OriginalName, req.Name);
-            //    }
-            //    if (req.Type == typeof(Partition))
-            //    {
-            //        RenamePartition(req.Id, req.OriginalName, req.Name);
-            //    }
-            //    if (req.Type == typeof(Measure))
-            //    {
-            //        RenameMeasure(req.Id, req.OriginalName, req.Name);
-            //    }
-            //}
-        }
-
-        public void RenameModel(int id, string oldName, string newName)
-        {
-            var model = Context.Models.Find(id);
-            if (model == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
-            try
-            {
-                using (var server = new AS.Server())
-                {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(model.DatabaseName);
-                    if (database == null)
-                    {
-                        throw new ArgumentException("Database not found");
-                    }
-                    database.Model.RequestRename(newName);
-                    database.Update(AN.UpdateOptions.ExpandFull);
-                }
-            }
-            catch (AN.OperationException ex)
-            {
-                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
-                {
-                }
-                throw;
-            }
-        }
-
-        public void RenameDataSource(int id, string oldName, string newName)
-        {
-            var databaseName = Context.DataSources.Where(x => x.Id == id).Select(x => x.Model.DatabaseName).FirstOrDefault();
-            if (databaseName == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
-            try
-            {
-                using (var server = new AS.Server())
-                {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(databaseName);
-                    if (database == null)
-                    {
-                        throw new ArgumentException("Database not found");
-                    }
-                    var ds = database.Model.DataSources.Find(oldName);
-                    if (ds == null)
-                    {
-                        throw new ArgumentException("Data Source not found");
-                    }
-                    ds.RequestRename(newName);
-                    database.Update(AN.UpdateOptions.ExpandFull);
-                }
-            }
-            catch (AN.OperationException ex)
-            {
-                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
-                {
-                }
-                throw;
-            }
-        }
-
-        public void RenameTable(int id, string oldName, string newName)
-        {
-            var model = Context.Tables.Where(x => x.Id == id).Select(x => x.Model).FirstOrDefault();
-            if (model == null || model.DatabaseName == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
-            try
-            {
-                using (var server = new AS.Server())
-                {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(model.DatabaseName);
-                    if (database == null)
-                    {
-                        throw new ArgumentException("Database not found");
-                    }
-                    var tb = database.Model.Tables.Find(oldName);
-                    if (tb == null)
-                    {
-                        throw new ArgumentException("Table not found");
-                    }
-                    tb.RequestRename(newName);
-                    database.Update(AN.UpdateOptions.ExpandFull);
-                }
-            }
-            catch (AN.OperationException ex)
-            {
-                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
-                {
-                }
-                throw;
-            }
-            try
-            {
-                var cmd = $"UPDATE [Reporting].[ReportTile] SET DataConfig=REPLACE(DataConfig, '\"tableName\":\"{oldName}\"',N'\"tableName\":\"{newName}\"') WHERE ModelId=@modelId";
-                Context.Database.ExecuteSqlCommand(cmd, new SqlParameter("modelId", model.Id));
-            }
-            catch (Exception e) { }
-        }
-
-        public void RenameRelationship(int id, string oldName, string newName)
-        {
-            var databaseName = Context.Relationships.Where(x => x.Id == id).Select(x => x.Model.DatabaseName).FirstOrDefault();
-            if (databaseName == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
-            try
-            {
-                using (var server = new AS.Server())
-                {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(databaseName);
-                    if (database == null)
-                    {
-                        throw new ArgumentException("Database not found");
-                    }
-                    var re = database.Model.Relationships.Find(oldName);
-                    if (re == null)
-                    {
-                        throw new ArgumentException("Table not found");
-                    }
-                    re.RequestRename(newName);
-                    database.Update(AN.UpdateOptions.ExpandFull);
-                }
-            }
-            catch (AN.OperationException ex)
-            {
-                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
-                {
-                }
-                throw;
-            }
-        }
-
-        public void RenameColumn(int id, string oldName, string newName)
-        {
-            var info = Context.Columns.Where(x => x.Id == id).Select(x => new
-            {
-                ModelId = x.Table.ModelId,
-                DatabaseName = x.Table.Model.DatabaseName,
-                TableName = x.Table.Name
-            }).FirstOrDefault();
-            if (info.DatabaseName == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
-            try
-            {
-                using (var server = new AS.Server())
-                {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(info.DatabaseName);
-                    if (database == null)
-                    {
-                        throw new ArgumentException("Database not found");
-                    }
-                    var tb = database.Model.Tables.Find(info.TableName);
-                    if (tb == null)
-                    {
-                        throw new ArgumentException("Table not found");
-                    }
-                    var co = tb.Columns.Find(oldName);
-                    if (co == null)
-                    {
-                        throw new ArgumentException("Column not found");
-                    }
-                    co.RequestRename(newName);
-                    database.Update(AN.UpdateOptions.ExpandFull);
-                }
-            }
-            catch (AN.OperationException ex)
-            {
-                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
-                {
-                }
-                throw;
-            }
-            try
-            {
-                var cmd = $"UPDATE [Reporting].[ReportTile] SET DataConfig=REPLACE(DataConfig, '\"name\":\"{oldName}\"',N'\"name\":\"{newName}\"') WHERE ModelId=@modelId AND DataConfig LIKE '%\"tableName\":\"{info.TableName}\"%'";
-                Context.Database.ExecuteSqlCommand(cmd, new SqlParameter("modelId", info.ModelId));
-            }
-            catch (Exception e) { }
-        }
-
-        public void RenameMeasure(int id, string oldName, string newName)
-        {
-            var info = Context.Measures.Where(x => x.Id == id).Select(x => new
-            {
-                DatabaseName = x.Table.Model.DatabaseName,
-                TableName = x.Table.Name
-            }).FirstOrDefault();
-            if (info.DatabaseName == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
-            try
-            {
-                using (var server = new AS.Server())
-                {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(info.DatabaseName);
-                    if (database == null)
-                    {
-                        throw new ArgumentException("Database not found");
-                    }
-                    var tb = database.Model.Tables.Find(info.TableName);
-                    if (tb == null)
-                    {
-                        throw new ArgumentException("Table not found");
-                    }
-                    var me = tb.Measures.Find(oldName);
-                    if (me == null)
-                    {
-                        throw new ArgumentException("Measure not found");
-                    }
-                    me.RequestRename(newName);
-                    database.Update(AN.UpdateOptions.ExpandFull);
-                }
-            }
-            catch (AN.OperationException ex)
-            {
-                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
-                {
-                }
-                throw;
-            }
-        }
-
-        public void RenamePartition(int id, string oldName, string newName)
-        {
-            var info = Context.Partitions.Where(x => x.Id == id).Select(x => new
-            {
-                DatabaseName = x.Table.Model.DatabaseName,
-                TableName = x.Table.Name
-            }).FirstOrDefault();
-            if (info.DatabaseName == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
-            try
-            {
-                using (var server = new AS.Server())
-                {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(info.DatabaseName);
-                    if (database == null)
-                    {
-                        throw new ArgumentException("Database not found");
-                    }
-                    var tb = database.Model.Tables.Find(info.TableName);
-                    if (tb == null)
-                    {
-                        throw new ArgumentException("Table not found");
-                    }
-                    var pa = tb.Partitions.Find(oldName);
-                    if (pa == null)
-                    {
-                        throw new ArgumentException("Partition not found");
-                    }
-                    pa.RequestRename(newName);
-                    database.Update(AN.UpdateOptions.ExpandFull);
-                }
-            }
-            catch (AN.OperationException ex)
-            {
-                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
-                {
-                }
-                throw;
-            }
-        }
 
         //Model-----------------------------------------------------------
 
@@ -1823,14 +1359,14 @@ namespace Pentamic.SSBI.Services
                     server.Connect(_asConnectionString);
                     var database = new AS.Database()
                     {
-                        Name = model.DatabaseName,
-                        ID = model.DatabaseName,
+                        Name = model.IdStr,
+                        ID = model.IdStr,
                         CompatibilityLevel = 1200,
                         StorageEngineUsed = AN.StorageEngineUsed.TabularMetadata,
                     };
                     database.Model = new AS.Model
                     {
-                        Name = model.Name,
+                        Name = model.IdStr,
                         Description = model.Description,
                         DefaultMode = model.DefaultMode.ToModeType()
                     };
@@ -1854,7 +1390,7 @@ namespace Pentamic.SSBI.Services
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(model.DatabaseName);
+                    var database = server.Databases.FindByName(model.IdStr);
                     if (database == null)
                     {
                         throw new ArgumentException("Database not found");
@@ -1880,11 +1416,7 @@ namespace Pentamic.SSBI.Services
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(model.DatabaseName);
-                    //if (database == null)
-                    //{
-                    //    throw new ArgumentException("Database not found");
-                    //}
+                    var database = server.Databases.FindByName(model.IdStr);
                     if (database != null)
                     {
                         database.Drop();
@@ -1904,20 +1436,19 @@ namespace Pentamic.SSBI.Services
 
         public void CreateDataSource(DataSource dataSource)
         {
-            var dbName = Context.Models.Where(x => x.Id == dataSource.ModelId).Select(x => x.DatabaseName).FirstOrDefault();
             try
             {
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(dbName);
+                    var database = server.Databases.FindByName(dataSource.ModelId.ToString());
                     if (database == null)
                     {
                         throw new ArgumentException("Database not found");
                     }
                     database.Model.DataSources.Add(new AS.ProviderDataSource
                     {
-                        Name = dataSource.Name,
+                        Name = dataSource.IdStr,
                         Description = dataSource.Description,
                         ConnectionString = GetDataSourceConnectionString(dataSource),
                         ImpersonationMode = AS.ImpersonationMode.ImpersonateServiceAccount
@@ -1938,7 +1469,7 @@ namespace Pentamic.SSBI.Services
         {
             database.Model.DataSources.Add(new AS.ProviderDataSource
             {
-                Name = dataSource.Name,
+                Name = dataSource.IdStr,
                 Description = dataSource.Description,
                 ConnectionString = GetDataSourceConnectionString(dataSource),
                 ImpersonationMode = AS.ImpersonationMode.ImpersonateServiceAccount
@@ -1947,18 +1478,17 @@ namespace Pentamic.SSBI.Services
 
         public void UpdateDataSource(DataSource dataSource)
         {
-            var dbName = Context.Models.Where(x => x.Id == dataSource.ModelId).Select(x => x.DatabaseName).FirstOrDefault();
             try
             {
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(dbName);
+                    var database = server.Databases.FindByName(dataSource.ModelId.ToString());
                     if (database == null)
                     {
                         throw new ArgumentException("Database not found");
                     }
-                    var ds = database.Model.DataSources.Find(dataSource.Name) as AS.ProviderDataSource;
+                    var ds = database.Model.DataSources.Find(dataSource.IdStr) as AS.ProviderDataSource;
                     if (ds == null)
                     {
                         throw new ArgumentException("Data Source not found");
@@ -1980,18 +1510,17 @@ namespace Pentamic.SSBI.Services
 
         public void DeleteDataSource(DataSource dataSource)
         {
-            var dbName = Context.Models.Where(x => x.Id == dataSource.ModelId).Select(x => x.DatabaseName).FirstOrDefault();
             try
             {
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(dbName);
+                    var database = server.Databases.FindByName(dataSource.ModelId.ToString());
                     if (database == null)
                     {
                         throw new ArgumentException("Database not found");
                     }
-                    var ds = database.Model.DataSources.Find(dataSource.Name);
+                    var ds = database.Model.DataSources.Find(dataSource.IdStr);
                     if (ds == null)
                     {
                         throw new ArgumentException("Data Source not found");
@@ -2013,20 +1542,19 @@ namespace Pentamic.SSBI.Services
 
         public void CreateTable(Table table)
         {
-            var dbName = Context.Models.Where(x => x.Id == table.ModelId).Select(x => x.DatabaseName).FirstOrDefault();
             try
             {
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(dbName);
+                    var database = server.Databases.FindByName(table.ModelId.ToString());
                     if (database == null)
                     {
                         throw new ArgumentException("Database not found");
                     }
                     var tb = new AS.Table
                     {
-                        Name = table.Name,
+                        Name = table.IdStr,
                         Description = table.Description
                     };
                     if (table.Columns != null)
@@ -2035,7 +1563,7 @@ namespace Pentamic.SSBI.Services
                         {
                             tb.Columns.Add(new AS.DataColumn
                             {
-                                Name = col.Name,
+                                Name = col.IdStr,
                                 DataType = col.DataType.ToDataType(),
                                 SourceColumn = col.SourceColumn,
                                 IsHidden = col.IsHidden,
@@ -2048,21 +1576,12 @@ namespace Pentamic.SSBI.Services
                     {
                         foreach (var par in table.Partitions)
                         {
-                            DataSource ds;
-                            if (par.DataSource == null)
-                            {
-                                ds = Context.DataSources.Find(par.DataSourceId);
-                            }
-                            else
-                            {
-                                ds = par.DataSource;
-                            }
                             tb.Partitions.Add(new AS.Partition
                             {
-                                Name = par.Name,
+                                Name = par.IdStr,
                                 Source = new AS.QueryPartitionSource()
                                 {
-                                    DataSource = database.Model.DataSources[ds.Name],
+                                    DataSource = database.Model.DataSources[par.DataSourceId.ToString()],
                                     Query = par.Query
                                 }
                             });
@@ -2074,7 +1593,7 @@ namespace Pentamic.SSBI.Services
                         {
                             tb.Measures.Add(new AS.Measure
                             {
-                                Name = mes.Name,
+                                Name = mes.IdStr,
                                 Expression = mes.Expression,
                                 Description = mes.Description,
                                 DisplayFolder = mes.DisplayFolder,
@@ -2097,13 +1616,12 @@ namespace Pentamic.SSBI.Services
 
         public void CreateTables(int modelId, List<Table> tables)
         {
-            var dbName = Context.Models.Where(x => x.Id == modelId).Select(x => x.DatabaseName).FirstOrDefault();
             try
             {
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(dbName);
+                    var database = server.Databases.FindByName(modelId.ToString());
                     if (database == null)
                     {
                         throw new ArgumentException("Database not found");
@@ -2112,7 +1630,7 @@ namespace Pentamic.SSBI.Services
                     {
                         var tb = new AS.Table
                         {
-                            Name = table.Name,
+                            Name = table.IdStr,
                             Description = table.Description
                         };
                         if (table.Columns != null)
@@ -2123,7 +1641,7 @@ namespace Pentamic.SSBI.Services
                                 {
                                     tb.Columns.Add(new AS.DataColumn
                                     {
-                                        Name = col.Name,
+                                        Name = col.IdStr,
                                         DataType = col.DataType.ToDataType(),
                                         SourceColumn = col.SourceColumn,
                                         IsHidden = col.IsHidden,
@@ -2135,7 +1653,7 @@ namespace Pentamic.SSBI.Services
                                 {
                                     tb.Columns.Add(new AS.CalculatedColumn
                                     {
-                                        Name = col.Name,
+                                        Name = col.IdStr,
                                         DataType = col.DataType.ToDataType(),
                                         Expression = col.Expression,
                                         IsHidden = col.IsHidden,
@@ -2151,21 +1669,12 @@ namespace Pentamic.SSBI.Services
                             {
                                 if (par.SourceType == PartitionSourceType.Query)
                                 {
-                                    DataSource ds;
-                                    if (par.DataSource == null)
-                                    {
-                                        ds = Context.DataSources.Find(par.DataSourceId);
-                                    }
-                                    else
-                                    {
-                                        ds = par.DataSource;
-                                    }
                                     tb.Partitions.Add(new AS.Partition
                                     {
-                                        Name = par.Name,
+                                        Name = par.IdStr,
                                         Source = new AS.QueryPartitionSource()
                                         {
-                                            DataSource = database.Model.DataSources[ds.Name],
+                                            DataSource = database.Model.DataSources[par.DataSourceId.ToString()],
                                             Query = par.Query
                                         }
                                     });
@@ -2174,7 +1683,7 @@ namespace Pentamic.SSBI.Services
                                 {
                                     tb.Partitions.Add(new AS.Partition
                                     {
-                                        Name = par.Name,
+                                        Name = par.IdStr,
                                         Source = new AS.CalculatedPartitionSource()
                                         {
                                             Expression = par.Expression
@@ -2189,7 +1698,7 @@ namespace Pentamic.SSBI.Services
                             {
                                 tb.Measures.Add(new AS.Measure
                                 {
-                                    Name = mes.Name,
+                                    Name = mes.IdStr,
                                     Expression = mes.Expression,
                                     Description = mes.Description,
                                     DisplayFolder = mes.DisplayFolder,
@@ -2217,7 +1726,7 @@ namespace Pentamic.SSBI.Services
             {
                 var tb = new AS.Table
                 {
-                    Name = table.Name,
+                    Name = table.IdStr,
                     Description = table.Description
                 };
                 if (table.Columns != null)
@@ -2226,7 +1735,7 @@ namespace Pentamic.SSBI.Services
                     {
                         tb.Columns.Add(new AS.DataColumn
                         {
-                            Name = col.Name,
+                            Name = col.IdStr,
                             DataType = col.DataType.ToDataType(),
                             SourceColumn = col.SourceColumn,
                             IsHidden = col.IsHidden,
@@ -2239,21 +1748,12 @@ namespace Pentamic.SSBI.Services
                 {
                     foreach (var par in table.Partitions)
                     {
-                        DataSource ds;
-                        if (par.DataSource == null)
-                        {
-                            ds = Context.DataSources.Find(par.DataSourceId);
-                        }
-                        else
-                        {
-                            ds = par.DataSource;
-                        }
                         tb.Partitions.Add(new AS.Partition
                         {
-                            Name = par.Name,
+                            Name = par.IdStr,
                             Source = new AS.QueryPartitionSource()
                             {
-                                DataSource = database.Model.DataSources[ds.Name],
+                                DataSource = database.Model.DataSources[par.DataSourceId.ToString()],
                                 Query = par.Query
                             }
                         });
@@ -2265,7 +1765,7 @@ namespace Pentamic.SSBI.Services
                     {
                         tb.Measures.Add(new AS.Measure
                         {
-                            Name = mes.Name,
+                            Name = mes.IdStr,
                             Expression = mes.Expression,
                             Description = mes.Description,
                             DisplayFolder = mes.DisplayFolder,
@@ -2278,11 +1778,11 @@ namespace Pentamic.SSBI.Services
 
         }
 
-        public AS.Table AddTable(AS.Database database, int modelId, Table table)
+        public AS.Table AddTable(AS.Database database, Table table)
         {
             var tb = new AS.Table
             {
-                Name = table.Name,
+                Name = table.IdStr,
                 Description = table.Description
             };
             if (table.Columns != null)
@@ -2291,7 +1791,7 @@ namespace Pentamic.SSBI.Services
                 {
                     var c = new AS.DataColumn
                     {
-                        Name = col.Name,
+                        Name = col.IdStr,
                         DataType = col.DataType.ToDataType(),
                         SourceColumn = col.SourceColumn,
                         IsHidden = col.IsHidden,
@@ -2300,7 +1800,7 @@ namespace Pentamic.SSBI.Services
                     };
                     if (col.SortByColumn != null)
                     {
-                        c.SortByColumn = tb.Columns[col.SortByColumn.Name];
+                        c.SortByColumn = tb.Columns[col.SortByColumn.IdStr];
                     }
                     tb.Columns.Add(c);
                 }
@@ -2309,21 +1809,12 @@ namespace Pentamic.SSBI.Services
             {
                 foreach (var par in table.Partitions)
                 {
-                    DataSource ds;
-                    if (par.DataSource == null)
-                    {
-                        ds = Context.DataSources.Find(par.DataSourceId);
-                    }
-                    else
-                    {
-                        ds = par.DataSource;
-                    }
                     tb.Partitions.Add(new AS.Partition
                     {
-                        Name = par.Name,
+                        Name = par.IdStr,
                         Source = new AS.QueryPartitionSource()
                         {
-                            DataSource = database.Model.DataSources[ds.Name],
+                            DataSource = database.Model.DataSources[par.DataSourceId.ToString()],
                             Query = par.Query
                         }
                     });
@@ -2335,7 +1826,7 @@ namespace Pentamic.SSBI.Services
                 {
                     tb.Measures.Add(new AS.Measure
                     {
-                        Name = mes.Name,
+                        Name = mes.IdStr,
                         Expression = mes.Expression,
                         Description = mes.Description,
                         DisplayFolder = mes.DisplayFolder,
@@ -2349,18 +1840,17 @@ namespace Pentamic.SSBI.Services
 
         public void UpdateTable(Table table)
         {
-            var dbName = Context.Models.Where(x => x.Id == table.ModelId).Select(x => x.DatabaseName).FirstOrDefault();
             try
             {
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(dbName);
+                    var database = server.Databases.FindByName(table.ModelId.ToString());
                     if (database == null)
                     {
                         throw new ArgumentException("Database not found");
                     }
-                    var tb = database.Model.Tables.Find(table.Name);
+                    var tb = database.Model.Tables.Find(table.IdStr);
                     tb.Description = table.Description;
                     database.Update(AN.UpdateOptions.ExpandFull);
                 }
@@ -2376,18 +1866,12 @@ namespace Pentamic.SSBI.Services
 
         public void DeleteTable(Table table)
         {
-            var dbName = Context.Models.Where(x => x.Id == table.ModelId).Select(x => x.DatabaseName)
-                .FirstOrDefault();
-            if (dbName == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
             try
             {
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(dbName);
+                    var database = server.Databases.FindByName(table.ModelId.ToString());
                     if (database == null)
                     {
                         throw new ArgumentException("Database not found");
@@ -2420,9 +1904,7 @@ namespace Pentamic.SSBI.Services
             var info = Context.Partitions.Where(x => x.Id == partition.Id)
                 .Select(x => new
                 {
-                    DatabaseName = x.Table.Model.DatabaseName,
-                    TableName = x.Name,
-                    DataSourceName = x.DataSource.Name
+                    DatabaseName = x.Table.ModelId.ToString()
                 }).FirstOrDefault();
             if (info == null || info.DatabaseName == null)
             {
@@ -2438,7 +1920,7 @@ namespace Pentamic.SSBI.Services
                     {
                         throw new ArgumentException("Database not found");
                     }
-                    var tb = database.Model.Tables.Find(info.TableName);
+                    var tb = database.Model.Tables.Find(partition.TableId.ToString());
                     if (tb == null)
                     {
                         throw new ArgumentException("Table not found");
@@ -2450,7 +1932,7 @@ namespace Pentamic.SSBI.Services
                     };
                     if (partition.SourceType == PartitionSourceType.Query)
                     {
-                        var dataSource = database.Model.DataSources[info.DataSourceName];
+                        var dataSource = database.Model.DataSources[partition.DataSourceId.ToString()];
                         if (dataSource == null)
                         {
                             throw new ArgumentException("Data Source not found");
@@ -2485,8 +1967,7 @@ namespace Pentamic.SSBI.Services
             var info = Context.Tables.Where(x => x.Id == partition.TableId)
                 .Select(x => new
                 {
-                    DatabaseName = x.Model.DatabaseName,
-                    TableName = x.Name
+                    DatabaseName = x.Model.IdStr
                 }).FirstOrDefault();
             if (info == null || info.DatabaseName == null)
             {
@@ -2502,12 +1983,12 @@ namespace Pentamic.SSBI.Services
                     {
                         throw new ArgumentException("Database not found");
                     }
-                    var tb = database.Model.Tables.Find(info.TableName);
+                    var tb = database.Model.Tables.Find(partition.TableId.ToString());
                     if (tb == null)
                     {
                         throw new ArgumentException("Table not found");
                     }
-                    var pa = tb.Partitions.Find(partition.Name);
+                    var pa = tb.Partitions.Find(partition.IdStr);
                     if (pa == null)
                     {
                         throw new ArgumentException("Partition not found");
@@ -2540,8 +2021,7 @@ namespace Pentamic.SSBI.Services
             var info = Context.Tables.Where(x => x.Id == partition.TableId)
                 .Select(x => new
                 {
-                    DatabaseName = x.Model.DatabaseName,
-                    TableName = x.Name
+                    DatabaseName = x.Model.IdStr
                 }).FirstOrDefault();
             if (info == null || info.DatabaseName == null)
             {
@@ -2557,7 +2037,7 @@ namespace Pentamic.SSBI.Services
                     {
                         throw new ArgumentException("Database not found");
                     }
-                    var tb = database.Model.Tables.Find(info.TableName);
+                    var tb = database.Model.Tables.Find(partition.TableId.ToString());
                     if (tb == null)
                     {
                         throw new ArgumentException("Table not found");
@@ -2579,11 +2059,45 @@ namespace Pentamic.SSBI.Services
             }
         }
 
+        public AS.Partition AddPartition(AS.Database database, AS.Table table, Partition partition)
+        {
+            if (table == null)
+            {
+                throw new ArgumentException("Table not found");
+            }
+            var pa = new AS.Partition
+            {
+                Name = partition.Name,
+                Description = partition.Description
+            };
+            if (partition.SourceType == PartitionSourceType.Query)
+            {
+                var dataSource = database.Model.DataSources[partition.DataSource.Name];
+                if (dataSource == null)
+                {
+                    throw new ArgumentException("Data Source not found");
+                }
+                pa.Source = new AS.QueryPartitionSource
+                {
+                    Query = partition.Query,
+                    DataSource = dataSource
+                };
+            }
+            if (partition.SourceType == PartitionSourceType.Calculated)
+            {
+                pa.Source = new AS.CalculatedPartitionSource
+                {
+                    Expression = partition.Query
+                };
+            }
+            return pa;
+        }
+
+
         //Relationship---------------------------------------------
 
         public void CreateRelationship(Relationship relationship)
         {
-            var dbName = Context.Models.Where(x => x.Id == relationship.ModelId).Select(x => x.DatabaseName).FirstOrDefault();
             var info = Context.Relationships.Where(x => x.Id == relationship.Id).Select(x => new
             {
                 FromTableName = x.FromColumn.Table.Name,
@@ -2591,14 +2105,11 @@ namespace Pentamic.SSBI.Services
                 ToTableName = x.ToColumn.Table.Name,
                 ToColumnName = x.ToColumn.Name
             }).FirstOrDefault();
-            if (dbName == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
+
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
-                var database = server.Databases.FindByName(dbName);
+                var database = server.Databases.FindByName(relationship.ModelId.ToString());
                 if (database == null)
                 {
                     throw new ArgumentException("Database not found");
@@ -2633,22 +2144,10 @@ namespace Pentamic.SSBI.Services
 
         public void UpdateRelationship(Relationship relationship)
         {
-            var dbName = Context.Models.Where(x => x.Id == relationship.ModelId).Select(x => x.DatabaseName).FirstOrDefault();
-            var info = Context.Relationships.Where(x => x.Id == relationship.Id).Select(x => new
-            {
-                FromTableName = x.FromColumn.Table.Name,
-                FromColumnName = x.FromColumn.Name,
-                ToTableName = x.ToColumn.Table.Name,
-                ToColumnName = x.ToColumn.Name
-            }).FirstOrDefault();
-            if (dbName == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
-                var database = server.Databases.FindByName(dbName);
+                var database = server.Databases.FindByName(relationship.ModelId.ToString());
                 if (database == null)
                 {
                     throw new ArgumentException("Database not found");
@@ -2658,8 +2157,8 @@ namespace Pentamic.SSBI.Services
                 {
                     throw new ArgumentException("Relationship not found");
                 }
-                re.FromColumn = database.Model.Tables[info.FromTableName].Columns[info.FromColumnName];
-                re.ToColumn = database.Model.Tables[info.ToTableName].Columns[info.ToColumnName];
+                re.FromColumn = database.Model.Tables[relationship.FromTableId].Columns[relationship.FromColumnId];
+                re.ToColumn = database.Model.Tables[relationship.ToTableId].Columns[relationship.ToColumnId];
                 re.CrossFilteringBehavior = (AS.CrossFilteringBehavior)relationship.CrossFilteringBehavior;
                 re.SecurityFilteringBehavior = (AS.SecurityFilteringBehavior)relationship.SecurityFilteringBehavior;
                 re.ToCardinality = AS.RelationshipEndCardinality.One;
@@ -2676,24 +2175,16 @@ namespace Pentamic.SSBI.Services
                 {
                     re.FromCardinality = AS.RelationshipEndCardinality.Many;
                 }
-                re.ToColumn = database.Model.Tables[info.ToTableName].Columns[info.ToColumnName];
-                re.FromColumn = database.Model.Tables[info.FromTableName].Columns[info.FromColumnName];
                 database.Update(AN.UpdateOptions.ExpandFull);
             }
         }
 
         public void DeleteRelationship(Relationship relationship)
         {
-            var dbName = Context.Models.Where(x => x.Id == relationship.ModelId).Select(x => x.DatabaseName)
-                .FirstOrDefault();
-            if (dbName == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
-                var database = server.Databases.FindByName(dbName);
+                var database = server.Databases.FindByName(relationship.ModelId.ToString());
                 if (database == null)
                 {
                     throw new ArgumentException("Database not found");
@@ -2711,20 +2202,15 @@ namespace Pentamic.SSBI.Services
 
         public void CreateMeasure(Measure measure)
         {
-            var info = Context.Measures.Where(x => x.Id == measure.Id).Select(x => new
-            {
-                TableName = x.Table.Name,
-                DatabaseName = x.Table.Model.DatabaseName
-            }).FirstOrDefault();
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
-                var database = server.Databases.FindByName(info.DatabaseName);
+                var database = server.Databases.FindByName(measure.ModelId.ToString());
                 if (database == null)
                 {
                     throw new ArgumentException("Database not found");
                 }
-                var t = database.Model.Tables[info.TableName];
+                var t = database.Model.Tables[measure.TableId.ToString()];
                 if (t == null)
                 {
                     throw new ArgumentException("Table not found");
@@ -2742,20 +2228,15 @@ namespace Pentamic.SSBI.Services
 
         public void UpdateMeasure(Measure measure)
         {
-            var info = Context.Measures.Where(x => x.Id == measure.Id).Select(x => new
-            {
-                TableName = x.Table.Name,
-                DatabaseName = x.Table.Model.DatabaseName
-            }).FirstOrDefault();
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
-                var database = server.Databases.FindByName(info.DatabaseName);
+                var database = server.Databases.FindByName(measure.ModelId.ToString());
                 if (database == null)
                 {
                     throw new ArgumentException("Database not found");
                 }
-                var t = database.Model.Tables[info.TableName];
+                var t = database.Model.Tables[measure.TableId.ToString()];
                 if (t == null)
                 {
                     throw new ArgumentException("Table not found");
@@ -2772,20 +2253,15 @@ namespace Pentamic.SSBI.Services
 
         public void DeleteMeasure(Measure measure)
         {
-            var info = Context.Measures.Where(x => x.Id == measure.Id).Select(x => new
-            {
-                TableName = x.Table.Name,
-                DatabaseName = x.Table.Model.DatabaseName
-            }).FirstOrDefault();
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
-                var database = server.Databases.FindByName(info.TableName);
+                var database = server.Databases.FindByName(measure.ModelId.ToString());
                 if (database == null)
                 {
                     throw new ArgumentException("Database not found");
                 }
-                var t = database.Model.Tables[info.TableName];
+                var t = database.Model.Tables[measure.TableId.ToString()];
                 var m = t.Measures[measure.Name];
                 if (m != null)
                 {
@@ -2799,25 +2275,15 @@ namespace Pentamic.SSBI.Services
 
         public void CreateColumn(Column column)
         {
-            var info = Context.Columns.Where(x => x.Id == column.Id).Select(x => new
-            {
-                DatabaseName = x.Table.Model.DatabaseName,
-                TableName = x.Table.Name,
-                Name = x.Name
-            }).FirstOrDefault();
-            if (info == null || info.DatabaseName == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
-                var database = server.Databases.FindByName(info.DatabaseName);
+                var database = server.Databases.FindByName(column.ModelId.ToString());
                 if (database == null)
                 {
                     throw new ArgumentException("Database not found");
                 }
-                var tb = database.Model.Tables.Find(info.TableName);
+                var tb = database.Model.Tables.Find(column.TableId.ToString());
                 if (tb == null)
                 {
                     throw new ArgumentException("Table not found");
@@ -2826,7 +2292,7 @@ namespace Pentamic.SSBI.Services
                 {
                     var co = new AS.CalculatedColumn
                     {
-                        Name = column.Name,
+                        Name = column.IdStr,
                         Description = column.Description,
                         DataType = column.DataType.ToDataType(),
                         DisplayFolder = column.DisplayFolder,
@@ -2840,7 +2306,7 @@ namespace Pentamic.SSBI.Services
                 {
                     var co = new AS.DataColumn
                     {
-                        Name = column.Name,
+                        Name = column.IdStr,
                         Description = column.Description,
                         DataType = column.DataType.ToDataType(),
                         DisplayFolder = column.DisplayFolder,
@@ -2858,34 +2324,24 @@ namespace Pentamic.SSBI.Services
 
         public void UpdateColumn(Column column)
         {
-            var info = Context.Columns.Where(x => x.Id == column.Id).Select(x => new
-            {
-                DatabaseName = x.Table.Model.DatabaseName,
-                TableName = x.Table.Name,
-                Name = x.Name
-            }).FirstOrDefault();
-            if (info == null || info.DatabaseName == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
             try
             {
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(info.DatabaseName);
+                    var database = server.Databases.FindByName(column.ModelId.ToString());
                     if (database == null)
                     {
                         throw new ArgumentException("Database not found");
                     }
-                    var tb = database.Model.Tables.Find(info.TableName);
+                    var tb = database.Model.Tables.Find(column.TableId.ToString());
                     if (tb == null)
                     {
                         throw new ArgumentException("Table not found");
                     }
                     if (column.ColumnType == ColumnType.Data)
                     {
-                        var co = tb.Columns.Find(info.Name) as AS.DataColumn;
+                        var co = tb.Columns.Find(column.IdStr) as AS.DataColumn;
                         if (co == null)
                         {
                             throw new ArgumentException("Column not found");
@@ -2899,7 +2355,7 @@ namespace Pentamic.SSBI.Services
                     }
                     if (column.ColumnType == ColumnType.Calculated)
                     {
-                        var co = tb.Columns.Find(info.Name) as AS.CalculatedColumn;
+                        var co = tb.Columns.Find(column.IdStr) as AS.CalculatedColumn;
                         if (co == null)
                         {
                             throw new ArgumentException("Column not found");
@@ -2926,31 +2382,22 @@ namespace Pentamic.SSBI.Services
 
         public void DeleteColumn(Column column)
         {
-            var info = Context.Tables.Where(x => x.Id == column.TableId).Select(x => new
-            {
-                DatabaseName = x.Model.DatabaseName,
-                TableName = x.Name
-            }).FirstOrDefault();
-            if (info == null || info.DatabaseName == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
             try
             {
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(info.DatabaseName);
+                    var database = server.Databases.FindByName(column.ModelId.ToString());
                     if (database == null)
                     {
                         throw new ArgumentException("Database not found");
                     }
-                    var tb = database.Model.Tables.Find(info.TableName);
+                    var tb = database.Model.Tables.Find(column.TableId.ToString());
                     if (tb == null)
                     {
                         throw new ArgumentException("Table not found");
                     }
-                    var co = tb.Columns.Find(column.Name);
+                    var co = tb.Columns.Find(column.IdStr);
                     if (co != null)
                     {
                         tb.Columns.Remove(co);
@@ -3009,7 +2456,7 @@ namespace Pentamic.SSBI.Services
         {
             var tb = new AS.Table
             {
-                Name = table.Name,
+                Name = table.IdStr,
                 Description = table.Description,
             };
             if (table.Partitions != null)
@@ -3021,7 +2468,7 @@ namespace Pentamic.SSBI.Services
                         var p = new AS.Partition();
                         tb.Partitions.Add(new AS.Partition
                         {
-                            Name = par.Name,
+                            Name = par.IdStr,
                             Source = new AS.CalculatedPartitionSource()
                             {
                                 Expression = par.Expression
@@ -3058,78 +2505,73 @@ namespace Pentamic.SSBI.Services
 
         public void FixModelColumns(int modelId)
         {
-            var model = Context.Models.Find(modelId);
-            if (model == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
-            try
-            {
-                using (var server = new AS.Server())
-                {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(model.DatabaseName);
-                    if (database == null)
-                    {
-                        throw new ArgumentException("Database not found");
-                    }
-                    //List<KeyValuePair<string, AS.DataColumn>> newCols = new List<KeyValuePair<string, AS.DataColumn>>();
-                    foreach (var tb in database.Model.Tables)
-                    {
-                        foreach (var co in tb.Columns)
-                        {
-                            if (co.Type == AS.ColumnType.Data)
-                            {
-                                if (string.IsNullOrEmpty(((AS.DataColumn)co).SourceColumn))
-                                {
-                                    ((AS.DataColumn)co).SourceColumn = ((AS.DataColumn)co).Name;
-                                }
-                            }
-                            //if (co.DataType == AS.DataType.Binary)
-                            //{
-                            //    var nv = new AS.DataColumn
-                            //    {
-                            //        Name = co.Name,
-                            //        Description = co.Description,
-                            //        DataType = AS.DataType.Int64,
-                            //        DisplayFolder = co.DisplayFolder,
-                            //        FormatString = co.FormatString,
-                            //        IsHidden = co.IsHidden
-                            //    };
-                            //    tb.Columns.Remove(co);
-                            //    newCols.Add(new KeyValuePair<string, AS.DataColumn>(tb.Name, nv));
-                            //}
+            //var model = Context.Models.Find(modelId);
+            //if (model == null)
+            //{
+            //    throw new ArgumentException("Model not found");
+            //}
+            //try
+            //{
+            //    using (var server = new AS.Server())
+            //    {
+            //        server.Connect(_asConnectionString);
+            //        var database = server.Databases.FindByName(model.Code);
+            //        if (database == null)
+            //        {
+            //            throw new ArgumentException("Database not found");
+            //        }
+            //        //List<KeyValuePair<string, AS.DataColumn>> newCols = new List<KeyValuePair<string, AS.DataColumn>>();
+            //        foreach (var tb in database.Model.Tables)
+            //        {
+            //            foreach (var co in tb.Columns)
+            //            {
+            //                if (co.Type == AS.ColumnType.Data)
+            //                {
+            //                    if (string.IsNullOrEmpty(((AS.DataColumn)co).SourceColumn))
+            //                    {
+            //                        ((AS.DataColumn)co).SourceColumn = ((AS.DataColumn)co).Name;
+            //                    }
+            //                }
+            //                //if (co.DataType == AS.DataType.Binary)
+            //                //{
+            //                //    var nv = new AS.DataColumn
+            //                //    {
+            //                //        Name = co.Name,
+            //                //        Description = co.Description,
+            //                //        DataType = AS.DataType.Int64,
+            //                //        DisplayFolder = co.DisplayFolder,
+            //                //        FormatString = co.FormatString,
+            //                //        IsHidden = co.IsHidden
+            //                //    };
+            //                //    tb.Columns.Remove(co);
+            //                //    newCols.Add(new KeyValuePair<string, AS.DataColumn>(tb.Name, nv));
+            //                //}
 
-                        }
-                    }
-                    database.Update(AN.UpdateOptions.ExpandFull);
-                    //foreach (var c in newCols)
-                    //{
-                    //    database.Model.Tables[c.Key].Columns.Add(c.Value);
-                    //}
-                    //database.Update(AN.UpdateOptions.ExpandFull);
-                }
-            }
-            catch (AN.OperationException ex)
-            {
-                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
-                {
-                }
-                throw;
-            }
+            //            }
+            //        }
+            //        database.Update(AN.UpdateOptions.ExpandFull);
+            //        //foreach (var c in newCols)
+            //        //{
+            //        //    database.Model.Tables[c.Key].Columns.Add(c.Value);
+            //        //}
+            //        //database.Update(AN.UpdateOptions.ExpandFull);
+            //    }
+            //}
+            //catch (AN.OperationException ex)
+            //{
+            //    foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
+            //    {
+            //    }
+            //    throw;
+            //}
         }
 
         public string GetModelDateColumn(int modelId)
         {
-            var model = Context.Models.Find(modelId);
-            if (model == null)
-            {
-                throw new Exception("Model not found");
-            }
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
-                var database = server.Databases.FindByName(model.DatabaseName);
+                var database = server.Databases.FindByName(modelId.ToString());
                 if (database == null)
                 {
                     throw new ArgumentException("Database not found");
@@ -3157,7 +2599,6 @@ namespace Pentamic.SSBI.Services
             {
                 throw new Exception("Table exist");
             }
-            var dbName = Context.Models.Where(x => x.Id == model.ModelId).Select(x => x.DatabaseName).FirstOrDefault();
             var table = new Table
             {
                 Name = model.TableName,
@@ -3220,7 +2661,7 @@ namespace Pentamic.SSBI.Services
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
-                var database = server.Databases.FindByName(dbName);
+                var database = server.Databases.FindByName(model.ModelId.ToString());
                 if (database == null)
                 {
                     throw new ArgumentException("Database not found");

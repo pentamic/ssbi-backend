@@ -3,11 +3,9 @@ using System.Collections.Generic;
 
 namespace Pentamic.SSBI.Models.DataModel.Objects
 {
-    public class Table : IDataModelObject, IAuditable
+    public class Table : DataModelObjectBase
     {
-        public int Id { get; set; }
         public int ModelId { get; set; }
-        public string Name { get; set; }
         public string Description { get; set; }
         public string SourceTable { get; set; }
         public string SourceSchema { get; set; }
@@ -22,11 +20,5 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public List<Measure> Measures { get; set; }
         public List<Hierarchy> Hierarchies { get; set; }
         public Model Model { get; set; }
-
-
-        public string CreatedBy { get; set; }
-        public DateTimeOffset CreatedAt { get; set; }
-        public string ModifiedBy { get; set; }
-        public DateTimeOffset ModifiedAt { get; set; }
     }
 }

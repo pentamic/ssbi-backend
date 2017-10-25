@@ -457,21 +457,16 @@ namespace Pentamic.SSBI.Services
         public List<Dictionary<string, object>> Query(QueryModel queryModel)
         {
             var dmContext = new DataModelContext();
-            var model = dmContext.Models.Find(queryModel.ModelId);
-            if (model == null)
-            {
-                throw new Exception("Model not found");
-            }
             var query = queryModel.Filters2.Count > 0 ?
-                $" EVALUATE ( FILTER (  SUMMARIZECOLUMNS ( {string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values))} ), {string.Join(" && ", queryModel.Filters2)} ) ) "
-                : $" EVALUATE ( SUMMARIZECOLUMNS ( {string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values))} ) ) ";
+               $" EVALUATE ( FILTER (  SUMMARIZECOLUMNS ( {string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values))} ), {string.Join(" && ", queryModel.Filters2)} ) ) "
+               : $" EVALUATE ( SUMMARIZECOLUMNS ( {string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values))} ) ) ";
             if (queryModel.OrderBy.Count > 0)
             {
                 query += $" ORDER BY {string.Join(",", queryModel.OrderBy)} ";
             }
             var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
             {
-                ["Catalog"] = model.DatabaseName
+                ["Catalog"] = queryModel.ModelId.ToString()
             };
             using (var conn = new AdomdConnection(conStrBuilder.ToString()))
             {
@@ -576,7 +571,6 @@ namespace Pentamic.SSBI.Services
                 throw new Exception("Report Tile not found");
             }
             var dms = new DataModelService();
-            var dbName = dms.GetModelDatabaseName(tile.ModelId);
             var dateCol = dms.GetModelDateColumn(tile.ModelId);
             if (string.IsNullOrEmpty(dateCol))
             {
@@ -622,7 +616,7 @@ namespace Pentamic.SSBI.Services
             }
             var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
             {
-                ["Catalog"] = dbName
+                ["Catalog"] = tile.ModelId.ToString()
             };
             var result = tileRows.Select(x => new ReportTileRowQueryResult(x)).ToList();
             using (var conn = new AdomdConnection(conStrBuilder.ToString()))
@@ -668,15 +662,9 @@ namespace Pentamic.SSBI.Services
 
         public List<Dictionary<string, object>> QueryCustom(QueryModel3 queryModel)
         {
-            var dmContext = new DataModelContext();
-            var model = dmContext.Models.Find(queryModel.ModelId);
-            if (model == null)
-            {
-                throw new Exception("Model not found");
-            }      
             var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
             {
-                ["Catalog"] = model.DatabaseName
+                ["Catalog"] = queryModel.ModelId.ToString()
             };
             using (var conn = new AdomdConnection(conStrBuilder.ToString()))
             {
@@ -765,16 +753,10 @@ namespace Pentamic.SSBI.Services
 
         public List<Dictionary<string, object>> GetFieldValues(FieldQueryModel queryModel)
         {
-            var dmContext = new DataModelContext();
-            var model = dmContext.Models.Find(queryModel.ModelId);
-            if (model == null)
-            {
-                throw new Exception("Model not found");
-            }
             var query = $"EVALUATE(VALUES({queryModel.FieldName})) ORDER BY {queryModel.FieldName}";
             var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
             {
-                ["Catalog"] = model.DatabaseName
+                ["Catalog"] = queryModel.ModelId.ToString()
             };
             using (var conn = new AdomdConnection(conStrBuilder.ToString()))
             {

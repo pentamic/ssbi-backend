@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Pentamic.SSBI.Models
 {
-    interface IAuditable
+    public interface IAuditable
     {
         string CreatedBy { get; set; }
         DateTimeOffset CreatedAt { get; set; }
