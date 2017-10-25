@@ -691,7 +691,6 @@ namespace Pentamic.SSBI.Services
                     {
                         Name = ds.Name,
                         Description = ds.Description,
-                        OriginalName = ds.Name,
                         ConnectionString = ds.ConnectionString,
                         Source = conStrBuilder.DataSource
                     };
@@ -736,7 +735,6 @@ namespace Pentamic.SSBI.Services
                     {
                         Name = tb.Name,
                         Description = tb.Description,
-                        OriginalName = tb.Name,
                         Partitions = new List<Partition>(),
                         Measures = new List<Measure>(),
                         Columns = new List<Column>()
@@ -751,7 +749,6 @@ namespace Pentamic.SSBI.Services
                             table.Partitions.Add(new Partition
                             {
                                 Name = pa.Name,
-                                OriginalName = pa.Name,
                                 Description = pa.Description,
                                 Query = source.Expression,
                                 SourceType = PartitionSourceType.Calculated
@@ -763,7 +760,6 @@ namespace Pentamic.SSBI.Services
                             table.Partitions.Add(new Partition
                             {
                                 Name = pa.Name,
-                                OriginalName = pa.Name,
                                 Description = pa.Description,
                                 Query = source.Query,
                                 SourceType = PartitionSourceType.Query
@@ -781,7 +777,6 @@ namespace Pentamic.SSBI.Services
                         table.Columns.Add(new Column
                         {
                             Name = co.Name,
-                            OriginalName = co.Name,
                             DataType = (ColumnDataType)co.DataType,
                             Description = co.Description,
                             IsHidden = co.IsHidden,
@@ -795,7 +790,6 @@ namespace Pentamic.SSBI.Services
                         table.Measures.Add(new Measure
                         {
                             Name = me.Name,
-                            OriginalName = me.Name,
                             Description = me.Description,
                             Expression = me.Expression
                         });
@@ -808,8 +802,7 @@ namespace Pentamic.SSBI.Services
                 {
                     var relationship = new Relationship
                     {
-                        Name = re.Name,
-                        OriginalName = re.Name
+                        Name = re.Name
                     };
                     foreach (var table in mo.Tables)
                     {
@@ -878,7 +871,6 @@ namespace Pentamic.SSBI.Services
                     {
                         Name = ds.Name,
                         Description = ds.Description,
-                        OriginalName = ds.Name,
                         ConnectionString = ds.ConnectionString,
                         Source = conStrBuilder.DataSource
                     };
@@ -923,7 +915,6 @@ namespace Pentamic.SSBI.Services
                     {
                         Name = tb.Name,
                         Description = tb.Description,
-                        OriginalName = tb.Name,
                         Partitions = new List<Partition>(),
                         Measures = new List<Measure>(),
                         Columns = new List<Column>()
@@ -938,7 +929,6 @@ namespace Pentamic.SSBI.Services
                             table.Partitions.Add(new Partition
                             {
                                 Name = pa.Name,
-                                OriginalName = pa.Name,
                                 Description = pa.Description,
                                 Query = source.Expression,
                                 SourceType = PartitionSourceType.Calculated
@@ -950,7 +940,6 @@ namespace Pentamic.SSBI.Services
                             table.Partitions.Add(new Partition
                             {
                                 Name = pa.Name,
-                                OriginalName = pa.Name,
                                 Description = pa.Description,
                                 Query = source.Query,
                                 SourceType = PartitionSourceType.Query
@@ -968,7 +957,6 @@ namespace Pentamic.SSBI.Services
                         table.Columns.Add(new Column
                         {
                             Name = co.Name,
-                            OriginalName = co.Name,
                             DataType = (ColumnDataType)co.DataType,
                             Description = co.Description,
                             IsHidden = co.IsHidden,
@@ -982,7 +970,6 @@ namespace Pentamic.SSBI.Services
                         table.Measures.Add(new Measure
                         {
                             Name = me.Name,
-                            OriginalName = me.Name,
                             Description = me.Description,
                             Expression = me.Expression
                         });
@@ -995,8 +982,7 @@ namespace Pentamic.SSBI.Services
                 {
                     var relationship = new Relationship
                     {
-                        Name = re.Name,
-                        OriginalName = re.Name
+                        Name = re.Name
                     };
                     foreach (var table in mo.Tables)
                     {
@@ -1047,6 +1033,15 @@ namespace Pentamic.SSBI.Services
             return _contextProvider.SaveChanges(saveBundle, txSettings);
         }
 
+        public SaveResult SaveRename(JObject saveBundle)
+        {
+            var txSettings = new TransactionSettings { TransactionType = TransactionType.TransactionScope };
+            _contextProvider.BeforeSaveEntityDelegate += BeforeSaveEntity;
+            _contextProvider.BeforeSaveEntitiesDelegate += BeforeSaveEntities;
+            _contextProvider.AfterSaveEntitiesDelegate += AfterSaveImport;
+            return _contextProvider.SaveChanges(saveBundle, txSettings);
+        }
+
         protected bool BeforeSaveEntity(EntityInfo info)
         {
             if (info.Entity is IAuditable)
@@ -1082,22 +1077,6 @@ namespace Pentamic.SSBI.Services
                                 info.OriginalValuesMap["DatabaseName"] = null;
                             }
                         }
-                        entity.OriginalName = entity.Name;
-                        info.OriginalValuesMap["OriginalName"] = null;
-                        break;
-                    case Breeze.ContextProvider.EntityState.Modified:
-                        if (entity.OriginalName != entity.Name)
-                        {
-                            _renameRequests.Add(new RenameRequest
-                            {
-                                Id = entity.Id,
-                                Name = entity.Name,
-                                OriginalName = entity.OriginalName,
-                                Type = entity.GetType()
-                            });
-                        }
-                        entity.OriginalName = entity.Name;
-                        info.OriginalValuesMap["OriginalName"] = null;
                         break;
                     default:
                         break;
@@ -1123,7 +1102,6 @@ namespace Pentamic.SSBI.Services
             {
                 var entity = info.Entity as Relationship;
                 entity.Name = Guid.NewGuid().ToString();
-                entity.OriginalName = entity.Name;
             }
             if (info.Entity is UserFavoriteModel && info.EntityState == Breeze.ContextProvider.EntityState.Added)
             {
@@ -1425,6 +1403,33 @@ namespace Pentamic.SSBI.Services
             }
         }
 
+        protected void AfterSaveRename(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings)
+        {
+            List<EntityInfo> eis;
+            foreach (var item in saveMap)
+            {
+                if (item.Key == typeof(Table))
+                {
+
+                }
+            }
+            if (saveMap.TryGetValue(typeof(Table), out eis))
+            {
+                var newTables = eis.Where(x => x.EntityState == Breeze.ContextProvider.EntityState.Added)
+                    .Select(x => x.Entity as Table)
+                    .GroupBy(x => x.ModelId).Select(x => new
+                    {
+                        ModelId = x.Key,
+                        Tables = x.ToList()
+                    });
+                foreach (var group in newTables)
+                {
+                    CreateTables(group.ModelId, group.Tables);
+                }
+            }
+        }
+
+
         public string GetDataSourceConnectionString(DataSource ds)
         {
             string cs;
@@ -1485,41 +1490,41 @@ namespace Pentamic.SSBI.Services
 
         public void ProcessRenameRequests()
         {
-            foreach (var req in _renameRequests)
-            {
-                if (req.Type == typeof(Model))
-                {
-                    RenameModel(req.Id, req.OriginalName, req.Name);
-                }
-                if (req.Type == typeof(DataSource))
-                {
-                    RenameDataSource(req.Id, req.OriginalName, req.Name);
-                }
-                if (req.Type == typeof(Table))
-                {
-                    RenameTable(req.Id, req.OriginalName, req.Name);
-                }
-                if (req.Type == typeof(Relationship))
-                {
-                    RenameRelationship(req.Id, req.OriginalName, req.Name);
-                }
-                if (req.Type == typeof(Column))
-                {
-                    RenameColumn(req.Id, req.OriginalName, req.Name);
-                }
-                if (req.Type == typeof(Measure))
-                {
-                    RenameMeasure(req.Id, req.OriginalName, req.Name);
-                }
-                if (req.Type == typeof(Partition))
-                {
-                    RenamePartition(req.Id, req.OriginalName, req.Name);
-                }
-                if (req.Type == typeof(Measure))
-                {
-                    RenameMeasure(req.Id, req.OriginalName, req.Name);
-                }
-            }
+            //foreach (var req in _renameRequests)
+            //{
+            //    if (req.Type == typeof(Model))
+            //    {
+            //        RenameModel(req.Id, req.OriginalName, req.Name);
+            //    }
+            //    if (req.Type == typeof(DataSource))
+            //    {
+            //        RenameDataSource(req.Id, req.OriginalName, req.Name);
+            //    }
+            //    if (req.Type == typeof(Table))
+            //    {
+            //        RenameTable(req.Id, req.OriginalName, req.Name);
+            //    }
+            //    if (req.Type == typeof(Relationship))
+            //    {
+            //        RenameRelationship(req.Id, req.OriginalName, req.Name);
+            //    }
+            //    if (req.Type == typeof(Column))
+            //    {
+            //        RenameColumn(req.Id, req.OriginalName, req.Name);
+            //    }
+            //    if (req.Type == typeof(Measure))
+            //    {
+            //        RenameMeasure(req.Id, req.OriginalName, req.Name);
+            //    }
+            //    if (req.Type == typeof(Partition))
+            //    {
+            //        RenamePartition(req.Id, req.OriginalName, req.Name);
+            //    }
+            //    if (req.Type == typeof(Measure))
+            //    {
+            //        RenameMeasure(req.Id, req.OriginalName, req.Name);
+            //    }
+            //}
         }
 
         public void RenameModel(int id, string oldName, string newName)
@@ -3152,7 +3157,6 @@ namespace Pentamic.SSBI.Services
             {
                 Name = model.TableName,
                 ModelId = model.ModelId,
-                OriginalName = model.TableName,
                 Columns = new List<Column>(),
                 Partitions = new List<Partition>(),
                 DataCategory = "Time"
