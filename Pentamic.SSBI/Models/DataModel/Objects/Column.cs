@@ -10,7 +10,6 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public int TableId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string OriginalName { get; set; }
         public string SourceColumn { get; set; }
         public string DisplayFolder { get; set; }
         public string FormatString { get; set; }

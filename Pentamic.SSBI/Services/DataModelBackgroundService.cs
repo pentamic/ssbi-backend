@@ -44,7 +44,11 @@ namespace Pentamic.SSBI.Services
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases[mo.DatabaseName];
+                    var database = server.Databases[modelId.ToString()];
+                    if (database == null)
+                    {
+                        throw new Exception("Database not found");
+                    }
                     database.Model.RequestRefresh(AS.RefreshType.Full);
                     database.Update(AN.UpdateOptions.ExpandFull);
                 }
@@ -61,7 +65,7 @@ namespace Pentamic.SSBI.Services
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases[tb.Model.DatabaseName];
+                    var database = server.Databases[tb.ModelId.ToString()];
                     var table = database.Model.Tables[tb.Name];
                     table.RequestRefresh(AS.RefreshType.Full);
                     database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
@@ -79,8 +83,12 @@ namespace Pentamic.SSBI.Services
                 using (var server = new AS.Server())
                 {
                     server.Connect(_asConnectionString);
-                    var database = server.Databases[pa.Table.Model.DatabaseName];
-                    var partition = database.Model.Tables[pa.Table.Name].Partitions[pa.Name];
+                    var database = server.Databases[pa.Table.ModelId.ToString()];
+                    if (database == null)
+                    {
+                        throw new Exception("Databse not found");
+                    }
+                    var partition = database.Model.Tables[pa.Table.Name].Partitions[pa.Id.ToString()];
                     partition.RequestRefresh(AS.RefreshType.Full);
                     database.Update(Microsoft.AnalysisServices.UpdateOptions.ExpandFull);
                 }

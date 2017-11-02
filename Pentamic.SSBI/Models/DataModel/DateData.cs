@@ -11,18 +11,28 @@ namespace Pentamic.SSBI.Models.DataModel
         public int DateKey { get; set; }
         public DateTime Date { get; set; }
         public string DateName { get; set; }
+        public DateTime PreviousMonthDate { get; set; }
+        public DateTime PreviousQuarterDate { get; set; }
+        public DateTime PreviousYearDate { get; set; }
+        public int SequentialDayNumber { get; set; }
+        public int SequentialMonthNumber { get; set; }
+        public int SequentialQuarterNumber { get; set; }
         public int Year { get; set; }
         public string YearName { get; set; }
         public int Month { get; set; }
         public string MonthName { get; set; }
+        public int MonthTotalDays { get; set; }
         public int Quarter { get; set; }
         public string QuarterName { get; set; }
+        public int QuarterTotalDays { get; set; }
         public int HalfYear { get; set; }
         public string HalfYearName { get; set; }
         public int DayOfMonth { get; set; }
         public string DayOfMonthName { get; set; }
         public int DayOfWeek { get; set; }
         public string DayOfWeekName { get; set; }
+        public int DayOfYear { get; set; }
+        public int DayOfQuarter { get; set; }
         public int MonthOfYear { get; set; }
         public string MonthOfYearName { get; set; }
         public int QuarterOfYear { get; set; }
@@ -54,32 +64,23 @@ namespace Pentamic.SSBI.Models.DataModel
             DateName = Date.ToString("dd/MM/yyyy");
             DayOfMonth = Date.Day;
             DayOfMonthName = "Ngày " + DayOfMonth;
+            var eom = Date.EndOfMonth();
+            PreviousMonthDate = Date.AddMonths(-1);
+            if (Date == eom) { PreviousMonthDate = PreviousMonthDate.EndOfMonth(); }
+            PreviousQuarterDate = Date.AddMonths(-3);
+            PreviousYearDate = Date.AddYears(-1);
             Year = Date.Year;
             YearName = "Năm " + Date.Year;
+            DayOfYear = Date.DayOfYear;
+            DayOfQuarter = Date.DayOfQuarter();
             MonthOfYear = Date.Month;
             MonthOfYearName = "Tháng " + MonthOfYear;
             Month = Date.Year * 100 + MonthOfYear;
             MonthName = "Tháng " + MonthOfYear + " năm " + Year;
-            if (MonthOfYear >= 1 && MonthOfYear <= 3)
-            {
-                QuarterOfYear = 1;
-                HalfYearOfYear = 1;
-            }
-            if (MonthOfYear >= 4 && MonthOfYear <= 6)
-            {
-                QuarterOfYear = 2;
-                HalfYearOfYear = 1;
-            }
-            if (MonthOfYear >= 7 && MonthOfYear <= 9)
-            {
-                QuarterOfYear = 3;
-                HalfYearOfYear = 2;
-            }
-            if (MonthOfYear >= 10 && MonthOfYear <= 12)
-            {
-                QuarterOfYear = 4;
-                HalfYearOfYear = 2;
-            }
+            MonthTotalDays = DateTime.DaysInMonth(Year, Date.Month);
+            QuarterTotalDays = (int)(Date.EndOfQuarter() - Date.StartOfQuarter()).TotalDays + 1;
+            QuarterOfYear = Date.Quarter();
+            HalfYearOfYear = Date.HalfYear();
             QuarterOfYearName = "Quý " + QuarterOfYear;
             HalfYearOfYearName = "Kỳ " + HalfYearOfYear;
             Quarter = Year * 100 + QuarterOfYear;

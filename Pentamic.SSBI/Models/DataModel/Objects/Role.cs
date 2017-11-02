@@ -10,7 +10,6 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public int Id { get; set; }
         public int ModelId { get; set; }
         public string Name { get; set; }
-        public string OriginalName { get; set; }
 
         public Model Model { get; set; }
         public List<RoleTablePermission> TablePermissions { get; set; }

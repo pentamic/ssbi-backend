@@ -8,7 +8,6 @@ namespace Pentamic.SSBI.Models.Reporting.Query
     public class QueryModel2
     {
         public int TileId { get; set; }
-        public DateTime Date { get; set; }
         public string FilterExpression { get; set; }
     }
 }

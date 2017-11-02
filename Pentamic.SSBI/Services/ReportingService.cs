@@ -454,52 +454,6 @@ namespace Pentamic.SSBI.Services
         //    return query;
         //}
 
-        public List<Dictionary<string, object>> Query(QueryModel queryModel)
-        {
-            var dmContext = new DataModelContext();
-            var model = dmContext.Models.Find(queryModel.ModelId);
-            if (model == null)
-            {
-                throw new Exception("Model not found");
-            }
-            var query = queryModel.Filters2.Count > 0 ?
-                $" EVALUATE ( FILTER (  SUMMARIZECOLUMNS ( {string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values))} ), {string.Join(" && ", queryModel.Filters2)} ) ) "
-                : $" EVALUATE ( SUMMARIZECOLUMNS ( {string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values))} ) ) ";
-            if (queryModel.OrderBy.Count > 0)
-            {
-                query += $" ORDER BY {string.Join(",", queryModel.OrderBy)} ";
-            }
-            var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
-            {
-                ["Catalog"] = model.DatabaseName
-            };
-            using (var conn = new AdomdConnection(conStrBuilder.ToString()))
-            {
-                conn.Open();
-                var command = conn.CreateCommand();
-                command.CommandText = query;
-                using (var reader = command.ExecuteReader())
-                {
-                    var result = new List<Dictionary<string, object>>();
-                    while (reader.Read())
-                    {
-                        var row = new Dictionary<string, object>();
-                        var columns = new List<string>();
-                        for (var i = 0; i < reader.FieldCount; ++i)
-                        {
-                            columns.Add(reader.GetName(i));
-                        }
-                        for (var i = 0; i < reader.FieldCount; ++i)
-                        {
-                            row[columns[i]] = reader.GetValue(i);
-                        }
-                        result.Add(row);
-                    }
-                    return result;
-                }
-            }
-        }
-
         public SaveResult SaveChanges(JObject saveBundle)
         {
             var txSettings = new TransactionSettings { TransactionType = TransactionType.TransactionScope };
@@ -568,6 +522,53 @@ namespace Pentamic.SSBI.Services
         //    return saveMap;
         //}
 
+        public List<Dictionary<string, object>> Query(QueryModel queryModel)
+        {
+            var dmContext = new DataModelContext();
+            var model = dmContext.Models.Find(queryModel.ModelId);
+            if (model == null)
+            {
+                throw new Exception("Model not found");
+            }
+            var query = queryModel.Filters2.Count > 0 ?
+                $" EVALUATE ( FILTER (  SUMMARIZECOLUMNS ( {string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values))} ), {string.Join(" && ", queryModel.Filters2)} ) ) "
+                : $" EVALUATE ( SUMMARIZECOLUMNS ( {string.Join(",", queryModel.Columns.Concat(queryModel.Filters1).Concat(queryModel.Values))} ) ) ";
+            if (queryModel.OrderBy.Count > 0)
+            {
+                query += $" ORDER BY {string.Join(",", queryModel.OrderBy)} ";
+            }
+            var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
+            {
+                ["Catalog"] = queryModel.ModelId.ToString()
+            };
+            using (var conn = new AdomdConnection(conStrBuilder.ToString()))
+            {
+                conn.Open();
+                var command = conn.CreateCommand();
+                command.CommandText = query;
+                using (var reader = command.ExecuteReader())
+                {
+                    var result = new List<Dictionary<string, object>>();
+                    while (reader.Read())
+                    {
+                        var row = new Dictionary<string, object>();
+                        var columns = new List<string>();
+                        for (var i = 0; i < reader.FieldCount; ++i)
+                        {
+                            columns.Add(reader.GetName(i));
+                        }
+                        for (var i = 0; i < reader.FieldCount; ++i)
+                        {
+                            row[columns[i]] = reader.GetValue(i);
+                        }
+                        result.Add(row);
+                    }
+                    return result;
+                }
+            }
+        }
+
+
         public List<ReportTileRowQueryResult> QueryRowTile(QueryModel2 queryModel)
         {
             var tile = Context.ReportTiles.Find(queryModel.TileId);
@@ -576,31 +577,12 @@ namespace Pentamic.SSBI.Services
                 throw new Exception("Report Tile not found");
             }
             var dms = new DataModelService();
-            var dbName = dms.GetModelDatabaseName(tile.ModelId);
-            var dateCol = dms.GetModelDateColumn(tile.ModelId);
-            if (string.IsNullOrEmpty(dateCol))
-            {
-                dateCol = "'ct00'[ngay_ct]";
-            }
-
-            var date = queryModel.Date.Date;
-            var somDate = new DateTime(date.Year, date.Month, 1);
-            var soyDate = new DateTime(date.Year, 1, 1);
-            var pmDate = date.AddMonths(-1);
-            var pyDate = date.AddYears(-1);
-            var sopmDate = new DateTime(pmDate.Year, pmDate.Month, 1);
-            var sopyDate = new DateTime(pyDate.Year, 1, 1);
-            var mtd = $"{dateCol} >= DATE({somDate.Year},{somDate.Month},{somDate.Day}), {dateCol} <= DATE({date.Year},{date.Month},{date.Day})";
-            var ytd = $"{dateCol} >= DATE({soyDate.Year},{soyDate.Month},{soyDate.Day}), {dateCol} <= DATE({date.Year},{date.Month},{date.Day})";
-            var pmtd = $"{dateCol} >= DATE({sopmDate.Year},{sopmDate.Month},{sopmDate.Day}), {dateCol} <= DATE({pmDate.Year},{pmDate.Month},{pmDate.Day})";
-            var pytd = $"{dateCol} >= DATE({sopyDate.Year},{sopyDate.Month},{sopyDate.Day}), {dateCol} <= DATE({pyDate.Year},{pyDate.Month},{pyDate.Day})";
-
             var tileRows = Context.ReportTileRows.Where(x => x.ReportTileId == queryModel.TileId).OrderBy(x => x.Ordinal).ToList();
             var rowExprList = new List<string>();
             var allRowExpr = "";
             foreach (var r in tileRows.Where(x => !x.IsFormula))
             {
-                var rowExpr = BuildTileRowQuery(r, mtd, ytd, pmtd, pytd);
+                var rowExpr = BuildTileRowQuery(r);
                 rowExprList.Add(rowExpr);
             }
             if (rowExprList.Count > 1)
@@ -622,7 +604,7 @@ namespace Pentamic.SSBI.Services
             }
             var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
             {
-                ["Catalog"] = dbName
+                ["Catalog"] = tile.ModelId.ToString()
             };
             var result = tileRows.Select(x => new ReportTileRowQueryResult(x)).ToList();
             using (var conn = new AdomdConnection(conStrBuilder.ToString()))
@@ -673,10 +655,10 @@ namespace Pentamic.SSBI.Services
             if (model == null)
             {
                 throw new Exception("Model not found");
-            }      
+            }
             var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
             {
-                ["Catalog"] = model.DatabaseName
+                ["Catalog"] = queryModel.ModelId.ToString()
             };
             using (var conn = new AdomdConnection(conStrBuilder.ToString()))
             {
@@ -706,8 +688,12 @@ namespace Pentamic.SSBI.Services
         }
 
 
-        public string BuildTileRowQuery(ReportTileRow row, string mtd, string ytd, string pmtd, string pytd)
+        public string BuildTileRowQuery(ReportTileRow row)
         {
+            var mtd = "FILTER ( ALL(DimDate), DimDate[Month] = MAX(DimDate[Month]) && DimDate[Date] <= MAX(DimDate[Date]))";
+            var ytd = "FILTER ( ALL(DimDate), DimDate[Year] = MAX(DimDate[Year]) && DimDate[Date] <= MAX(DimDate[Date]))";
+            var pmtd = "FILTER ( ALL(DimDate), DimDate[Month] = MAX(DimDate[Month]) - 1 && DimDate[Date] <= MAX(DimDate[PreviousMonthDate]))";
+            var pytd = "FILTER ( ALL(DimDate), DimDate[Year] = MAX(DimDate[Year]) - 1 && DimDate[Date] <= MAX(DimDate[PreviousYearDate]))";
             var res =
                 $"\"Id\", {row.Id}," +
                 $"\"PMTD\", CALCULATE ( {row.ValueExpression}, {pmtd}, {row.FilterExpression})," +
@@ -774,7 +760,7 @@ namespace Pentamic.SSBI.Services
             var query = $"EVALUATE(VALUES({queryModel.FieldName})) ORDER BY {queryModel.FieldName}";
             var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
             {
-                ["Catalog"] = model.DatabaseName
+                ["Catalog"] = queryModel.ModelId.ToString()
             };
             using (var conn = new AdomdConnection(conStrBuilder.ToString()))
             {

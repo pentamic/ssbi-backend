@@ -241,3 +241,5 @@ ModelManifest.xml
 # FAKE - F# Make
 .fake/
 /Pentamic.SSBI/Uploads
+/Pentamic.SSBI/Exports
+/Pentamic.SSBI/Imports

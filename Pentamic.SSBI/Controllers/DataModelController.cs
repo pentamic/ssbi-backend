@@ -1,6 +1,7 @@
 ﻿using Breeze.ContextProvider;
 using Breeze.WebApi2;
 using Newtonsoft.Json.Linq;
+using Pentamic.SSBI.Models;
 using Pentamic.SSBI.Models.DataModel;
 using Pentamic.SSBI.Models.DataModel.Objects;
 using Pentamic.SSBI.Services;
@@ -216,6 +217,47 @@ namespace Pentamic.SSBI.Controllers
             }
 
         }
+
+        [HttpPost]
+        [Route("breeze/datamodel/export/{modelId}")]
+        public IHttpActionResult ExportModel(int modelId)
+        {
+            try
+            {
+                var path = _dataModelService.ExportModelTemplate(modelId);
+                return new FileActionResult(path);
+            }
+            catch (Exception e)
+            {
+                Serilog.Log.Logger.Error(e, e.Message);
+                return BadRequest(e.Message);
+            }
+
+        }
+
+
+        [HttpPost]
+        public async Task<IHttpActionResult> ImportModel()
+        {
+            if (!Request.Content.IsMimeMultipartContent())
+            {
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+            }
+            var basePath = System.Configuration.ConfigurationManager.AppSettings["ImportBasePath"];
+            if (string.IsNullOrEmpty(basePath))
+            {
+                basePath = HttpContext.Current.Server.MapPath("~/Imports");
+            }
+            if (!Directory.Exists(basePath))
+            {
+                Directory.CreateDirectory(basePath);
+            }
+            var provider = new MultipartFormDataStreamProvider(basePath);
+            await Request.Content.ReadAsMultipartAsync(provider);
+            var model = _dataModelService.ImportModel(provider);
+            return Ok(model);
+        }
+
 
     }
 }

@@ -9,7 +9,6 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public int? DataSourceId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string OriginalName { get; set; }
         public string Query { get; set; }
         public string Expression { get; set; }
         public PartitionSourceType SourceType { get; set; }

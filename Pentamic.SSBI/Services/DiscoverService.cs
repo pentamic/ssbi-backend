@@ -30,15 +30,14 @@ namespace Pentamic.SSBI.Services
 
         public JArray DiscoverModel(int modelId, string perspective)
         {
-            var model = _dataModelContext.Models.Find(modelId);
-            if (model == null)
-            {
-                throw new ArgumentException("Model not found");
-            }
             using (var server = new AS.Server())
             {
                 server.Connect(_asConnectionString);
-                var db = server.Databases.FindByName(model.DatabaseName);
+                var db = server.Databases.FindByName(modelId.ToString());
+                if (db == null)
+                {
+                    throw new Exception("Database not found");
+                }
                 if (string.IsNullOrEmpty(perspective))
                 {
                     var tables = new JArray();
@@ -168,7 +167,6 @@ namespace Pentamic.SSBI.Services
                     }
                     return tables;
                 }
-
             }
         }
 

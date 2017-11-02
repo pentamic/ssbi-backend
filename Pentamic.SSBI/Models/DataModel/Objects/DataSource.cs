@@ -8,7 +8,6 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public int Id { get; set; }
         public int ModelId { get; set; }
         public string Name { get; set; }
-        public string OriginalName { get; set; }
         public string Description { get; set; }
         public DataSourceType Type { get; set; }
         public string ConnectionString { get; set; }

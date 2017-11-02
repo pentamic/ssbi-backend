@@ -443,6 +443,7 @@
     <Compile Include="Migrations\ReportingContext\Configuration.cs" />
     <Compile Include="Models\AuthGroup.cs" />
     <Compile Include="Models\DataModel\DateData.cs" />
+    <Compile Include="Models\DataModel\DateTimeExtension.cs" />
     <Compile Include="Models\DataModel\DateTableCreateModel.cs" />
     <Compile Include="Models\DataModel\Enums\CrossFilteringBehavior.cs" />
     <Compile Include="Models\DataModel\Enums\ColumnType.cs" />
@@ -493,6 +494,7 @@
     <Compile Include="Models\Discover\TableDiscoverModel.cs" />
     <Compile Include="Models\Discover\TableDiscoverResult.cs" />
     <Compile Include="Models\DataModel\SourceFile.cs" />
+    <Compile Include="Models\FileActionResult.cs" />
     <Compile Include="Models\IAuditable.cs" />
     <Compile Include="Models\IShareInfo.cs" />
     <Compile Include="Models\Reporting\DashboardComment.cs" />
