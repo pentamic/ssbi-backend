@@ -7,15 +7,17 @@ using System.Web;
 
 namespace Pentamic.SSBI.Models.DataModel.Objects
 {
-    public class UserRole
+    public class RoleColumnPermission
     {
         [Key]
         [Column(Order = 1)]
-        public string UserId { get; set; }
+        public int RoleId { get; set; }
         [Key]
         [Column(Order = 2)]
-        public int RoleId { get; set; }
+        public int ColumnId { get; set; }
+        public bool MetadataPermission { get; set; }
 
         public Role Role { get; set; }
+        public Table Column { get; set; }
     }
 }

@@ -79,74 +79,26 @@ namespace Pentamic.SSBI.Services
             get { return _contextProvider.Metadata(); }
         }
 
-        public IQueryable<Model> Models
-        {
-            get
-            {
-                return Context.Models.Where(x => x.CreatedBy == UserId)
-                    .Concat(Context.ModelSharings.Where(x => x.UserId == UserId).Select(x => x.Model)); ;
-            }
-        }
-        public IQueryable<Role> Roles
-        {
-            get { return Context.Roles; }
-        }
-        public IQueryable<DataSource> DataSources
-        {
-            get { return Context.DataSources; }
-        }
-        public IQueryable<Table> Tables
-        {
-            get { return Context.Tables; }
-        }
-        public IQueryable<Column> Columns
-        {
-            get { return Context.Columns; }
-        }
-        public IQueryable<Partition> Partitions
-        {
-            get { return Context.Partitions; }
-        }
-        public IQueryable<Measure> Measures
-        {
-            get { return Context.Measures; }
-        }
-        public IQueryable<Relationship> Relationships
-        {
-            get { return Context.Relationships; }
-        }
-        public IQueryable<Perspective> Perspectives
-        {
-            get { return Context.Perspectives; }
-        }
-        public IQueryable<Hierarchy> Hierarchies
-        {
-            get { return Context.Hierarchies; }
-        }
-        public IQueryable<Level> Levels
-        {
-            get { return Context.Levels; }
-        }
-        public IQueryable<SourceFile> SourceFiles
-        {
-            get { return Context.SourceFiles; }
-        }
-        public IQueryable<RoleTablePermission> RoleTablePermissions
-        {
-            get { return Context.RoleTablePermissions; }
-        }
-        public IQueryable<ModelSharing> ModelSharings
-        {
-            get { return Context.ModelSharings; }
-        }
-        public IQueryable<UserFavoriteModel> UserFavoriteModels
-        {
-            get { return Context.UserFavoriteModels.Where(x => x.UserId == UserId); }
-        }
-        public IQueryable<UserModelActivity> UserModelActivities
-        {
-            get { return Context.UserModelActivities.Where(x => x.UserId == UserId); }
-        }
+        public IQueryable<Model> Models => Context.Models.Where(x => x.CreatedBy == UserId)
+                    .Concat(Context.ModelSharings.Where(x => x.UserId == UserId).Select(x => x.Model));
+        public IQueryable<Role> Roles => Context.Roles;
+        public IQueryable<DataSource> DataSources => Context.DataSources;
+        public IQueryable<Table> Tables => Context.Tables;
+        public IQueryable<Column> Columns => Context.Columns;
+        public IQueryable<Partition> Partitions => Context.Partitions;
+        public IQueryable<Measure> Measures => Context.Measures;
+        public IQueryable<Relationship> Relationships => Context.Relationships;
+        public IQueryable<Perspective> Perspectives => Context.Perspectives;
+        public IQueryable<Hierarchy> Hierarchies => Context.Hierarchies;
+        public IQueryable<Level> Levels => Context.Levels;
+        public IQueryable<SourceFile> SourceFiles => Context.SourceFiles;
+        public IQueryable<RoleTablePermission> RoleTablePermissions => Context.RoleTablePermissions;
+        public IQueryable<UserRole> UserRoles => Context.UserRoles;
+        public IQueryable<ModelSharing> ModelSharings => Context.ModelSharings;
+        public IQueryable<UserFavoriteModel> UserFavoriteModels => Context.UserFavoriteModels
+            .Where(x => x.UserId == UserId);
+        public IQueryable<UserModelActivity> UserModelActivities => Context.UserModelActivities
+            .Where(x => x.UserId == UserId);
 
         public IQueryable<UserModelActivity> GetUserRecentModels()
         {
@@ -1141,6 +1093,51 @@ namespace Pentamic.SSBI.Services
         protected Dictionary<Type, List<EntityInfo>> BeforeSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap)
         {
             List<EntityInfo> eis;
+            if (saveMap.TryGetValue(typeof(Model), out eis))
+            {
+                foreach (var ei in eis)
+                {
+                    if (ei.EntityState == Breeze.ContextProvider.EntityState.Added)
+                    {
+                        var e = ei.Entity as Model;
+                        var r1 = new Role
+                        {
+                            Name = "Administrator",
+                            Description = "Administrator",
+                            ModelId = e.Id,
+                            ModelPermission = SSBI.Models.DataModel.Enums.ModelPermission.Administrator
+                        };
+                        var r2 = new Role
+                        {
+                            Name = "User",
+                            Description = "User",
+                            ModelId = e.Id,
+                            ModelPermission = SSBI.Models.DataModel.Enums.ModelPermission.Read
+                        };
+                        var r1e = _contextProvider.CreateEntityInfo(r1, Breeze.ContextProvider.EntityState.Added);
+                        var r2e = _contextProvider.CreateEntityInfo(r2, Breeze.ContextProvider.EntityState.Added);
+                        if (!saveMap.TryGetValue(typeof(Role), out List<EntityInfo> roles))
+                        {
+                            roles = new List<EntityInfo>();
+                            saveMap.Add(typeof(Role), roles);
+                        }
+                        roles.Add(r1e);
+                        roles.Add(r2e);
+                        if (!saveMap.TryGetValue(typeof(UserRole), out List<EntityInfo> userRoles))
+                        {
+                            userRoles = new List<EntityInfo>();
+                            saveMap.Add(typeof(UserRole), userRoles);
+                        }
+                        userRoles.Add(_contextProvider.CreateEntityInfo(new UserRole
+                        {
+                            UserId = UserId,
+                            Role = r1
+                        }, Breeze.ContextProvider.EntityState.Added));
+
+                    }
+                }
+            }
+
             if (saveMap.TryGetValue(typeof(DataSource), out eis))
             {
                 var names = eis.Where(x => x.EntityState == Breeze.ContextProvider.EntityState.Added).Select(x => x.Entity as DataSource)
@@ -1414,6 +1411,45 @@ namespace Pentamic.SSBI.Services
                     }
                 }
             }
+            if (saveMap.TryGetValue(typeof(Role), out eis))
+            {
+                foreach (var ei in eis)
+                {
+                    var e = ei.Entity as Role;
+                    if (ei.EntityState == Breeze.ContextProvider.EntityState.Added)
+                    {
+                        CreateRole(e);
+                    }
+                    if (ei.EntityState == Breeze.ContextProvider.EntityState.Modified)
+                    {
+                        UpdateRole(e);
+                    }
+                    if (ei.EntityState == Breeze.ContextProvider.EntityState.Deleted)
+                    {
+                        DeleteRole(e);
+                    }
+                }
+            }
+            if (saveMap.TryGetValue(typeof(RoleTablePermission), out eis))
+            {
+                foreach (var ei in eis)
+                {
+                    var e = ei.Entity as RoleTablePermission;
+                    if (ei.EntityState == Breeze.ContextProvider.EntityState.Added)
+                    {
+                        CreateRoleTablePermission(e);
+                    }
+                    if (ei.EntityState == Breeze.ContextProvider.EntityState.Modified)
+                    {
+                        UpdateRoleTablePermission(e);
+                    }
+                    if (ei.EntityState == Breeze.ContextProvider.EntityState.Deleted)
+                    {
+                        DeleteRoleTablePermission(e);
+                    }
+                }
+            }
+
         }
 
         protected void AfterSaveImport(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings)
@@ -1600,34 +1636,24 @@ namespace Pentamic.SSBI.Services
 
         public void CreateModel(Model model)
         {
-            try
+            using (var server = new AS.Server())
             {
-                using (var server = new AS.Server())
+                server.Connect(_asConnectionString);
+                var database = new AS.Database()
                 {
-                    server.Connect(_asConnectionString);
-                    var database = new AS.Database()
-                    {
-                        Name = model.Id.ToString(),
-                        ID = model.Id.ToString(),
-                        CompatibilityLevel = 1200,
-                        StorageEngineUsed = AN.StorageEngineUsed.TabularMetadata,
-                    };
-                    database.Model = new AS.Model
-                    {
-                        Name = model.Id.ToString(),
-                        Description = model.Description,
-                        DefaultMode = model.DefaultMode.ToModeType()
-                    };
-                    server.Databases.Add(database);
-                    database.Update(AN.UpdateOptions.ExpandFull);
-                }
-            }
-            catch (AN.OperationException ex)
-            {
-                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
+                    Name = model.Id.ToString(),
+                    ID = model.Id.ToString(),
+                    CompatibilityLevel = 1200,
+                    StorageEngineUsed = AN.StorageEngineUsed.TabularMetadata,
+                };
+                database.Model = new AS.Model
                 {
-                }
-                throw;
+                    Name = model.Id.ToString(),
+                    Description = model.Description,
+                    DefaultMode = model.DefaultMode.ToModeType()
+                };
+                server.Databases.Add(database);
+                database.Update(AN.UpdateOptions.ExpandFull);
             }
         }
 
@@ -2637,41 +2663,164 @@ namespace Pentamic.SSBI.Services
 
         //Role----------------------------------------------------
 
-        public void CreateRole()
+        public void CreateRole(Role role)
         {
-            var dbName = "";
-            try
+            using (var server = new AS.Server())
             {
-                using (var server = new AS.Server())
+                server.Connect(_asConnectionString);
+                var database = server.Databases.FindByName(role.ModelId.ToString());
+                if (database == null)
                 {
-                    server.Connect(_asConnectionString);
-                    var database = server.Databases.FindByName(dbName);
-                    if (database == null)
+                    throw new ArgumentException("Database not found");
+                }
+                var r = new AS.ModelRole
+                {
+                    Name = role.Id.ToString(),
+                    Description = role.Description,
+                    ModelPermission = (AS.ModelPermission)role.ModelPermission
+                };
+                if (role.TablePermissions != null && role.TablePermissions.Count > 0)
+                {
+                    foreach (var tp in role.TablePermissions)
                     {
-                        throw new ArgumentException("Database not found");
+                        r.TablePermissions.Add(new AS.TablePermission
+                        {
+                            Name = r.TablePermissions.GetNewName(),
+                            FilterExpression = tp.FilterExpression
+                        });
                     }
-                    var role = new AS.ModelRole
-                    {
-                        Name = "Test",
-                        Description = "Test",
-                        ModelPermission = AS.ModelPermission.ReadRefresh
-                    };
-                    //role.TablePermissions.Add(new AS.TablePermission
-                    //{
-                    //    Name
-                    //})
-                    database.Model.Roles.Add(role);
+                }
+                database.Model.Roles.Add(r);
+                database.Update(AN.UpdateOptions.ExpandFull);
+            }
+        }
+
+        public void UpdateRole(Role role)
+        {
+            using (var server = new AS.Server())
+            {
+                server.Connect(_asConnectionString);
+                var database = server.Databases.FindByName(role.ModelId.ToString());
+                if (database == null)
+                {
+                    throw new ArgumentException("Database not found");
+                }
+                var r = database.Model.Roles.Find(role.Id.ToString());
+                r.Description = role.Description;
+                database.Model.Roles.Add(r);
+                database.Update(AN.UpdateOptions.ExpandFull);
+            }
+        }
+
+        public void DeleteRole(Role role)
+        {
+            using (var server = new AS.Server())
+            {
+                server.Connect(_asConnectionString);
+                var database = server.Databases.FindByName(role.ModelId.ToString());
+                if (database == null)
+                {
+                    throw new ArgumentException("Database not found");
+                }
+                var r = database.Model.Roles.Find(role.Id.ToString());
+                if (r != null)
+                {
+                    database.Model.Roles.Remove(r);
                     database.Update(AN.UpdateOptions.ExpandFull);
                 }
             }
-            catch (AN.OperationException ex)
+        }
+
+        //Role table permission-----------------------------------
+
+        public void CreateRoleTablePermission(RoleTablePermission tablePermission)
+        {
+            var info = Context.RoleTablePermissions
+                .Where(x => x.RoleId == tablePermission.RoleId && x.TableId == tablePermission.TableId)
+                .Select(x => new { ModelId = x.Role.ModelId, TableName = x.Table.Name })
+                .FirstOrDefault();
+            using (var server = new AS.Server())
             {
-                foreach (AN.XmlaError err in ex.Results.OfType<AN.XmlaError>().Cast<AN.XmlaError>())
+                server.Connect(_asConnectionString);
+                var database = server.Databases.FindByName(info.ModelId.ToString());
+                if (database == null)
                 {
+                    throw new ArgumentException("Database not found");
                 }
-                throw;
+                var r = database.Model.Roles.Find(tablePermission.RoleId.ToString());
+                if (r == null)
+                {
+                    throw new Exception("Role not found");
+                }
+                var tb = database.Model.Tables.Find(info.TableName);
+                if (tb == null)
+                {
+                    throw new Exception("Table not found");
+                }
+                r.TablePermissions.Add(new AS.TablePermission
+                {
+                    Table = tb,
+                    FilterExpression = tablePermission.FilterExpression
+                });
+                database.Update(AN.UpdateOptions.ExpandFull);
             }
         }
+
+        public void UpdateRoleTablePermission(RoleTablePermission tablePermission)
+        {
+            var info = Context.RoleTablePermissions
+                         .Where(x => x.RoleId == tablePermission.RoleId && x.TableId == tablePermission.TableId)
+                         .Select(x => new { ModelId = x.Role.ModelId, TableName = x.Table.Name })
+                         .FirstOrDefault();
+            using (var server = new AS.Server())
+            {
+                server.Connect(_asConnectionString);
+                var database = server.Databases.FindByName(info.ModelId.ToString());
+                if (database == null)
+                {
+                    throw new ArgumentException("Database not found");
+                }
+                var r = database.Model.Roles.Find(tablePermission.RoleId.ToString());
+                if (r == null)
+                {
+                    throw new Exception("Role not found");
+                }
+                var tp = r.TablePermissions.Find(info.TableName);
+                if (tp == null)
+                {
+                    throw new Exception("Table permission not found");
+                }
+                tp.FilterExpression = tablePermission.FilterExpression;
+                database.Update(AN.UpdateOptions.ExpandFull);
+            }
+        }
+
+        public void DeleteRoleTablePermission(RoleTablePermission tablePermission)
+        {
+            var dbName = Context.Roles.Where(x => x.Id == tablePermission.RoleId).Select(x => x.ModelId)
+                .FirstOrDefault().ToString();
+            using (var server = new AS.Server())
+            {
+                server.Connect(_asConnectionString);
+                var database = server.Databases.FindByName(dbName);
+                if (database == null)
+                {
+                    throw new ArgumentException("Database not found");
+                }
+                var r = database.Model.Roles.Find(tablePermission.RoleId.ToString());
+                if (r == null)
+                {
+                    throw new Exception("Role not found");
+                }
+                var tp = r.TablePermissions.Find(tablePermission.TableId.ToString());
+                if (tp != null)
+                {
+                    r.TablePermissions.Remove(tp);
+                    database.Update(AN.UpdateOptions.ExpandFull);
+                }
+            }
+        }
+
 
         public AS.Table AddCalculatedTable(AS.Database database, int modelId, Table table)
         {
@@ -3060,5 +3209,21 @@ namespace Pentamic.SSBI.Services
                 }
             }
         }
+
+        public string GetAnalysisServiceConnectionString(int modelId)
+        {
+            var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
+            {
+                ["Catalog"] = modelId.ToString()
+            };
+            var userRoles = Context.UserRoles.Where(x => x.UserId == UserId).Select(x => x.RoleId);
+            var roles = Context.Roles.Where(x => x.ModelId == modelId && userRoles.Contains(x.Id)).Select(x => x.Id).ToList();
+            if (roles != null && roles.Count > 0)
+            {
+                conStrBuilder["Roles"] = string.Join(",", roles);
+            }
+            return conStrBuilder.ConnectionString;
+        }
+
     }
 }

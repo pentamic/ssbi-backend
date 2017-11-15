@@ -21,10 +21,12 @@ namespace Pentamic.SSBI.Controllers
     public class DataModelController : ApiController
     {
         private DataModelService _dataModelService;
+        private EmailService _emailService;
 
         public DataModelController()
         {
             _dataModelService = new DataModelService();
+            _emailService = new EmailService();
         }
 
         [HttpGet]
@@ -94,7 +96,11 @@ namespace Pentamic.SSBI.Controllers
         {
             return _dataModelService.GetUserRecentModels();
         }
-
+        [HttpGet]
+        public IQueryable<UserRole> UserRoles()
+        {
+            return _dataModelService.UserRoles;
+        }
         [HttpGet]
         public IQueryable<UserFavoriteModel> UserFavoriteModels()
         {
@@ -170,7 +176,7 @@ namespace Pentamic.SSBI.Controllers
 
         [HttpPost]
         [Route("breeze/datamodel/{modelId}/refresh")]
-        public IHttpActionResult RefreshModel(int modelId)
+        public async Task<IHttpActionResult> RefreshModel(int modelId)
         {
             try
             {

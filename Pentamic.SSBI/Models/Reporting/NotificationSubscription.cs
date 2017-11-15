@@ -5,17 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
-namespace Pentamic.SSBI.Models.DataModel.Objects
+namespace Pentamic.SSBI.Models.Reporting
 {
-    public class UserRole
+    public class NotificationSubscription
     {
         [Key]
         [Column(Order = 1)]
-        public string UserId { get; set; }
+        public int NotificationId { get; set; }
         [Key]
         [Column(Order = 2)]
-        public int RoleId { get; set; }
-
-        public Role Role { get; set; }
+        public string UserId { get; set; }
+        public bool UseEmail { get; set; }
     }
 }

@@ -75,22 +75,11 @@ namespace Pentamic.SSBI.Services
         public IQueryable<ReportView> ReportViews => Context.ReportViews;
         public IQueryable<DashboardComment> DashboardComments => Context.DashboardComments;
         public IQueryable<DashboardView> DashboardViews => Context.DashboardViews;
-        public IQueryable<UserReportActivity> UserReportActivities
-        {
-            get { return Context.UserReportActivities.Where(x => x.UserId == UserId); }
-        }
-        public IQueryable<UserDashboardActivity> UserDashboardActivities
-        {
-            get { return Context.UserDashboardActivities.Where(x => x.UserId == UserId); }
-        }
-        public IQueryable<UserFavoriteReport> UserFavoriteReports
-        {
-            get { return Context.UserFavoriteReports.Where(x => x.UserId == UserId); }
-        }
-        public IQueryable<UserFavoriteDashboard> UserFavoriteDashboards
-        {
-            get { return Context.UserFavoriteDashboards.Where(x => x.UserId == UserId); }
-        }
+        public IQueryable<UserReportActivity> UserReportActivities => Context.UserReportActivities.Where(x => x.UserId == UserId);
+        public IQueryable<UserDashboardActivity> UserDashboardActivities => Context.UserDashboardActivities.Where(x => x.UserId == UserId);
+        public IQueryable<UserFavoriteReport> UserFavoriteReports => Context.UserFavoriteReports.Where(x => x.UserId == UserId);
+        public IQueryable<UserFavoriteDashboard> UserFavoriteDashboards => Context.UserFavoriteDashboards.Where(x => x.UserId == UserId);
+        public IQueryable<Alert> Alerts => Context.Alerts;
 
         public IQueryable<UserReportActivity> GetUserRecentReports()
         {
@@ -101,7 +90,6 @@ namespace Pentamic.SSBI.Services
                 .Select(x => x.OrderByDescending(y => y.CreatedAt).FirstOrDefault())
                 .Include(x => x.Report);
         }
-
         public IQueryable<UserDashboardActivity> GetUserRecentDashboards()
         {
             return Context.UserDashboardActivities
@@ -111,6 +99,7 @@ namespace Pentamic.SSBI.Services
                 .Select(x => x.OrderByDescending(y => y.CreatedAt).FirstOrDefault())
                 .Include(x => x.Dashboard);
         }
+
 
         //public bool CheckUserModelPermission(int modelId)
         //{
@@ -537,11 +526,11 @@ namespace Pentamic.SSBI.Services
             {
                 query += $" ORDER BY {string.Join(",", queryModel.OrderBy)} ";
             }
-            var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
-            {
-                ["Catalog"] = queryModel.ModelId.ToString()
-            };
-            using (var conn = new AdomdConnection(conStrBuilder.ToString()))
+            //var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
+            //{
+            //    ["Catalog"] = queryModel.ModelId.ToString()
+            //};
+            using (var conn = new AdomdConnection(GetAnalysisServiceConnectionString(queryModel.ModelId)))
             {
                 conn.Open();
                 var command = conn.CreateCommand();
@@ -578,12 +567,19 @@ namespace Pentamic.SSBI.Services
             }
             var dms = new DataModelService();
             var tileRows = Context.ReportTileRows.Where(x => x.ReportTileId == queryModel.TileId).OrderBy(x => x.Ordinal).ToList();
+            if (tileRows.Count == 0)
+            {
+                return new List<ReportTileRowQueryResult>();
+            }
             var rowExprList = new List<string>();
             var allRowExpr = "";
             foreach (var r in tileRows.Where(x => !x.IsFormula))
             {
-                var rowExpr = BuildTileRowQuery(r);
-                rowExprList.Add(rowExpr);
+                if (!string.IsNullOrEmpty(r.ValueExpression))
+                {
+                    var rowExpr = BuildTileRowQuery(r);
+                    rowExprList.Add(rowExpr);
+                }
             }
             if (rowExprList.Count > 1)
             {
@@ -602,12 +598,12 @@ namespace Pentamic.SSBI.Services
             {
                 query = $"EVALUATE( CALCULATETABLE ( {allRowExpr}, {queryModel.FilterExpression}) )";
             }
-            var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
-            {
-                ["Catalog"] = tile.ModelId.ToString()
-            };
+            //var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
+            //{
+            //    ["Catalog"] = tile.ModelId.ToString()
+            //};
             var result = tileRows.Select(x => new ReportTileRowQueryResult(x)).ToList();
-            using (var conn = new AdomdConnection(conStrBuilder.ToString()))
+            using (var conn = new AdomdConnection(GetAnalysisServiceConnectionString(tile.ModelId)))
             {
                 conn.Open();
                 var command = conn.CreateCommand();
@@ -656,11 +652,11 @@ namespace Pentamic.SSBI.Services
             {
                 throw new Exception("Model not found");
             }
-            var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
-            {
-                ["Catalog"] = queryModel.ModelId.ToString()
-            };
-            using (var conn = new AdomdConnection(conStrBuilder.ToString()))
+            //var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
+            //{
+            //    ["Catalog"] = queryModel.ModelId.ToString()
+            //};
+            using (var conn = new AdomdConnection(GetAnalysisServiceConnectionString(queryModel.ModelId)))
             {
                 conn.Open();
                 var command = conn.CreateCommand();
@@ -687,20 +683,32 @@ namespace Pentamic.SSBI.Services
             }
         }
 
-
         public string BuildTileRowQuery(ReportTileRow row)
         {
             var mtd = "FILTER ( ALL(DimDate), DimDate[Month] = MAX(DimDate[Month]) && DimDate[Date] <= MAX(DimDate[Date]))";
             var ytd = "FILTER ( ALL(DimDate), DimDate[Year] = MAX(DimDate[Year]) && DimDate[Date] <= MAX(DimDate[Date]))";
             var pmtd = "FILTER ( ALL(DimDate), DimDate[Month] = MAX(DimDate[Month]) - 1 && DimDate[Date] <= MAX(DimDate[PreviousMonthDate]))";
             var pytd = "FILTER ( ALL(DimDate), DimDate[Year] = MAX(DimDate[Year]) - 1 && DimDate[Date] <= MAX(DimDate[PreviousYearDate]))";
-            var res =
-                $"\"Id\", {row.Id}," +
-                $"\"PMTD\", CALCULATE ( {row.ValueExpression}, {pmtd}, {row.FilterExpression})," +
-                $"\"MTD\", CALCULATE ( {row.ValueExpression}, {mtd}, {row.FilterExpression})," +
-                $"\"PYTD\", CALCULATE ( {row.ValueExpression}, {pytd}, {row.FilterExpression})," +
-                $"\"YTD\", CALCULATE ( {row.ValueExpression}, {ytd}, {row.FilterExpression})";
-            return $"ROW ({res})";
+            if (string.IsNullOrEmpty(row.FilterExpression))
+            {
+                var res =
+                    $"\"Id\", {row.Id}," +
+                    $"\"PMTD\", CALCULATE ( {row.ValueExpression}, {pmtd})," +
+                    $"\"MTD\", CALCULATE ( {row.ValueExpression}, {mtd})," +
+                    $"\"PYTD\", CALCULATE ( {row.ValueExpression}, {pytd})," +
+                    $"\"YTD\", CALCULATE ( {row.ValueExpression}, {ytd})";
+                return $"ROW ({res})";
+            }
+            else
+            {
+                var res =
+                    $"\"Id\", {row.Id}," +
+                    $"\"PMTD\", CALCULATE ( {row.ValueExpression}, {pmtd}, {row.FilterExpression})," +
+                    $"\"MTD\", CALCULATE ( {row.ValueExpression}, {mtd}, {row.FilterExpression})," +
+                    $"\"PYTD\", CALCULATE ( {row.ValueExpression}, {pytd}, {row.FilterExpression})," +
+                    $"\"YTD\", CALCULATE ( {row.ValueExpression}, {ytd}, {row.FilterExpression})";
+                return $"ROW ({res})";
+            }
         }
 
         public void CalculateEntryFormula(ReportTileRowQueryResult e, List<ReportTileRowQueryResult> r)
@@ -758,11 +766,11 @@ namespace Pentamic.SSBI.Services
                 throw new Exception("Model not found");
             }
             var query = $"EVALUATE(VALUES({queryModel.FieldName})) ORDER BY {queryModel.FieldName}";
-            var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
-            {
-                ["Catalog"] = queryModel.ModelId.ToString()
-            };
-            using (var conn = new AdomdConnection(conStrBuilder.ToString()))
+            //var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
+            //{
+            //    ["Catalog"] = queryModel.ModelId.ToString()
+            //};
+            using (var conn = new AdomdConnection(GetAnalysisServiceConnectionString(queryModel.ModelId)))
             {
                 conn.Open();
                 var command = conn.CreateCommand();
@@ -789,6 +797,49 @@ namespace Pentamic.SSBI.Services
             }
         }
 
+        public List<Dictionary<string, object>> GetFieldValuesRange(FieldQueryModel queryModel)
+        {
+            var dmContext = new DataModelContext();
+            var model = dmContext.Models.Find(queryModel.ModelId);
+            if (model == null)
+            {
+                throw new Exception("Model not found");
+            }
+            var minQuery = $"ROW(\"{queryModel.FieldName}\", CALCULATE(MIN({queryModel.FieldName})))";
+            var maxQuery = $"ROW(\"{queryModel.FieldName}\", CALCULATE(MAX({queryModel.FieldName})))";
+            var query = $"EVALUATE UNION({minQuery},{maxQuery})";
+            //var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
+            //{
+            //    ["Catalog"] = queryModel.ModelId.ToString()
+            //};
+            using (var conn = new AdomdConnection(GetAnalysisServiceConnectionString(queryModel.ModelId)))
+            {
+                conn.Open();
+                var command = conn.CreateCommand();
+                command.CommandText = query;
+                using (var reader = command.ExecuteReader())
+                {
+                    var result = new List<Dictionary<string, object>>();
+                    while (reader.Read())
+                    {
+                        var row = new Dictionary<string, object>();
+                        var columns = new List<string>();
+                        for (var i = 0; i < reader.FieldCount; ++i)
+                        {
+                            columns.Add(reader.GetName(i));
+                        }
+                        for (var i = 0; i < reader.FieldCount; ++i)
+                        {
+                            row[columns[i]] = reader.GetValue(i);
+                        }
+                        result.Add(row);
+                    }
+                    return result;
+                }
+            }
+        }
+
+
         protected void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings)
         {
             List<EntityInfo> eis;
@@ -808,6 +859,80 @@ namespace Pentamic.SSBI.Services
                     }
                 }
             }
+        }
+
+
+        public void ProcessAlert()
+        {
+            var alerts = Context.Alerts.Where(x => x.IsActive).ToList();
+            foreach (var alert in alerts)
+            {
+                var val = CalculateAlertValue(alert);
+                var res = false;
+                switch (alert.Condition)
+                {
+                    case AlertCondition.Above:
+                        res = val[0] > val[1];
+                        break;
+                    case AlertCondition.AboveOrEqual:
+                        res = val[0] >= val[1];
+                        break;
+                    case AlertCondition.Below:
+                        res = val[0] < val[1];
+                        break;
+                    case AlertCondition.BelowOrEqual:
+                        res = val[0] <= val[1];
+                        break;
+                }
+            }
+        }
+
+        public List<decimal> CalculateAlertValue(Alert alert)
+        {
+            string query = "";
+            if (alert.UseThresold)
+            {
+                query = $"EVALUATE(ROW(\"MainValue\", {BuildAlertValueQuery(alert.MainValueField, alert.MainValueModification, alert.MainFilterExpression)}, \"TargetValue\", {alert.Thresold}))";
+            }
+            else
+            {
+                query = $"EVALUATE(ROW(\"MainValue\", {BuildAlertValueQuery(alert.MainValueField, alert.MainValueModification, alert.MainFilterExpression)}, \"TargetValue\", {BuildAlertValueQuery(alert.TargetValueField, alert.TargetValueModification, alert.TargetFilterExpression)}))";
+            }
+            using (var conn = new AdomdConnection(GetAnalysisServiceConnectionString(alert.ModelId)))
+            {
+                conn.Open();
+                var command = conn.CreateCommand();
+                command.CommandText = query;
+                using (var reader = command.ExecuteReader())
+                {
+                    var result = new List<decimal>();
+                    reader.Read();
+                    result.Add(reader.GetDecimal(0));
+                    result.Add(reader.GetDecimal(1));
+                    return result;
+                }
+            }
+        }
+
+        public string BuildAlertValueQuery(string valueField, string valueModification, string filterExpression)
+        {
+            return $"CALCULATE({valueField},{filterExpression})";
+        }
+
+        public string GetAnalysisServiceConnectionString(int modelId)
+        {
+            var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
+            {
+                ["Catalog"] = modelId.ToString()
+            };
+            var context = new DataModelContext();
+            var userRoles = context.UserRoles.Where(x => x.UserId == UserId).Select(x => x.RoleId);
+            var roles = context.Roles.Where(x => x.ModelId == modelId && userRoles.Contains(x.Id)).Select(x => x.Id).ToList();
+            if (roles != null && roles.Count > 0)
+            {
+                conStrBuilder["Roles"] = string.Join(",", roles);
+            }
+            return conStrBuilder.ConnectionString;
         }
     }
 }
