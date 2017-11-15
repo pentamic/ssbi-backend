@@ -546,6 +546,10 @@
     <Compile Include="Migrations\ReportingContext\201711091037154_UpdateReporting22.Designer.cs">
       <DependentUpon>201711091037154_UpdateReporting22.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\ReportingContext\201711150753167_UpdateReporting23.cs" />
+    <Compile Include="Migrations\ReportingContext\201711150753167_UpdateReporting23.Designer.cs">
+      <DependentUpon>201711150753167_UpdateReporting23.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\ReportingContext\Configuration.cs" />
     <Compile Include="Models\AuthGroup.cs" />
     <Compile Include="Models\DataModel\DateData.cs" />
@@ -832,6 +836,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\ReportingContext\201711091037154_UpdateReporting22.resx">
       <DependentUpon>201711091037154_UpdateReporting22.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\ReportingContext\201711150753167_UpdateReporting23.resx">
+      <DependentUpon>201711150753167_UpdateReporting23.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

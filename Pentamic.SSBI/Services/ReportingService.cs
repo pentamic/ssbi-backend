@@ -80,6 +80,11 @@ namespace Pentamic.SSBI.Services
         public IQueryable<UserFavoriteReport> UserFavoriteReports => Context.UserFavoriteReports.Where(x => x.UserId == UserId);
         public IQueryable<UserFavoriteDashboard> UserFavoriteDashboards => Context.UserFavoriteDashboards.Where(x => x.UserId == UserId);
         public IQueryable<Alert> Alerts => Context.Alerts;
+        public IQueryable<Notification> Notifications => Context.Notifications;
+        public IQueryable<NotificationSubscription> NotificationSubscriptions => Context.NotificationSubscriptions
+            .Where(x => x.UserId == UserId);
+        public IQueryable<UserNotification> UserNotifications => Context.UserNotifications
+            .Where(x => x.UserId == UserId);
 
         public IQueryable<UserReportActivity> GetUserRecentReports()
         {
@@ -506,10 +511,68 @@ namespace Pentamic.SSBI.Services
             return true;
         }
 
-        //protected Dictionary<Type, List<EntityInfo>> BeforeSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap)
-        //{    
-        //    return saveMap;
-        //}
+        protected Dictionary<Type, List<EntityInfo>> BeforeSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap)
+        {
+            if (saveMap.TryGetValue(typeof(Alert), out List<EntityInfo> eis))
+            {
+                foreach (var ei in eis)
+                {
+                    if (ei.EntityState == Breeze.ContextProvider.EntityState.Added)
+                    {
+                        var e = ei.Entity as Alert;
+                        var n = new Notification
+                        {
+                            Title = e.Name,
+                            Content = e.Name,
+                            CreatedAt = DateTimeOffset.Now,
+                            CreatedBy = UserId,
+                            ModifiedAt = DateTimeOffset.Now,
+                            ModifiedBy = UserId
+                        };
+                        e.Notification = n;
+                        var notificationEntity = _contextProvider.CreateEntityInfo(n, Breeze.ContextProvider.EntityState.Added);
+                        if (!saveMap.TryGetValue(typeof(Notification), out List<EntityInfo> notifications))
+                        {
+                            notifications = new List<EntityInfo>();
+                            saveMap.Add(typeof(Notification), notifications);
+                        }
+                        notifications.Add(notificationEntity);
+                    }
+                    if (ei.EntityState == Breeze.ContextProvider.EntityState.Modified)
+                    {
+                        var e = ei.Entity as Alert;
+                        var n = e.Notification ?? new Notification
+                        {
+
+                        };
+                        var ne = _contextProvider.CreateEntityInfo(n, Breeze.ContextProvider.EntityState.Modified);
+                        if (!saveMap.TryGetValue(typeof(Notification), out List<EntityInfo> notifications))
+                        {
+                            notifications = new List<EntityInfo>();
+                            saveMap.Add(typeof(Notification), notifications);
+                        }
+                        notifications.Add(ne);
+                    }
+                    if (ei.EntityState == Breeze.ContextProvider.EntityState.Deleted)
+                    {
+                        var e = ei.Entity as Alert;
+                        var n = e.Notification ?? new Notification
+                        {
+                            Id = e.NotificationId
+                        };
+                        var ne = _contextProvider.CreateEntityInfo(n, Breeze.ContextProvider.EntityState.Deleted);
+                        if (!saveMap.TryGetValue(typeof(Notification), out List<EntityInfo> notifications))
+                        {
+                            notifications = new List<EntityInfo>();
+                            saveMap.Add(typeof(Notification), notifications);
+                        }
+                        notifications.Add(ne);
+                    }
+                }
+            }
+            return saveMap;
+        }
+
 
         public List<Dictionary<string, object>> Query(QueryModel queryModel)
         {

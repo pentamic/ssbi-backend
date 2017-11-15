@@ -40,6 +40,7 @@ namespace Pentamic.SSBI.Models.Reporting
         public DbSet<Alert> Alerts { get; set; }
 
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<NotificationSubscription> NotificationSubscriptions { get; set; }
         public DbSet<UserNotification> UserNotifications { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

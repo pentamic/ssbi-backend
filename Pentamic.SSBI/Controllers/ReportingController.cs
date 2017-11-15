@@ -105,7 +105,26 @@ namespace Pentamic.SSBI.Controllers
         {
             return _reportingService.UserDashboardActivities;
         }
-
+        [HttpGet]
+        public IQueryable<Alert> Alerts()
+        {
+            return _reportingService.Alerts;
+        }
+        [HttpGet]
+        public IQueryable<Notification> Notifications()
+        {
+            return _reportingService.Notifications;
+        }
+        [HttpGet]
+        public IQueryable<NotificationSubscription> NotificationSubscriptions()
+        {
+            return _reportingService.NotificationSubscriptions;
+        }
+        [HttpGet]
+        public IQueryable<UserNotification> UserNotifications()
+        {
+            return _reportingService.UserNotifications;
+        }
         [HttpGet]
         public IQueryable<UserReportActivity> UserRecentReports()
         {
@@ -135,6 +154,13 @@ namespace Pentamic.SSBI.Controllers
         {
             var result = _reportingService.GetFieldValues(queryModel);
             return Ok(result);
+        }
+
+        [HttpPost]
+        public IHttpActionResult ProcessAlert()
+        {
+            _reportingService.ProcessAlert();
+            return Ok();
         }
 
         [HttpPost]
