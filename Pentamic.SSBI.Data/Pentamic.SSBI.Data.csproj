@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0A2D740B-BC04-47F7-8470-61836690A704}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Pentamic.SSBI.Data</RootNamespace>
+    <AssemblyName>Pentamic.SSBI.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AppDbContext.cs" />
+    <Compile Include="AppDbContextFactory.cs" />
+    <Compile Include="Configurations\AlertConfiguration.cs" />
+    <Compile Include="Configurations\ColumnConfiguration.cs" />
+    <Compile Include="Configurations\DashboardConfiguration.cs" />
+    <Compile Include="Configurations\DashboardCommentConfiguration.cs" />
+    <Compile Include="Configurations\DashboardFilterConfiguration.cs" />
+    <Compile Include="Configurations\DashboardSharingConfiguration.cs" />
+    <Compile Include="Configurations\DashboardTileConfiguration.cs" />
+    <Compile Include="Configurations\DashboardViewConfiguration.cs" />
+    <Compile Include="Configurations\DataSourceConfiguration.cs" />
+    <Compile Include="Configurations\DisplayTypeConfiguration.cs" />
+    <Compile Include="Configurations\HierarchyConfiguration.cs" />
+    <Compile Include="Configurations\LevelConfiguration.cs" />
+    <Compile Include="Configurations\MeasureConfiguration.cs" />
+    <Compile Include="Configurations\ModelConfiguration.cs" />
+    <Compile Include="Configurations\ModelRefreshQueueConfiguration.cs" />
+    <Compile Include="Configurations\ModelSharingConfiguration.cs" />
+    <Compile Include="Configurations\NotificationConfiguration.cs" />
+    <Compile Include="Configurations\NotificationSubscriptionConfiguration.cs" />
+    <Compile Include="Configurations\PartitionConfiguration.cs" />
+    <Compile Include="Configurations\PerspectiveConfiguration.cs" />
+    <Compile Include="Configurations\PerspectiveColumnConfiguration.cs" />
+    <Compile Include="Configurations\RelationshipConfiguration.cs" />
+    <Compile Include="Configurations\ReportConfiguration.cs" />
+    <Compile Include="Configurations\ReportCommentConfiguration.cs" />
+    <Compile Include="Configurations\ReportFilterConfiguration.cs" />
+    <Compile Include="Configurations\ReportPageConfiguration.cs" />
+    <Compile Include="Configurations\ReportSharingConfiguration.cs" />
+    <Compile Include="Configurations\ReportTileConfiguration.cs" />
+    <Compile Include="Configurations\ReportTileRowConfiguration.cs" />
+    <Compile Include="Configurations\ReportViewConfiguration.cs" />
+    <Compile Include="Configurations\ModelRoleConfiguration.cs" />
+    <Compile Include="Configurations\ModelRoleColumnPermissionConfiguration.cs" />
+    <Compile Include="Configurations\ModelRoleTablePermissionConfiguration.cs" />
+    <Compile Include="Configurations\SourceFileConfiguration.cs" />
+    <Compile Include="Configurations\TableConfiguration.cs" />
+    <Compile Include="Configurations\UserDashboardActivityConfiguration.cs" />
+    <Compile Include="Configurations\UserFavoriteDashboardConfiguration.cs" />
+    <Compile Include="Configurations\UserFavoriteModelConfiguration.cs" />
+    <Compile Include="Configurations\UserFavoriteReportConfiguration.cs" />
+    <Compile Include="Configurations\UserGroupConfiguration.cs" />
+    <Compile Include="Configurations\UserModelActivityConfiguration.cs" />
+    <Compile Include="Configurations\UserNotificationConfiguration.cs" />
+    <Compile Include="Configurations\UserReportActivityConfiguration.cs" />
+    <Compile Include="Configurations\UserModelRoleConfiguration.cs" />
+    <Compile Include="Migrations\201711161151442_Initial.cs" />
+    <Compile Include="Migrations\201711161151442_Initial.Designer.cs">
+      <DependentUpon>201711161151442_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Pentamic.SSBI.Entities\Pentamic.SSBI.Entities.csproj">
+      <Project>{48491A02-164D-418F-8DE6-EE307F5414E0}</Project>
+      <Name>Pentamic.SSBI.Entities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201711161151442_Initial.resx">
+      <DependentUpon>201711161151442_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
