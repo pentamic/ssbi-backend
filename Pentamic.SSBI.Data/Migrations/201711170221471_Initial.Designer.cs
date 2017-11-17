@@ -13,7 +13,7 @@ namespace Pentamic.SSBI.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201711161151442_Initial"; }
+            get { return "201711170221471_Initial"; }
         }
         
         string IMigrationMetadata.Source

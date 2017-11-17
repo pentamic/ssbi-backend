@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Breeze.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 using Pentamic.SSBI.Data;
 using Pentamic.SSBI.Services.Breeze;
 using Pentamic.SSBI.Services.SSAS.Metadata;
@@ -39,14 +41,25 @@ namespace Pentamic.SSBI.WebApi
                         builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
                     });
             });
-            services.AddScoped(_ => new AppDbContext(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<AppDbContext>(_ => new AppDbContext(Configuration.GetConnectionString("DefaultConnection")));
             services.AddTransient<DbPersistenceManager<AppDbContext>>();
             services.AddTransient<MetadataService>();
             services.AddTransient<DataModelEntityService>();
             services.AddTransient<ReportingEntityService>();
             services.AddTransient<QueryService>();
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc().AddJsonOptions(opt => {
+                var ss = JsonSerializationFns.UpdateWithDefaults(opt.SerializerSettings);
+                var resolver = ss.ContractResolver;
+                if (resolver != null)
+                {
+                    if (resolver is DefaultContractResolver res)
+                    {
+                        res.NamingStrategy = null; // <<!-- this removes the camelcasing
+                    }
+                }
+
+            }); ;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -93,9 +93,9 @@
     <Compile Include="Configurations\UserNotificationConfiguration.cs" />
     <Compile Include="Configurations\UserReportActivityConfiguration.cs" />
     <Compile Include="Configurations\UserModelRoleConfiguration.cs" />
-    <Compile Include="Migrations\201711161151442_Initial.cs" />
-    <Compile Include="Migrations\201711161151442_Initial.Designer.cs">
-      <DependentUpon>201711161151442_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201711170221471_Initial.cs" />
+    <Compile Include="Migrations\201711170221471_Initial.Designer.cs">
+      <DependentUpon>201711170221471_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -111,8 +111,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201711161151442_Initial.resx">
-      <DependentUpon>201711161151442_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201711170221471_Initial.resx">
+      <DependentUpon>201711170221471_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -6,10 +6,11 @@ namespace Pentamic.SSBI.Data
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext() { }
         public AppDbContext(string connString) : base(connString)
         {
-            System.Data.Entity.Database.SetInitializer<AppDbContext>(null);
+        }
+        public AppDbContext() : base("Server=.;Database=SSBI_APP_DEV2;Trusted_Connection=True;MultipleActiveResultSets=true")
+        {
         }
         public DbSet<Model> Models { get; set; }
         public DbSet<DataSource> DataSources { get; set; }

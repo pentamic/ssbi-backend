@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
 using Breeze.AspNetCore;
+using Breeze.Persistence;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using Pentamic.SSBI.Entities;
 using Pentamic.SSBI.Services.Breeze;
 
@@ -102,18 +104,6 @@ namespace Pentamic.SSBI.WebApi.Controllers
         //    {
         //        return BadRequest(e.Message);
         //    }
-        //}
-
-        //[HttpPost]
-        //public SaveResult SaveChanges(JObject saveBundle)
-        //{
-        //    return _dataModelEntityService.SaveChanges(saveBundle);
-        //}
-
-        //[HttpPost]
-        //public SaveResult SaveImport(JObject saveBundle)
-        //{
-        //    return _dataModelEntityService.SaveImport(saveBundle);
         //}
 
 
@@ -252,6 +242,16 @@ namespace Pentamic.SSBI.WebApi.Controllers
         //    //return Ok(model);
         //}
 
+        [HttpPost]
+        public SaveResult SaveChanges([FromBody]JObject saveBundle)
+        {
+            return _dataModelEntityService.SaveChanges(saveBundle);
+        }
 
+        [HttpPost]
+        public SaveResult SaveImport([FromBody]JObject saveBundle)
+        {
+            return _dataModelEntityService.SaveImport(saveBundle);
+        }
     }
 }

@@ -1,0 +1,1165 @@
+2017-11-17T09:26:51.5849665+07:00 0HL9DCAKNDKH8 [INF] Request starting HTTP/1.1 GET http://localhost:5001/api/values   (e5be5b71)
+2017-11-17T09:26:53.3044690+07:00 0HL9DCAKNDKH8 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ValuesController.Get (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:26:53.3599688+07:00 0HL9DCAKNDKH8 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:26:53.5259679+07:00 0HL9DCAKNDKH8 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ValuesController.Get (Pentamic.SSBI.WebApi)" in 306.8384ms (afa2e885)
+2017-11-17T09:26:53.5519680+07:00 0HL9DCAKNDKH8 [INF] Request finished in 1997.5484ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:26:53.6069678+07:00 0HL9DCAKNDKH9 [INF] Request starting HTTP/1.1 GET http://localhost:5001/favicon.ico   (e5be5b71)
+2017-11-17T09:26:53.6219674+07:00 0HL9DCAKNDKH9 [INF] Request finished in 14.1012ms 404  (15c52c40)
+2017-11-17T09:35:00.3007873+07:00 0HL9DCF6C5N2E [INF] Request starting HTTP/1.1 GET http://localhost:5001/api/values   (e5be5b71)
+2017-11-17T09:35:00.8722874+07:00 0HL9DCF6C5N2E [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ValuesController.Get (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:35:00.9072888+07:00 0HL9DCF6C5N2E [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:35:01.0172892+07:00 0HL9DCF6C5N2E [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ValuesController.Get (Pentamic.SSBI.WebApi)" in 188.9244ms (afa2e885)
+2017-11-17T09:35:01.0527880+07:00 0HL9DCF6C5N2E [INF] Request finished in 775.815ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:35:01.0767878+07:00 0HL9DCF6C5N2F [INF] Request starting HTTP/1.1 GET http://localhost:5001/favicon.ico   (e5be5b71)
+2017-11-17T09:35:01.0902893+07:00 0HL9DCF6C5N2F [INF] Request finished in 11.9069ms 404  (15c52c40)
+2017-11-17T09:37:54.2165191+07:00 0HL9DCF6C5N2G [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/UserFavoriteReports?%7B%22expand%22%3A%5B%22Report%22%5D%7D   (e5be5b71)
+2017-11-17T09:37:54.2165191+07:00 0HL9DCF6C5N2H [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/UserFavoriteDashboards?%7B%22expand%22%3A%5B%22Dashboard%22%5D%7D   (e5be5b71)
+2017-11-17T09:37:54.2225208+07:00 0HL9DCF6C5N2I [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/UserRecentDashboards?%7B%7D   (e5be5b71)
+2017-11-17T09:37:54.2255226+07:00 0HL9DCF6C5N2J [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/UserRecentReports?%7B%7D   (e5be5b71)
+2017-11-17T09:37:54.2275199+07:00 0HL9DCF6C5N2K [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/UserFavoriteModels?%7B%22expand%22%3A%5B%22Model%22%5D%7D   (e5be5b71)
+2017-11-17T09:37:54.5865221+07:00 0HL9DCF6C5N2J [INF] Request finished in 80.519ms 204  (15c52c40)
+2017-11-17T09:37:54.6825210+07:00 0HL9DCF6C5N2I [INF] Request finished in 185.6917ms 204  (15c52c40)
+2017-11-17T09:37:54.7345201+07:00 0HL9DCF6C5N2H [INF] Request finished in 94.056ms 204  (15c52c40)
+2017-11-17T09:37:54.7785198+07:00 0HL9DCF6C5N2L [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserRecentReports?%7B%7D   (e5be5b71)
+2017-11-17T09:37:54.8405202+07:00 0HL9DCF6C5N2M [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserRecentDashboards?%7B%7D   (e5be5b71)
+2017-11-17T09:37:55.1080202+07:00 0HL9DCF6C5N2N [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserFavoriteDashboards?%7B%22expand%22%3A%5B%22Dashboard%22%5D%7D   (e5be5b71)
+2017-11-17T09:37:55.1280212+07:00 0HL9DCF6C5N2K [INF] Request finished in 398.598ms 204  (15c52c40)
+2017-11-17T09:37:55.1620211+07:00 0HL9DCF6C5N2G [INF] Request finished in 594.1081ms 204  (15c52c40)
+2017-11-17T09:37:55.1645196+07:00 0HL9DCF6C5N2O [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/UserFavoriteModels?%7B%22expand%22%3A%5B%22Model%22%5D%7D   (e5be5b71)
+2017-11-17T09:37:55.2030223+07:00 0HL9DCF6C5N2P [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserFavoriteReports?%7B%22expand%22%3A%5B%22Report%22%5D%7D   (e5be5b71)
+2017-11-17T09:37:55.7785180+07:00 0HL9DCF6C5N2L [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserRecentReports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:37:55.7810220+07:00 0HL9DCF6C5N2M [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserRecentDashboards (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:37:55.7810220+07:00 0HL9DCF6C5N2P [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteReports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:37:55.7820190+07:00 0HL9DCF6C5N2O [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserFavoriteModels (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:37:55.7860211+07:00 0HL9DCF6C5N2N [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteDashboards (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:37:59.4965232+07:00 0HL9DCF6C5N2Q [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/UserRecentModels?%7B%7D   (e5be5b71)
+2017-11-17T09:37:59.6625204+07:00 0HL9DCF6C5N2Q [INF] Request finished in 35.8664ms 204  (15c52c40)
+2017-11-17T09:38:01.0380215+07:00 0HL9DCF6C5N2R [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/UserRecentModels?%7B%7D   (e5be5b71)
+2017-11-17T09:38:01.3725217+07:00 0HL9DCF6C5N2R [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserRecentModels (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:38:08.7191426+07:00 0HL9DCF6C5N2R [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:38:08.7256424+07:00 0HL9DCF6C5N2M [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:38:08.7351433+07:00 0HL9DCF6C5N2L [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:38:09.5161422+07:00 0HL9DCF6C5N2M [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserRecentDashboards (Pentamic.SSBI.WebApi)" in 14386.3219ms (afa2e885)
+2017-11-17T09:38:09.6286425+07:00 0HL9DCF6C5N2R [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserRecentModels (Pentamic.SSBI.WebApi)" in 8266.1627ms (afa2e885)
+2017-11-17T09:38:09.7111453+07:00 0HL9DCF6C5N2N [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:38:09.7236454+07:00 0HL9DCF6C5N2M [INF] Request finished in 14863.6974ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:38:09.7411428+07:00 0HL9DCF6C5N2L [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserRecentReports (Pentamic.SSBI.WebApi)" in 14448.3718ms (afa2e885)
+2017-11-17T09:38:09.7461449+07:00 0HL9DCF6C5N2O [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:38:09.7561443+07:00 0HL9DCF6C5N2R [INF] Request finished in 8916.0811ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:38:09.7641448+07:00 0HL9DCF6C5N2N [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteDashboards (Pentamic.SSBI.WebApi)" in 14578.8247ms (afa2e885)
+2017-11-17T09:38:09.7786430+07:00 0HL9DCF6C5N2L [INF] Request finished in 15018.336ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:38:09.7836458+07:00 0HL9DCF6C5N2O [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserFavoriteModels (Pentamic.SSBI.WebApi)" in 14555.0767ms (afa2e885)
+2017-11-17T09:38:09.8041453+07:00 0HL9DCF6C5N2N [INF] Request finished in 15025.2248ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:38:09.8321458+07:00 0HL9DCF6C5N2O [INF] Request finished in 14656.0095ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:38:10.2701428+07:00 0HL9DCF6C5N2P [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:38:10.3286429+07:00 0HL9DCF6C5N2P [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteReports (Pentamic.SSBI.WebApi)" in 15111.608ms (afa2e885)
+2017-11-17T09:38:10.3326421+07:00 0HL9DCF6C5N2P [INF] Request finished in 15165.3714ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:38:23.8207641+07:00 0HL9DCF6C5N2S [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/UserFavoriteModels?%7B%22expand%22%3A%5B%22Model%22%5D%7D   (e5be5b71)
+2017-11-17T09:38:23.8457650+07:00 0HL9DCF6C5N2T [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/UserFavoriteReports?%7B%22expand%22%3A%5B%22Report%22%5D%7D   (e5be5b71)
+2017-11-17T09:38:24.1202637+07:00 0HL9DCF6C5N2U [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/UserFavoriteDashboards?%7B%22expand%22%3A%5B%22Dashboard%22%5D%7D   (e5be5b71)
+2017-11-17T09:38:24.1412624+07:00 0HL9DCF6C5N2V [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/UserRecentReports?%7B%7D   (e5be5b71)
+2017-11-17T09:38:24.1752627+07:00 0HL9DCF6C5N30 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/UserRecentDashboards?%7B%7D   (e5be5b71)
+2017-11-17T09:38:24.3027630+07:00 0HL9DCF6C5N2T [INF] Request finished in 264.8445ms 204  (15c52c40)
+2017-11-17T09:38:24.3167638+07:00 0HL9DCF6C5N2V [INF] Request finished in 83.8297ms 204  (15c52c40)
+2017-11-17T09:38:24.3227651+07:00 0HL9DCF6C5N30 [INF] Request finished in 192.4536ms 204  (15c52c40)
+2017-11-17T09:38:24.3617628+07:00 0HL9DCF6C5N2U [INF] Request finished in 313.3181ms 204  (15c52c40)
+2017-11-17T09:38:24.3667630+07:00 0HL9DCF6C5N31 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/UserFavoriteModels?%7B%22expand%22%3A%5B%22Model%22%5D%7D   (e5be5b71)
+2017-11-17T09:38:24.3697622+07:00 0HL9DCF6C5N32 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserFavoriteDashboards?%7B%22expand%22%3A%5B%22Dashboard%22%5D%7D   (e5be5b71)
+2017-11-17T09:38:24.4047658+07:00 0HL9DCF6C5N33 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserFavoriteReports?%7B%22expand%22%3A%5B%22Report%22%5D%7D   (e5be5b71)
+2017-11-17T09:38:24.4152626+07:00 0HL9DCF6C5N34 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserRecentReports?%7B%7D   (e5be5b71)
+2017-11-17T09:38:24.4167633+07:00 0HL9DCF6C5N31 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserFavoriteModels (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:38:24.4237628+07:00 0HL9DCF6C5N32 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteDashboards (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:38:24.4257627+07:00 0HL9DCF6C5N33 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteReports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:38:24.4457663+07:00 0HL9DCF6C5N34 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserRecentReports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:38:24.4612626+07:00 0HL9DCF6C5N2S [INF] Request finished in 555.6097ms 204  (15c52c40)
+2017-11-17T09:38:24.4667632+07:00 0HL9DCF6C5N31 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:38:24.4742645+07:00 0HL9DCF6C5N33 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:38:24.4972632+07:00 0HL9DCF6C5N31 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserFavoriteModels (Pentamic.SSBI.WebApi)" in 60.2196ms (afa2e885)
+2017-11-17T09:38:24.5147639+07:00 0HL9DCF6C5N32 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:38:24.5297650+07:00 0HL9DCF6C5N33 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteReports (Pentamic.SSBI.WebApi)" in 59.1386ms (afa2e885)
+2017-11-17T09:38:24.5887637+07:00 0HL9DCF6C5N31 [INF] Request finished in 190.8023ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:38:24.6012652+07:00 0HL9DCF6C5N32 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteDashboards (Pentamic.SSBI.WebApi)" in 106.6987ms (afa2e885)
+2017-11-17T09:38:24.6622638+07:00 0HL9DCF6C5N33 [INF] Request finished in 201.7042ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:38:24.6987655+07:00 0HL9DCF6C5N35 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/UserRecentModels?%7B%7D   (e5be5b71)
+2017-11-17T09:38:24.7962643+07:00 0HL9DCF6C5N34 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:38:24.7992635+07:00 0HL9DCF6C5N35 [INF] Request finished in 192.6868ms 204  (15c52c40)
+2017-11-17T09:38:24.8017642+07:00 0HL9DCF6C5N32 [INF] Request finished in 286.9727ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:38:25.0657671+07:00 0HL9DCF6C5N36 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/UserRecentModels?%7B%7D   (e5be5b71)
+2017-11-17T09:38:25.0912651+07:00 0HL9DCF6C5N34 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserRecentReports (Pentamic.SSBI.WebApi)" in 639.9204ms (afa2e885)
+2017-11-17T09:38:25.1357644+07:00 0HL9DCF6C5N37 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserRecentDashboards?%7B%7D   (e5be5b71)
+2017-11-17T09:38:25.1422657+07:00 0HL9DCF6C5N36 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserRecentModels (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:38:25.1567635+07:00 0HL9DCF6C5N34 [INF] Request finished in 751.5424ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:38:25.3852651+07:00 0HL9DCF6C5N36 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:38:25.3947646+07:00 0HL9DCF6C5N37 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserRecentDashboards (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:38:25.4087646+07:00 0HL9DCF6C5N36 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserRecentModels (Pentamic.SSBI.WebApi)" in 302.2927ms (afa2e885)
+2017-11-17T09:38:25.4232631+07:00 0HL9DCF6C5N37 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:38:25.4422645+07:00 0HL9DCF6C5N36 [INF] Request finished in 629.9848ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:38:25.4792648+07:00 0HL9DCF6C5N37 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserRecentDashboards (Pentamic.SSBI.WebApi)" in 133.0082ms (afa2e885)
+2017-11-17T09:38:25.4907638+07:00 0HL9DCF6C5N37 [INF] Request finished in 954.1488ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:38:41.8495941+07:00 0HL9DCF6C5N38 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T09:38:41.9000943+07:00 0HL9DCF6C5N39 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T09:38:41.9120952+07:00 0HL9DCF6C5N38 [INF] Request finished in 49.137ms 204  (15c52c40)
+2017-11-17T09:38:41.9215964+07:00 0HL9DCF6C5N39 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:38:41.9350946+07:00 0HL9DCF6C5N39 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:38:42.0015931+07:00 0HL9DCF6C5N39 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" in 84.1945ms (afa2e885)
+2017-11-17T09:38:42.0125935+07:00 0HL9DCF6C5N39 [INF] Request finished in 117.7494ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:38:43.9851488+07:00 0HL9DCF6C5N3A [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T09:38:44.0821480+07:00 0HL9DCF6C5N3B [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T09:38:44.1101492+07:00 0HL9DCF6C5N3A [INF] Request finished in 109.5157ms 204  (15c52c40)
+2017-11-17T09:38:44.1151483+07:00 0HL9DCF6C5N3B [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:38:44.1321494+07:00 0HL9DCF6C5N3B [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:38:44.1691503+07:00 0HL9DCF6C5N3B [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 51.0292ms (afa2e885)
+2017-11-17T09:38:44.1846507+07:00 0HL9DCF6C5N3B [INF] Request finished in 161.9118ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:38:50.3154548+07:00 0HL9DCF6C5N3C [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T09:38:50.3354833+07:00 0HL9DCF6C5N3D [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T09:38:50.3434564+07:00 0HL9DCF6C5N3C [INF] Request finished in 19.9962ms 204  (15c52c40)
+2017-11-17T09:38:50.3509588+07:00 0HL9DCF6C5N3D [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:38:50.3639570+07:00 0HL9DCF6C5N3D [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:38:50.3784563+07:00 0HL9DCF6C5N3D [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 25.492ms (afa2e885)
+2017-11-17T09:38:50.4004554+07:00 0HL9DCF6C5N3D [INF] Request finished in 52.5856ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:38:57.0473369+07:00 0HL9DCF6C5N3E [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/SaveChanges   (e5be5b71)
+2017-11-17T09:38:57.0753410+07:00 0HL9DCF6C5N3E [INF] Request finished in 10.4935ms 204  (15c52c40)
+2017-11-17T09:38:57.0988510+07:00 0HL9DCF6C5N3F [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/reporting/SaveChanges application/json 475 (e5be5b71)
+2017-11-17T09:38:57.1123379+07:00 0HL9DCF6C5N3F [INF] Request finished in 44.2002ms 404  (15c52c40)
+2017-11-17T09:39:59.8951832+07:00 0HL9DCHVLAGME [INF] Request starting HTTP/1.1 GET http://localhost:5001/api/values   (e5be5b71)
+2017-11-17T09:40:00.6478356+07:00 0HL9DCHVLAGME [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ValuesController.Get (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:40:00.6988351+07:00 0HL9DCHVLAGME [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:40:00.8168368+07:00 0HL9DCHVLAGME [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ValuesController.Get (Pentamic.SSBI.WebApi)" in 279.4619ms (afa2e885)
+2017-11-17T09:40:00.8503360+07:00 0HL9DCHVLAGME [INF] Request finished in 988.2381ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:40:00.8758376+07:00 0HL9DCHVLAGMF [INF] Request starting HTTP/1.1 GET http://localhost:5001/favicon.ico   (e5be5b71)
+2017-11-17T09:40:00.8928361+07:00 0HL9DCHVLAGMF [INF] Request finished in 12.5741ms 404  (15c52c40)
+2017-11-17T09:40:17.2725105+07:00 0HL9DCHVLAGMG [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/SaveChanges   (e5be5b71)
+2017-11-17T09:40:17.2925133+07:00 0HL9DCHVLAGMG [INF] Request finished in 25.488ms 204  (15c52c40)
+2017-11-17T09:40:17.3100118+07:00 0HL9DCHVLAGMH [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/reporting/SaveChanges application/json 475 (e5be5b71)
+2017-11-17T09:40:18.1233999+07:00 0HL9DCHVLAGMH [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.SaveChanges (Pentamic.SSBI.WebApi)" in 806.8337ms (afa2e885)
+2017-11-17T09:40:18.2115112+07:00 0HL9DCHVLAGMH [ERR] Connection id ""0HL9DCHVJJISK"": An unhandled exception was thrown by the application. (8c14976b)
+System.ArgumentNullException: Value cannot be null.
+Parameter name: modelMetadata
+   at Microsoft.AspNetCore.Mvc.ModelBinding.DefaultModelBindingContext.EnterNestedScope(ModelMetadata modelMetadata, String fieldName, String modelName, Object model)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinder`2.<TryBindStrongModel>d__4`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinder`2.<BindModelAsync>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinder`1.<BindComplexCollectionFromIndexes>d__11.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinder`1.<BindModelAsync>d__5.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DictionaryModelBinder`2.<BindModelAsync>d__2.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.DefaultControllerArgumentBinder.<BindModelAsync>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.DefaultControllerArgumentBinder.<BindArgumentsCoreAsync>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__20.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsMiddleware.<Invoke>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISMiddleware.<Invoke>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Hosting.Internal.RequestServicesContainerMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.ValidateEnd(Task task)
+   at Microsoft.AspNetCore.Server.Kestrel.Internal.Http.Frame`1.<RequestProcessingAsync>d__2.MoveNext()
+2017-11-17T09:40:18.2450137+07:00 0HL9DCHVLAGMH [INF] Request finished in 919.9505ms 500  (15c52c40)
+2017-11-17T09:43:32.9516107+07:00 0HL9DCJV57HPB [INF] Request starting HTTP/1.1 GET http://localhost:5001/api/values   (e5be5b71)
+2017-11-17T09:43:33.5861098+07:00 0HL9DCJV57HPB [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ValuesController.Get (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:43:33.6491105+07:00 0HL9DCJV57HPB [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:43:33.7681099+07:00 0HL9DCJV57HPB [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ValuesController.Get (Pentamic.SSBI.WebApi)" in 253.4137ms (afa2e885)
+2017-11-17T09:43:33.8061090+07:00 0HL9DCJV57HPB [INF] Request finished in 890.9959ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:43:33.8326084+07:00 0HL9DCJV57HPC [INF] Request starting HTTP/1.1 GET http://localhost:5001/favicon.ico   (e5be5b71)
+2017-11-17T09:43:33.8471084+07:00 0HL9DCJV57HPC [INF] Request finished in 13.3347ms 404  (15c52c40)
+2017-11-17T09:43:42.8553326+07:00 0HL9DCJV57HPD [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T09:43:42.9023300+07:00 0HL9DCJV57HPD [INF] Request finished in 62.2324ms 204  (15c52c40)
+2017-11-17T09:43:42.9108305+07:00 0HL9DCJV57HPE [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T09:43:43.4543306+07:00 0HL9DCJV57HPE [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:43:48.6064495+07:00 0HL9DCJV57HPE [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:43:48.9989494+07:00 0HL9DCJV57HPE [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 6075.0008ms (afa2e885)
+2017-11-17T09:43:49.0299491+07:00 0HL9DCJV57HPE [INF] Request finished in 6118.9759ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:43:59.5128531+07:00 0HL9DCJV57HPF [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/SaveChanges   (e5be5b71)
+2017-11-17T09:43:59.5363540+07:00 0HL9DCJV57HPF [INF] Request finished in 23.3267ms 204  (15c52c40)
+2017-11-17T09:43:59.5448519+07:00 0HL9DCJV57HPG [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/datamodel/SaveChanges application/json 615 (e5be5b71)
+2017-11-17T09:43:59.8168547+07:00 0HL9DCJV57HPG [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" in 261.393ms (afa2e885)
+2017-11-17T09:43:59.9333538+07:00 0HL9DCJV57HPG [ERR] Connection id ""0HL9DCJV3CPU2"": An unhandled exception was thrown by the application. (8c14976b)
+System.ArgumentNullException: Value cannot be null.
+Parameter name: modelMetadata
+   at Microsoft.AspNetCore.Mvc.ModelBinding.DefaultModelBindingContext.EnterNestedScope(ModelMetadata modelMetadata, String fieldName, String modelName, Object model)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinder`2.<TryBindStrongModel>d__4`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinder`2.<BindModelAsync>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinder`1.<BindComplexCollectionFromIndexes>d__11.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinder`1.<BindModelAsync>d__5.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DictionaryModelBinder`2.<BindModelAsync>d__2.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.DefaultControllerArgumentBinder.<BindModelAsync>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.DefaultControllerArgumentBinder.<BindArgumentsCoreAsync>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__20.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsMiddleware.<Invoke>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISMiddleware.<Invoke>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Hosting.Internal.RequestServicesContainerMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.ValidateEnd(Task task)
+   at Microsoft.AspNetCore.Server.Kestrel.Internal.Http.Frame`1.<RequestProcessingAsync>d__2.MoveNext()
+2017-11-17T09:43:59.9903558+07:00 0HL9DCJV57HPG [INF] Request finished in 436.1924ms 500  (15c52c40)
+2017-11-17T09:45:59.6485977+07:00 0HL9DCJV57HPH [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/SaveChanges   (e5be5b71)
+2017-11-17T09:45:59.6660969+07:00 0HL9DCJV57HPH [INF] Request finished in 13.5575ms 204  (15c52c40)
+2017-11-17T09:45:59.6710997+07:00 0HL9DCJV57HPI [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/datamodel/SaveChanges application/json 615 (e5be5b71)
+2017-11-17T09:45:59.7885959+07:00 0HL9DCJV57HPI [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" in 111.2715ms (afa2e885)
+2017-11-17T09:45:59.8525966+07:00 0HL9DCJV57HPI [ERR] Connection id ""0HL9DCJV3CPU4"": An unhandled exception was thrown by the application. (8c14976b)
+System.ArgumentNullException: Value cannot be null.
+Parameter name: modelMetadata
+   at Microsoft.AspNetCore.Mvc.ModelBinding.DefaultModelBindingContext.EnterNestedScope(ModelMetadata modelMetadata, String fieldName, String modelName, Object model)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinder`2.<TryBindStrongModel>d__4`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinder`2.<BindModelAsync>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinder`1.<BindComplexCollectionFromIndexes>d__11.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinder`1.<BindModelAsync>d__5.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DictionaryModelBinder`2.<BindModelAsync>d__2.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.DefaultControllerArgumentBinder.<BindModelAsync>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.DefaultControllerArgumentBinder.<BindArgumentsCoreAsync>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__20.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsMiddleware.<Invoke>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISMiddleware.<Invoke>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Hosting.Internal.RequestServicesContainerMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.ValidateEnd(Task task)
+   at Microsoft.AspNetCore.Server.Kestrel.Internal.Http.Frame`1.<RequestProcessingAsync>d__2.MoveNext()
+2017-11-17T09:45:59.8840991+07:00 0HL9DCJV57HPI [INF] Request finished in 198.694ms 500  (15c52c40)
+2017-11-17T09:46:11.2336481+07:00 0HL9DCJV57HPJ [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/SaveChanges   (e5be5b71)
+2017-11-17T09:46:11.2531480+07:00 0HL9DCJV57HPJ [INF] Request finished in 18.6172ms 204  (15c52c40)
+2017-11-17T09:46:11.2631492+07:00 0HL9DCJV57HPK [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/datamodel/SaveChanges application/json 615 (e5be5b71)
+2017-11-17T09:46:11.3737236+07:00 0HL9DCJV57HPK [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" in 105.1177ms (afa2e885)
+2017-11-17T09:46:11.4282234+07:00 0HL9DCJV57HPK [ERR] Connection id ""0HL9DCJV3CPU4"": An unhandled exception was thrown by the application. (8c14976b)
+System.ArgumentNullException: Value cannot be null.
+Parameter name: modelMetadata
+   at Microsoft.AspNetCore.Mvc.ModelBinding.DefaultModelBindingContext.EnterNestedScope(ModelMetadata modelMetadata, String fieldName, String modelName, Object model)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinder`2.<TryBindStrongModel>d__4`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinder`2.<BindModelAsync>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinder`1.<BindComplexCollectionFromIndexes>d__11.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinder`1.<BindModelAsync>d__5.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DictionaryModelBinder`2.<BindModelAsync>d__2.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.DefaultControllerArgumentBinder.<BindModelAsync>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.DefaultControllerArgumentBinder.<BindArgumentsCoreAsync>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__20.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsMiddleware.<Invoke>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISMiddleware.<Invoke>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Hosting.Internal.RequestServicesContainerMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.ValidateEnd(Task task)
+   at Microsoft.AspNetCore.Server.Kestrel.Internal.Http.Frame`1.<RequestProcessingAsync>d__2.MoveNext()
+2017-11-17T09:46:11.4467248+07:00 0HL9DCJV57HPK [INF] Request finished in 184.8098ms 500  (15c52c40)
+2017-11-17T09:49:04.2056429+07:00 0HL9DCN1SEQUQ [INF] Request starting HTTP/1.1 GET http://localhost:5001/api/values   (e5be5b71)
+2017-11-17T09:49:05.3621443+07:00 0HL9DCN1SEQUQ [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ValuesController.Get (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:49:05.7326437+07:00 0HL9DCN1SEQUQ [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:49:06.0546428+07:00 0HL9DCN1SEQUQ [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ValuesController.Get (Pentamic.SSBI.WebApi)" in 789.1068ms (afa2e885)
+2017-11-17T09:49:06.1136421+07:00 0HL9DCN1SEQUQ [INF] Request finished in 1986.3023ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:49:06.1431422+07:00 0HL9DCN1SEQUR [INF] Request starting HTTP/1.1 GET http://localhost:5001/favicon.ico   (e5be5b71)
+2017-11-17T09:49:06.1741429+07:00 0HL9DCN1SEQUR [INF] Request finished in 24.1871ms 404  (15c52c40)
+2017-11-17T09:49:34.9325302+07:00 0HL9DCNB1A4MS [INF] Request starting HTTP/1.1 GET http://localhost:5001/api/values   (e5be5b71)
+2017-11-17T09:49:35.4380330+07:00 0HL9DCNB1A4MS [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ValuesController.Get (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:49:35.4735332+07:00 0HL9DCNB1A4MS [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T09:49:35.5714345+07:00 0HL9DCNB1A4MS [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ValuesController.Get (Pentamic.SSBI.WebApi)" in 179.6394ms (afa2e885)
+2017-11-17T09:49:35.5989339+07:00 0HL9DCNB1A4MS [INF] Request finished in 692.0545ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T09:49:35.6234333+07:00 0HL9DCNB1A4MT [INF] Request starting HTTP/1.1 GET http://localhost:5001/favicon.ico   (e5be5b71)
+2017-11-17T09:49:35.6394333+07:00 0HL9DCNB1A4MT [INF] Request finished in 15.7624ms 404  (15c52c40)
+2017-11-17T09:49:46.7736856+07:00 0HL9DCNB1A4MU [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/SaveChanges   (e5be5b71)
+2017-11-17T09:49:46.7956870+07:00 0HL9DCNB1A4MU [INF] Request finished in 23.4473ms 204  (15c52c40)
+2017-11-17T09:49:46.8121979+07:00 0HL9DCNB1A4MV [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/datamodel/SaveChanges application/json 615 (e5be5b71)
+2017-11-17T09:49:47.3911880+07:00 0HL9DCNB1A4MV [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" with arguments (["{
+  \"entities\": [
+    {
+      \"Id\": -3,
+      \"Name\": \"test\",
+      \"Description\": null,
+      \"DefaultMode\": \"Import\",
+      \"GenerateFromTemplate\": null,
+      \"CloneFromModelId\": null,
+      \"RefreshSchedule\": null,
+      \"RefreshJobId\": null,
+      \"CreatedBy\": null,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"RefreshedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"Model\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"Model:#Pentamic.SSBI.Models.DataModel.Objects\",
+        \"defaultResourceName\": \"Models\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    }
+  ],
+  \"saveOptions\": {}
+}"]) - ModelState is Valid (ba7f4ac2)
+2017-11-17T09:49:54.0455136+07:00 0HL9DCNB1A4MV [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" in 7224.1171ms (afa2e885)
+2017-11-17T09:49:54.1645134+07:00 0HL9DCNB1A4MV [ERR] Connection id ""0HL9DCNAVL6DE"": An unhandled exception was thrown by the application. (8c14976b)
+System.ArgumentException: Assembly could not be found for Model:#Pentamic.SSBI.Models.DataModel.Objects
+   at Breeze.Persistence.PersistenceManager.LookupEntityType(String entityTypeName)
+   at Breeze.Persistence.SaveWorkState.<.ctor>b__0_2(IGrouping`2 g)
+   at System.Linq.Enumerable.WhereSelectListIterator`2.MoveNext()
+   at System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Breeze.Persistence.SaveWorkState..ctor(PersistenceManager contextProvider, JArray entitiesArray)
+   at Breeze.Persistence.PersistenceManager.InitializeSaveState(JObject saveBundle)
+   at Breeze.Persistence.PersistenceManager.SaveChanges(JObject saveBundle, TransactionSettings transactionSettings)
+   at Pentamic.SSBI.Services.Breeze.DataModelEntityService.SaveChanges(JObject saveBundle) in C:\Repositories\ssbi-backend\Pentamic.SSBI.Services.Breeze\DataModelEntityService.cs:line 510
+   at Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges(JObject saveBundle) in C:\Repositories\ssbi-backend\Pentamic.SSBI.WebApi\Controllers\DataModelController.cs:line 248
+   at lambda_method(Closure , Object , Object[] )
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.Execute(Object target, Object[] parameters)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__27.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__25.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__20.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsMiddleware.<Invoke>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISMiddleware.<Invoke>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Hosting.Internal.RequestServicesContainerMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.ValidateEnd(Task task)
+   at Microsoft.AspNetCore.Server.Kestrel.Internal.Http.Frame`1.<RequestProcessingAsync>d__2.MoveNext()
+2017-11-17T09:49:54.2395142+07:00 0HL9DCNB1A4MV [INF] Request finished in 7364.6468ms 500  (15c52c40)
+2017-11-17T10:19:58.6943382+07:00 0HL9DD8AI3JDL [INF] Request starting HTTP/1.1 GET http://localhost:5001/api/values   (e5be5b71)
+2017-11-17T10:19:59.7828398+07:00 0HL9DD8AI3JDL [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ValuesController.Get (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T10:19:59.8793393+07:00 0HL9DD8AI3JDL [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T10:20:00.0948401+07:00 0HL9DD8AI3JDL [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ValuesController.Get (Pentamic.SSBI.WebApi)" in 438.9193ms (afa2e885)
+2017-11-17T10:20:00.4003407+07:00 0HL9DD8AI3JDL [INF] Request finished in 1743.7079ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T10:20:00.5698404+07:00 0HL9DD8AI3JDM [INF] Request starting HTTP/1.1 GET http://localhost:5001/favicon.ico   (e5be5b71)
+2017-11-17T10:20:00.7763421+07:00 0HL9DD8AI3JDM [INF] Request finished in 276.3084ms 404  (15c52c40)
+2017-11-17T10:31:10.4796130+07:00 0HL9DD8AI3JDN [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T10:31:10.5506124+07:00 0HL9DD8AI3JDN [INF] Request finished in 78.8577ms 204  (15c52c40)
+2017-11-17T10:31:10.6081140+07:00 0HL9DD8AI3JDO [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T10:31:12.2041143+07:00 0HL9DD8AI3JDO [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T10:31:19.7536143+07:00 0HL9DD8AI3JDO [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T10:31:20.2346162+07:00 0HL9DD8AI3JDO [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 9591.9971ms (afa2e885)
+2017-11-17T10:31:20.2621137+07:00 0HL9DD8AI3JDO [INF] Request finished in 9642.641ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T10:31:22.8912346+07:00 0HL9DD8AI3JDP [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T10:31:22.9002336+07:00 0HL9DD8AI3JDP [INF] Request finished in 4.2689ms 204  (15c52c40)
+2017-11-17T10:31:22.9525422+07:00 0HL9DD8AI3JDQ [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T10:31:23.0570357+07:00 0HL9DD8AI3JDQ [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T10:31:23.0920367+07:00 0HL9DD8AI3JDQ [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T10:31:23.1665379+07:00 0HL9DD8AI3JDQ [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" in 151.9649ms (afa2e885)
+2017-11-17T10:31:23.1780361+07:00 0HL9DD8AI3JDQ [INF] Request finished in 225.3733ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T10:38:44.1567694+07:00 0HL9DD8AI3JDR [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Reports   (e5be5b71)
+2017-11-17T10:38:44.2187712+07:00 0HL9DD8AI3JDR [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T10:38:44.3042681+07:00 0HL9DD8AI3JDR [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T10:38:44.3817674+07:00 0HL9DD8AI3JDR [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" in 195.5115ms (afa2e885)
+2017-11-17T10:38:44.4827687+07:00 0HL9DD8AI3JDR [INF] Request finished in 339.4788ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T10:38:59.7336389+07:00 0HL9DD8AI3JDS [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models   (e5be5b71)
+2017-11-17T10:38:59.7696403+07:00 0HL9DD8AI3JDS [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T10:38:59.8216409+07:00 0HL9DD8AI3JDS [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T10:38:59.8416379+07:00 0HL9DD8AI3JDS [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 86.6823ms (afa2e885)
+2017-11-17T10:38:59.8576397+07:00 0HL9DD8AI3JDS [INF] Request finished in 129.3609ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T10:39:20.2317955+07:00 0HL9DD8AI3JDT [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserFavoriteReports?$expand=Report   (e5be5b71)
+2017-11-17T10:39:20.2607967+07:00 0HL9DD8AI3JDU [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserRecentReports   (e5be5b71)
+2017-11-17T10:39:20.3302954+07:00 0HL9DD8AI3JDV [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserRecentDashboards   (e5be5b71)
+2017-11-17T10:39:20.3457950+07:00 0HL9DD8AI3JDT [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteReports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T10:39:20.3957953+07:00 0HL9DD8AI3JE0 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserFavoriteDashboards?$expand=Dashboard   (e5be5b71)
+2017-11-17T10:39:20.4997940+07:00 0HL9DD8AI3JE1 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/UserRecentModels   (e5be5b71)
+2017-11-17T10:39:20.5292959+07:00 0HL9DD8AI3JDU [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserRecentReports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T10:39:20.5347950+07:00 0HL9DD8AI3JDV [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserRecentDashboards (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T10:39:20.6417950+07:00 0HL9DD8AI3JE0 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteDashboards (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T10:39:20.6567951+07:00 0HL9DD8AI3JE1 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserRecentModels (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T10:39:20.6597943+07:00 0HL9DD8AI3JE2 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/UserFavoriteModels?$expand=Model   (e5be5b71)
+2017-11-17T10:39:20.7842979+07:00 0HL9DD8AI3JE1 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T10:39:20.8307961+07:00 0HL9DD8AI3JDV [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T10:39:20.9087957+07:00 0HL9DD8AI3JDU [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T10:39:20.9597967+07:00 0HL9DD8AI3JE2 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserFavoriteModels (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T10:39:20.9632963+07:00 0HL9DD8AI3JE0 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteDashboards (Pentamic.SSBI.WebApi)" in 457.5442ms (afa2e885)
+2017-11-17T10:39:20.9787956+07:00 0HL9DD8AI3JDT [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteReports (Pentamic.SSBI.WebApi)" in 642.3452ms (afa2e885)
+2017-11-17T10:39:21.4412983+07:00 0HL9DD8AI3JDV [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserRecentDashboards (Pentamic.SSBI.WebApi)" in 938.5923ms (afa2e885)
+2017-11-17T10:39:21.5242974+07:00 0HL9DD8AI3JE1 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserRecentModels (Pentamic.SSBI.WebApi)" in 802.127ms (afa2e885)
+2017-11-17T10:39:21.5657957+07:00 0HL9DD8AI3JDU [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserRecentReports (Pentamic.SSBI.WebApi)" in 1047.5879ms (afa2e885)
+2017-11-17T10:39:21.5897970+07:00 0HL9DD8AI3JDT [ERR] Connection id ""0HL9DD8ADBACF"": An unhandled exception was thrown by the application. (8c14976b)
+System.Exception: This EntityQuery ctor requires a valid json string. The following is not json: $expand=Report
+   at Breeze.Core.EntityQuery..ctor(String json)
+   at Breeze.AspNetCore.BreezeQueryFilterAttribute.OnActionExecuted(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.<OnActionExecutionAsync>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__25.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__20.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsMiddleware.<Invoke>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISMiddleware.<Invoke>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Hosting.Internal.RequestServicesContainerMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.ValidateEnd(Task task)
+   at Microsoft.AspNetCore.Server.Kestrel.Internal.Http.Frame`1.<RequestProcessingAsync>d__2.MoveNext()
+2017-11-17T10:39:21.5922947+07:00 0HL9DD8AI3JE0 [ERR] Connection id ""0HL9DD8ADBACJ"": An unhandled exception was thrown by the application. (8c14976b)
+System.Exception: This EntityQuery ctor requires a valid json string. The following is not json: $expand=Dashboard
+   at Breeze.Core.EntityQuery..ctor(String json)
+   at Breeze.AspNetCore.BreezeQueryFilterAttribute.OnActionExecuted(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.<OnActionExecutionAsync>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__25.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__20.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsMiddleware.<Invoke>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISMiddleware.<Invoke>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Hosting.Internal.RequestServicesContainerMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.ValidateEnd(Task task)
+   at Microsoft.AspNetCore.Server.Kestrel.Internal.Http.Frame`1.<RequestProcessingAsync>d__2.MoveNext()
+2017-11-17T10:39:21.5937951+07:00 0HL9DD8AI3JE2 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserFavoriteModels (Pentamic.SSBI.WebApi)" in 784.5743ms (afa2e885)
+2017-11-17T10:39:21.5987968+07:00 0HL9DD8AI3JE1 [INF] Request finished in 1219.9996ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T10:39:21.6297964+07:00 0HL9DD8AI3JDV [INF] Request finished in 1207.1597ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T10:39:21.7188002+07:00 0HL9DD8AI3JDU [INF] Request finished in 1334.9092ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T10:39:21.7867971+07:00 0HL9DD8AI3JE0 [INF] Request finished in 1401.0162ms 500  (15c52c40)
+2017-11-17T10:39:21.7967951+07:00 0HL9DD8AI3JDT [INF] Request finished in 1575.9648ms 500  (15c52c40)
+2017-11-17T10:39:21.8872985+07:00 0HL9DD8AI3JE2 [ERR] Connection id ""0HL9DD8ADBACH"": An unhandled exception was thrown by the application. (8c14976b)
+System.Exception: This EntityQuery ctor requires a valid json string. The following is not json: $expand=Model
+   at Breeze.Core.EntityQuery..ctor(String json)
+   at Breeze.AspNetCore.BreezeQueryFilterAttribute.OnActionExecuted(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Filters.ActionFilterAttribute.<OnActionExecutionAsync>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__25.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__20.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsMiddleware.<Invoke>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISMiddleware.<Invoke>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Hosting.Internal.RequestServicesContainerMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.ValidateEnd(Task task)
+   at Microsoft.AspNetCore.Server.Kestrel.Internal.Http.Frame`1.<RequestProcessingAsync>d__2.MoveNext()
+2017-11-17T10:39:21.9812955+07:00 0HL9DD8AI3JE2 [INF] Request finished in 1645.645ms 500  (15c52c40)
+2017-11-17T10:39:26.7058042+07:00 0HL9DD8AI3JE3 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models   (e5be5b71)
+2017-11-17T10:39:26.7137967+07:00 0HL9DD8AI3JE3 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T10:39:26.7422982+07:00 0HL9DD8AI3JE3 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T10:39:26.7802962+07:00 0HL9DD8AI3JE3 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 63.0516ms (afa2e885)
+2017-11-17T10:39:26.8067970+07:00 0HL9DD8AI3JE3 [INF] Request finished in 106.9776ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T10:39:32.1492454+07:00 0HL9DD8AI3JE4 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/SaveChanges   (e5be5b71)
+2017-11-17T10:39:32.1787432+07:00 0HL9DD8AI3JE5 [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/datamodel/SaveChanges application/json 615 (e5be5b71)
+2017-11-17T10:39:32.1812443+07:00 0HL9DD8AI3JE4 [INF] Request finished in 49.0215ms 204  (15c52c40)
+2017-11-17T10:39:32.4542434+07:00 0HL9DD8AI3JE5 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" with arguments (["{
+  \"entities\": [
+    {
+      \"Id\": -1,
+      \"Name\": \"test\",
+      \"Description\": null,
+      \"DefaultMode\": \"Import\",
+      \"GenerateFromTemplate\": null,
+      \"CloneFromModelId\": null,
+      \"RefreshSchedule\": null,
+      \"RefreshJobId\": null,
+      \"CreatedBy\": null,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"RefreshedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"Model\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"Model:#Pentamic.SSBI.Models.DataModel.Objects\",
+        \"defaultResourceName\": \"Models\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    }
+  ],
+  \"saveOptions\": {}
+}"]) - ModelState is Valid (ba7f4ac2)
+2017-11-17T10:39:33.0252424+07:00 0HL9DD8AI3JE5 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" in 833.0625ms (afa2e885)
+2017-11-17T10:39:33.1487439+07:00 0HL9DD8AI3JE5 [ERR] Connection id ""0HL9DD8ADBACG"": An unhandled exception was thrown by the application. (8c14976b)
+System.ArgumentException: Assembly could not be found for Model:#Pentamic.SSBI.Models.DataModel.Objects
+   at Breeze.Persistence.PersistenceManager.LookupEntityType(String entityTypeName)
+   at Breeze.Persistence.SaveWorkState.<.ctor>b__0_2(IGrouping`2 g)
+   at System.Linq.Enumerable.WhereSelectListIterator`2.MoveNext()
+   at System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Breeze.Persistence.SaveWorkState..ctor(PersistenceManager contextProvider, JArray entitiesArray)
+   at Breeze.Persistence.PersistenceManager.InitializeSaveState(JObject saveBundle)
+   at Breeze.Persistence.PersistenceManager.SaveChanges(JObject saveBundle, TransactionSettings transactionSettings)
+   at Pentamic.SSBI.Services.Breeze.DataModelEntityService.SaveChanges(JObject saveBundle) in C:\Repositories\ssbi-backend\Pentamic.SSBI.Services.Breeze\DataModelEntityService.cs:line 510
+   at Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges(JObject saveBundle) in C:\Repositories\ssbi-backend\Pentamic.SSBI.WebApi\Controllers\DataModelController.cs:line 248
+   at lambda_method(Closure , Object , Object[] )
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.Execute(Object target, Object[] parameters)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__27.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__25.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__20.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsMiddleware.<Invoke>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISMiddleware.<Invoke>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Hosting.Internal.RequestServicesContainerMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.ValidateEnd(Task task)
+   at Microsoft.AspNetCore.Server.Kestrel.Internal.Http.Frame`1.<RequestProcessingAsync>d__2.MoveNext()
+2017-11-17T10:39:33.2317431+07:00 0HL9DD8AI3JE5 [INF] Request finished in 1055.2267ms 500  (15c52c40)
+2017-11-17T10:55:21.7844156+07:00 0HL9DD8AI3JE6 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models   (e5be5b71)
+2017-11-17T10:55:21.8014145+07:00 0HL9DD8AI3JE6 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T10:55:21.8109150+07:00 0HL9DD8AI3JE6 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T10:55:21.8489137+07:00 0HL9DD8AI3JE6 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 38.5958ms (afa2e885)
+2017-11-17T10:55:21.8719528+07:00 0HL9DD8AI3JE6 [INF] Request finished in 73.7966ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T10:59:32.5653086+07:00 0HL9DD8AI3JE7 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T10:59:32.7693086+07:00 0HL9DD8AI3JE7 [INF] Request finished in 129.7073ms 204  (15c52c40)
+2017-11-17T10:59:32.7798083+07:00 0HL9DD8AI3JE8 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T10:59:32.7923080+07:00 0HL9DD8AI3JE8 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T10:59:32.8123075+07:00 0HL9DD8AI3JE8 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T10:59:32.8443086+07:00 0HL9DD8AI3JE8 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 39.3176ms (afa2e885)
+2017-11-17T10:59:32.8683081+07:00 0HL9DD8AI3JE8 [INF] Request finished in 92.3083ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T10:59:51.8392794+07:00 0HL9DD8AI3JE9 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T10:59:51.8462719+07:00 0HL9DD8AI3JE9 [INF] Request finished in 6.645ms 204  (15c52c40)
+2017-11-17T10:59:51.8732728+07:00 0HL9DD8AI3JEA [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T10:59:51.8792726+07:00 0HL9DD8AI3JEA [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T10:59:51.9092715+07:00 0HL9DD8AI3JEA [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T10:59:51.9222738+07:00 0HL9DD8AI3JEA [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 39.797ms (afa2e885)
+2017-11-17T10:59:51.9697771+07:00 0HL9DD8AI3JEA [INF] Request finished in 83.0691ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:00:20.6834935+07:00 0HL9DD8AI3JEB [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:00:20.7274939+07:00 0HL9DD8AI3JEB [INF] Request finished in 191.9251ms 204  (15c52c40)
+2017-11-17T11:00:20.8354928+07:00 0HL9DD8AI3JEC [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:00:20.8509929+07:00 0HL9DD8AI3JEC [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:00:20.8634955+07:00 0HL9DD8AI3JEC [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:00:20.9149932+07:00 0HL9DD8AI3JEC [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 30.0275ms (afa2e885)
+2017-11-17T11:00:20.9534937+07:00 0HL9DD8AI3JEC [INF] Request finished in 116.1332ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:00:29.6923943+07:00 0HL9DD8AI3JED [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/SaveChanges   (e5be5b71)
+2017-11-17T11:00:29.7038955+07:00 0HL9DD8AI3JED [INF] Request finished in 7.2604ms 204  (15c52c40)
+2017-11-17T11:00:29.7233972+07:00 0HL9DD8AI3JEE [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/datamodel/SaveChanges application/json 599 (e5be5b71)
+2017-11-17T11:00:29.7703947+07:00 0HL9DD8AI3JEE [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" with arguments (["{
+  \"entities\": [
+    {
+      \"Id\": -1,
+      \"Name\": \"test\",
+      \"Description\": null,
+      \"DefaultMode\": \"Import\",
+      \"GenerateFromTemplate\": null,
+      \"CloneFromModelId\": null,
+      \"RefreshSchedule\": null,
+      \"RefreshJobId\": null,
+      \"CreatedBy\": null,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"RefreshedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"Model\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"Model:#Pentamic.SSBI.Entities\",
+        \"defaultResourceName\": \"Models\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    }
+  ],
+  \"saveOptions\": {}
+}"]) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:00:30.5426753+07:00 0HL9DD8AI3JEE [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:00:30.5606778+07:00 0HL9DD8AI3JEE [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" in 820.3502ms (afa2e885)
+2017-11-17T11:00:30.5656762+07:00 0HL9DD8AI3JEE [INF] Request finished in 847.6447ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:00:47.0216450+07:00 0HL9DD8AI3JEF [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:00:47.0341462+07:00 0HL9DD8AI3JEF [INF] Request finished in 7.2117ms 204  (15c52c40)
+2017-11-17T11:00:47.0801455+07:00 0HL9DD8AI3JEG [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:00:47.0891456+07:00 0HL9DD8AI3JEG [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:00:47.0996468+07:00 0HL9DD8AI3JEG [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:00:47.1201497+07:00 0HL9DD8AI3JEG [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 27.3512ms (afa2e885)
+2017-11-17T11:00:47.1291450+07:00 0HL9DD8AI3JEG [INF] Request finished in 51.3444ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:01:38.7883671+07:00 0HL9DD8AI3JEH [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/SaveChanges   (e5be5b71)
+2017-11-17T11:01:38.8018690+07:00 0HL9DD8AI3JEH [INF] Request finished in 15.7683ms 204  (15c52c40)
+2017-11-17T11:01:38.8153694+07:00 0HL9DD8AI3JEI [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/datamodel/SaveChanges application/json 599 (e5be5b71)
+2017-11-17T11:01:38.8283720+07:00 0HL9DD8AI3JEI [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" with arguments (["{
+  \"entities\": [
+    {
+      \"Id\": -1,
+      \"Name\": \"test\",
+      \"Description\": null,
+      \"DefaultMode\": \"Import\",
+      \"GenerateFromTemplate\": null,
+      \"CloneFromModelId\": null,
+      \"RefreshSchedule\": null,
+      \"RefreshJobId\": null,
+      \"CreatedBy\": null,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"RefreshedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"Model\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"Model:#Pentamic.SSBI.Entities\",
+        \"defaultResourceName\": \"Models\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    }
+  ],
+  \"saveOptions\": {}
+}"]) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:02:37.6359726+07:00 0HL9DD8AI3JEI [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:02:37.6419747+07:00 0HL9DD8AI3JEI [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" in 58817.362ms (afa2e885)
+2017-11-17T11:02:37.6994729+07:00 0HL9DD8AI3JEI [INF] Request finished in 58861.9075ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:04:13.9245490+07:00 0HL9DE11SAAS4 [INF] Request starting HTTP/1.1 GET http://localhost:5001/api/values   (e5be5b71)
+2017-11-17T11:04:14.7735500+07:00 0HL9DE11SAAS4 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ValuesController.Get (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:04:14.8335471+07:00 0HL9DE11SAAS4 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:04:15.0705497+07:00 0HL9DE11SAAS4 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ValuesController.Get (Pentamic.SSBI.WebApi)" in 422.0553ms (afa2e885)
+2017-11-17T11:04:15.1580487+07:00 0HL9DE11SAAS4 [INF] Request finished in 1239.7491ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:04:15.2000495+07:00 0HL9DE11SAAS5 [INF] Request starting HTTP/1.1 GET http://localhost:5001/favicon.ico   (e5be5b71)
+2017-11-17T11:04:15.2180477+07:00 0HL9DE11SAAS5 [INF] Request finished in 17.8071ms 404  (15c52c40)
+2017-11-17T11:05:11.5202107+07:00 0HL9DE11SAAS6 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/SaveChanges   (e5be5b71)
+2017-11-17T11:05:11.5447057+07:00 0HL9DE11SAAS6 [INF] Request finished in 52.0515ms 204  (15c52c40)
+2017-11-17T11:05:11.5622049+07:00 0HL9DE11SAAS7 [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/datamodel/SaveChanges application/json 599 (e5be5b71)
+2017-11-17T11:05:12.1312059+07:00 0HL9DE11SAAS7 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" with arguments (["{
+  \"entities\": [
+    {
+      \"Id\": -1,
+      \"Name\": \"test\",
+      \"Description\": null,
+      \"DefaultMode\": \"Import\",
+      \"GenerateFromTemplate\": null,
+      \"CloneFromModelId\": null,
+      \"RefreshSchedule\": null,
+      \"RefreshJobId\": null,
+      \"CreatedBy\": null,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"RefreshedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"Model\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"Model:#Pentamic.SSBI.Entities\",
+        \"defaultResourceName\": \"Models\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    }
+  ],
+  \"saveOptions\": {}
+}"]) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:05:19.9332065+07:00 0HL9DE11SAAS7 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:05:19.9912047+07:00 0HL9DE11SAAS7 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" in 8403.7892ms (afa2e885)
+2017-11-17T11:05:20.0647078+07:00 0HL9DE11SAAS7 [INF] Request finished in 8501.2144ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:05:24.0039453+07:00 0HL9DE11SAAS8 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T11:05:24.0229434+07:00 0HL9DE11SAAS8 [INF] Request finished in 24.955ms 204  (15c52c40)
+2017-11-17T11:05:24.0314428+07:00 0HL9DE11SAAS9 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T11:05:24.0394430+07:00 0HL9DE11SAAS9 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:05:24.0539448+07:00 0HL9DE11SAAS9 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:05:24.3799427+07:00 0HL9DE11SAAS9 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" in 338.2739ms (afa2e885)
+2017-11-17T11:05:24.3919439+07:00 0HL9DE11SAAS9 [INF] Request finished in 358.7181ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:05:27.5727226+07:00 0HL9DE11SAASA [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:05:27.5892281+07:00 0HL9DE11SAASA [INF] Request finished in 25.764ms 204  (15c52c40)
+2017-11-17T11:05:27.6007227+07:00 0HL9DE11SAASB [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:05:27.6257221+07:00 0HL9DE11SAASB [INF] Request finished in 31.4039ms 404  (15c52c40)
+2017-11-17T11:06:48.9604027+07:00 0HL9DE11SAASC [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:06:49.0034035+07:00 0HL9DE11SAASC [INF] Request finished in 20.1424ms 204  (15c52c40)
+2017-11-17T11:06:49.0064027+07:00 0HL9DE11SAASD [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:06:49.0184039+07:00 0HL9DE11SAASD [INF] Request finished in 5.3954ms 404  (15c52c40)
+2017-11-17T11:06:52.3529873+07:00 0HL9DE11SAASE [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T11:06:52.3699913+07:00 0HL9DE11SAASE [INF] Request finished in 4.7311ms 204  (15c52c40)
+2017-11-17T11:06:52.3759890+07:00 0HL9DE11SAASF [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T11:06:52.3824862+07:00 0HL9DE11SAASF [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:06:52.3919882+07:00 0HL9DE11SAASF [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:06:52.4029891+07:00 0HL9DE11SAASF [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" in 21.4162ms (afa2e885)
+2017-11-17T11:06:52.4164865+07:00 0HL9DE11SAASF [INF] Request finished in 36.8554ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:07:34.2110519+07:00 0HL9DE11SAASG [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T11:07:34.2415526+07:00 0HL9DE11SAASG [INF] Request finished in 31.1026ms 204  (15c52c40)
+2017-11-17T11:07:34.2475510+07:00 0HL9DE11SAASH [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T11:07:34.2600511+07:00 0HL9DE11SAASH [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:07:34.2745537+07:00 0HL9DE11SAASH [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:07:34.2910518+07:00 0HL9DE11SAASH [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" in 28.3109ms (afa2e885)
+2017-11-17T11:07:34.5170527+07:00 0HL9DE11SAASH [INF] Request finished in 266.4032ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:07:40.5788592+07:00 0HL9DE11SAASI [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:07:40.6138599+07:00 0HL9DE11SAASI [INF] Request finished in 40.2464ms 204  (15c52c40)
+2017-11-17T11:07:40.6198601+07:00 0HL9DE11SAASJ [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:07:40.6308602+07:00 0HL9DE11SAASJ [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:07:40.6608606+07:00 0HL9DE11SAASJ [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:07:40.7405035+07:00 0HL9DE11SAASJ [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 112.3415ms (afa2e885)
+2017-11-17T11:07:40.7490026+07:00 0HL9DE11SAASJ [INF] Request finished in 127.5072ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:08:00.7119356+07:00 0HL9DE11SAASK [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:08:00.7399328+07:00 0HL9DE11SAASK [INF] Request finished in 40.2992ms 204  (15c52c40)
+2017-11-17T11:08:00.7524321+07:00 0HL9DE11SAASL [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:08:00.7614323+07:00 0HL9DE11SAASL [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:08:00.7739338+07:00 0HL9DE11SAASL [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:08:00.7874342+07:00 0HL9DE11SAASL [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 23.3887ms (afa2e885)
+2017-11-17T11:08:00.7959337+07:00 0HL9DE11SAASL [INF] Request finished in 42.6393ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:08:05.7895218+07:00 0HL9DE11SAASM [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T11:08:05.8040343+07:00 0HL9DE11SAASM [INF] Request finished in 18.6681ms 204  (15c52c40)
+2017-11-17T11:08:05.8135260+07:00 0HL9DE11SAASN [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T11:08:05.8220221+07:00 0HL9DE11SAASN [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:08:05.8305219+07:00 0HL9DE11SAASN [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:08:05.8425224+07:00 0HL9DE11SAASN [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" in 22.2483ms (afa2e885)
+2017-11-17T11:08:05.8600220+07:00 0HL9DE11SAASN [INF] Request finished in 43.9406ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:08:07.1838443+07:00 0HL9DE11SAASO [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:08:07.2138417+07:00 0HL9DE11SAASO [INF] Request finished in 26.2299ms 204  (15c52c40)
+2017-11-17T11:08:07.2283403+07:00 0HL9DE11SAASP [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:08:07.3428402+07:00 0HL9DE11SAASP [INF] Request finished in 62.0234ms 404  (15c52c40)
+2017-11-17T11:09:24.1703629+07:00 0HL9DE11SAASQ [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T11:09:24.3248648+07:00 0HL9DE11SAASQ [INF] Request finished in 133.0203ms 204  (15c52c40)
+2017-11-17T11:09:24.3748614+07:00 0HL9DE11SAASR [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T11:09:24.6468635+07:00 0HL9DE11SAASR [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:09:24.6703615+07:00 0HL9DE11SAASR [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:09:24.7993716+07:00 0HL9DE11SAASR [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" in 295.7811ms (afa2e885)
+2017-11-17T11:09:24.8378616+07:00 0HL9DE11SAASR [INF] Request finished in 453.7848ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:10:12.5306547+07:00 0HL9DE11SAASS [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Metadata   (e5be5b71)
+2017-11-17T11:10:12.6771535+07:00 0HL9DE11SAASS [INF] Request finished in 152.1767ms 204  (15c52c40)
+2017-11-17T11:10:12.6921524+07:00 0HL9DE11SAAST [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Metadata   (e5be5b71)
+2017-11-17T11:10:12.7171521+07:00 0HL9DE11SAAST [INF] Request finished in 28.0906ms 404  (15c52c40)
+2017-11-17T11:13:30.2027562+07:00 0HL9DE11SAASU [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T11:13:30.5707546+07:00 0HL9DE11SAASU [INF] Request finished in 424.8866ms 204  (15c52c40)
+2017-11-17T11:13:30.9892554+07:00 0HL9DE11SAASV [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T11:13:31.5512546+07:00 0HL9DE11SAASV [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:13:31.9942560+07:00 0HL9DE11SAASV [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:13:32.1822556+07:00 0HL9DE11SAASV [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" in 692.1175ms (afa2e885)
+2017-11-17T11:13:32.4452535+07:00 0HL9DE11SAASV [INF] Request finished in 1742.7849ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:13:39.1205507+07:00 0HL9DE11SAAT0 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:13:39.1450545+07:00 0HL9DE11SAAT0 [INF] Request finished in 22.5243ms 204  (15c52c40)
+2017-11-17T11:13:39.1530539+07:00 0HL9DE11SAAT1 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:13:39.1605527+07:00 0HL9DE11SAAT1 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:13:39.1720498+07:00 0HL9DE11SAAT1 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:13:39.1895513+07:00 0HL9DE11SAAT1 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 29.2548ms (afa2e885)
+2017-11-17T11:13:39.2065545+07:00 0HL9DE11SAAT1 [INF] Request finished in 45.8046ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:13:41.5878418+07:00 0HL9DE11SAAT2 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T11:13:41.6228424+07:00 0HL9DE11SAAT2 [INF] Request finished in 36.8429ms 204  (15c52c40)
+2017-11-17T11:13:41.6348462+07:00 0HL9DE11SAAT3 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-17T11:13:41.6428441+07:00 0HL9DE11SAAT3 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:13:41.6763426+07:00 0HL9DE11SAAT3 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:13:41.6898452+07:00 0HL9DE11SAAT3 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" in 43.4102ms (afa2e885)
+2017-11-17T11:13:41.7193434+07:00 0HL9DE11SAAT3 [INF] Request finished in 82.7249ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:13:44.0921928+07:00 0HL9DE11SAAT4 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:13:44.1111961+07:00 0HL9DE11SAAT4 [INF] Request finished in 29.6649ms 204  (15c52c40)
+2017-11-17T11:13:44.1246913+07:00 0HL9DE11SAAT5 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-17T11:13:44.1331955+07:00 0HL9DE11SAAT5 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:13:44.1386928+07:00 0HL9DE11SAAT5 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:13:44.1516940+07:00 0HL9DE11SAAT5 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 15.9002ms (afa2e885)
+2017-11-17T11:13:44.1606931+07:00 0HL9DE11SAAT5 [INF] Request finished in 37.6138ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:13:49.6276330+07:00 0HL9DE11SAAT6 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/SaveChanges   (e5be5b71)
+2017-11-17T11:13:49.6366342+07:00 0HL9DE11SAAT6 [INF] Request finished in 11.6767ms 204  (15c52c40)
+2017-11-17T11:13:49.6466377+07:00 0HL9DE11SAAT7 [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/reporting/SaveChanges application/json 467 (e5be5b71)
+2017-11-17T11:13:50.0132731+07:00 0HL9DE11SAAT7 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.SaveChanges (Pentamic.SSBI.WebApi)" in 347.395ms (afa2e885)
+2017-11-17T11:13:50.1237757+07:00 0HL9DE11SAAT7 [ERR] Connection id ""0HL9DE11P50MD"": An unhandled exception was thrown by the application. (8c14976b)
+System.ArgumentNullException: Value cannot be null.
+Parameter name: modelMetadata
+   at Microsoft.AspNetCore.Mvc.ModelBinding.DefaultModelBindingContext.EnterNestedScope(ModelMetadata modelMetadata, String fieldName, String modelName, Object model)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinder`2.<TryBindStrongModel>d__4`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.KeyValuePairModelBinder`2.<BindModelAsync>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinder`1.<BindComplexCollectionFromIndexes>d__11.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.CollectionModelBinder`1.<BindModelAsync>d__5.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.ModelBinding.Binders.DictionaryModelBinder`2.<BindModelAsync>d__2.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.DefaultControllerArgumentBinder.<BindModelAsync>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.DefaultControllerArgumentBinder.<BindArgumentsCoreAsync>d__6.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__20.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsMiddleware.<Invoke>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISMiddleware.<Invoke>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Hosting.Internal.RequestServicesContainerMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.ValidateEnd(Task task)
+   at Microsoft.AspNetCore.Server.Kestrel.Internal.Http.Frame`1.<RequestProcessingAsync>d__2.MoveNext()
+2017-11-17T11:13:50.1862749+07:00 0HL9DE11SAAT7 [INF] Request finished in 523.3429ms 500  (15c52c40)
+2017-11-17T11:15:54.9261982+07:00 0HL9DE7IPHVS5 [INF] Request starting HTTP/1.1 GET http://localhost:5001/api/values   (e5be5b71)
+2017-11-17T11:15:55.5384049+07:00 0HL9DE7IPHVS5 [INF] Request finished in 522.2685ms 404  (15c52c40)
+2017-11-17T11:15:55.5749070+07:00 0HL9DE7IPHVS6 [INF] Request starting HTTP/1.1 GET http://localhost:5001/favicon.ico   (e5be5b71)
+2017-11-17T11:15:55.5859056+07:00 0HL9DE7IPHVS6 [INF] Request finished in 9.6002ms 404  (15c52c40)
+2017-11-17T11:16:33.1164056+07:00 0HL9DE7IPHVS7 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/SaveChanges   (e5be5b71)
+2017-11-17T11:16:33.1614071+07:00 0HL9DE7IPHVS7 [INF] Request finished in 41.8303ms 204  (15c52c40)
+2017-11-17T11:16:33.1659074+07:00 0HL9DE7IPHVS8 [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/reporting/SaveChanges application/json 467 (e5be5b71)
+2017-11-17T11:16:34.2534079+07:00 0HL9DE7IPHVS8 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.SaveChanges (Pentamic.SSBI.WebApi)" with arguments (["{
+  \"entities\": [
+    {
+      \"Id\": -1,
+      \"ModelId\": 1,
+      \"Name\": \"test\",
+      \"Description\": null,
+      \"Ordinal\": 0,
+      \"CreatedBy\": null,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"Report\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"Report:#Pentamic.SSBI.Entities\",
+        \"defaultResourceName\": \"Reports\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    }
+  ],
+  \"saveOptions\": {}
+}"]) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:16:40.6204686+07:00 0HL9DE7IPHVS8 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:16:40.7319693+07:00 0HL9DE7IPHVS8 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.SaveChanges (Pentamic.SSBI.WebApi)" in 7337.9836ms (afa2e885)
+2017-11-17T11:16:40.7629759+07:00 0HL9DE7IPHVS8 [INF] Request finished in 7586.08ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:16:43.8640197+07:00 0HL9DE7IPHVS9 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/ReportSharings?%7B%22where%22%3A%7B%22ReportId%22%3A1%7D%7D   (e5be5b71)
+2017-11-17T11:16:43.9155185+07:00 0HL9DE7IPHVS9 [INF] Request finished in 55.8363ms 204  (15c52c40)
+2017-11-17T11:16:43.9155185+07:00 0HL9DE7IPHVSA [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/UserFavoriteReports?%7B%22where%22%3A%7B%22ReportId%22%3A1%7D%7D   (e5be5b71)
+2017-11-17T11:16:43.9330177+07:00 0HL9DE7IPHVSB [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Reports?%7B%22where%22%3A%7B%22Id%22%3A1%7D%2C%22expand%22%3A%5B%22ReportPages%22%2C%22ReportViews%22%2C%22ReportFilters%22%5D%7D   (e5be5b71)
+2017-11-17T11:16:43.9720197+07:00 0HL9DE7IPHVSB [INF] Request finished in 60.3512ms 204  (15c52c40)
+2017-11-17T11:16:43.9825176+07:00 0HL9DE7IPHVSC [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/ReportSharings?%7B%22where%22%3A%7B%22ReportId%22%3A1%7D%7D   (e5be5b71)
+2017-11-17T11:16:43.9915192+07:00 0HL9DE7IPHVSD [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Reports?%7B%22where%22%3A%7B%22Id%22%3A1%7D%2C%22expand%22%3A%5B%22ReportPages%22%2C%22ReportViews%22%2C%22ReportFilters%22%5D%7D   (e5be5b71)
+2017-11-17T11:16:43.9990176+07:00 0HL9DE7IPHVSA [INF] Request finished in 146.7439ms 204  (15c52c40)
+2017-11-17T11:16:44.0030223+07:00 0HL9DE7IPHVSD [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:16:44.0060189+07:00 0HL9DE7IPHVSC [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.ReportSharings (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:16:44.0070200+07:00 0HL9DE7IPHVSE [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserFavoriteReports?%7B%22where%22%3A%7B%22ReportId%22%3A1%7D%7D   (e5be5b71)
+2017-11-17T11:16:44.0210222+07:00 0HL9DE7IPHVSE [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteReports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:16:44.1600171+07:00 0HL9DE7IPHVSE [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:16:44.1615197+07:00 0HL9DE7IPHVSC [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:16:44.1755190+07:00 0HL9DE7IPHVSC [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.ReportSharings (Pentamic.SSBI.WebApi)" in 171.7302ms (afa2e885)
+2017-11-17T11:16:44.1995191+07:00 0HL9DE7IPHVSE [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteReports (Pentamic.SSBI.WebApi)" in 149.804ms (afa2e885)
+2017-11-17T11:16:44.2320195+07:00 0HL9DE7IPHVSE [INF] Request finished in 223.9569ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:16:44.2335202+07:00 0HL9DE7IPHVSC [INF] Request finished in 261.4821ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:16:45.0390178+07:00 0HL9DE7IPHVSD [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:16:45.1055199+07:00 0HL9DE7IPHVSD [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" in 1053.4598ms (afa2e885)
+2017-11-17T11:16:45.2710186+07:00 0HL9DE7IPHVSD [INF] Request finished in 1289.168ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-17T11:16:45.5875210+07:00 0HL9DE7IPHVSF [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/SaveChanges   (e5be5b71)
+2017-11-17T11:16:45.6935185+07:00 0HL9DE7IPHVSF [INF] Request finished in 178.0288ms 204  (15c52c40)
+2017-11-17T11:16:45.7175180+07:00 0HL9DE7IPHVSG [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/reporting/SaveChanges application/json 474 (e5be5b71)
+2017-11-17T11:16:45.7650180+07:00 0HL9DE7IPHVSG [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.SaveChanges (Pentamic.SSBI.WebApi)" with arguments (["{
+  \"entities\": [
+    {
+      \"Id\": -2,
+      \"UserId\": null,
+      \"ReportId\": 1,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"CreatedBy\": null,
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"UserReportActivity\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"UserReportActivity:#Pentamic.SSBI.Entities\",
+        \"defaultResourceName\": \"UserReportActivities\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    }
+  ],
+  \"saveOptions\": {}
+}"]) - ModelState is Valid (ba7f4ac2)
+2017-11-17T11:16:46.0910187+07:00 0HL9DE7IPHVSG [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-17T11:16:46.1210191+07:00 0HL9DE7IPHVSG [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.SaveChanges (Pentamic.SSBI.WebApi)" in 373.5729ms (afa2e885)
+2017-11-17T11:16:46.1855187+07:00 0HL9DE7IPHVSG [INF] Request finished in 444.7674ms 200 application/json; charset=utf-8 (15c52c40)

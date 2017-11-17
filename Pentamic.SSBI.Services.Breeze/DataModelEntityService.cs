@@ -21,8 +21,8 @@ namespace Pentamic.SSBI.Services.Breeze
         private readonly DbPersistenceManager<AppDbContext> _persistenceManager;
         private readonly MetadataService _metadataService;
 
-        private string UserId { get; } = null;
-        private string UserName { get; } = null;
+        private string UserId { get; } = "";
+        private string UserName { get; } = "";
 
         public DataModelEntityService(DbPersistenceManager<AppDbContext> persistenceManager, MetadataService metadataService)
         {
@@ -535,37 +535,14 @@ namespace Pentamic.SSBI.Services.Breeze
                         entity1.ModifiedAt = DateTimeOffset.Now;
                         entity1.ModifiedBy = UserId;
                         break;
-                    default:
+                    case EntityState.Detached:
+                        break;
+                    case EntityState.Unchanged:
+                        break;
+                    case EntityState.Deleted:
                         break;
                 }
-            }
-            if (info.Entity is IDataModelObject)
-            {
-                var entity = info.Entity as IDataModelObject;
-                switch (info.EntityState)
-                {
-                    case EntityState.Added:
-                        //entity.OriginalName = entity.Name;
-                        //info.OriginalValuesMap["OriginalName"] = null;
-                        break;
-                    case EntityState.Modified:
-                        //if (entity.OriginalName != entity.Name)
-                        //{
-                        //    _renameRequests.Add(new RenameRequest
-                        //    {
-                        //        Id = entity.Id,
-                        //        Name = entity.Name,
-                        //        OriginalName = entity.OriginalName,
-                        //        Type = entity.GetType()
-                        //    });
-                        //}
-                        //entity.OriginalName = entity.Name;
-                        //info.OriginalValuesMap["OriginalName"] = null;
-                        break;
-                    default:
-                        break;
-                }
-            }
+            }        
             if (info.Entity is IShareInfo)
             {
                 var entity = info.Entity as IShareInfo;
@@ -590,7 +567,6 @@ namespace Pentamic.SSBI.Services.Breeze
             {
                 uma.UserId = UserId;
             }
-
             return true;
         }
 

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Breeze.AspNetCore;
+using Breeze.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using Pentamic.SSBI.Entities;
 using Pentamic.SSBI.Services.Breeze;
 using Pentamic.SSBI.Services.SSAS.Query;
@@ -192,11 +194,11 @@ namespace Pentamic.SSBI.WebApi.Controllers
             }
         }
 
-        //[HttpPost]
-        //public SaveResult SaveChanges(JObject saveBundle)
-        //{
-        //    return _reportingEntityService.SaveChanges(saveBundle);
-        //}
+        [HttpPost]
+        public SaveResult SaveChanges([FromBody]JObject saveBundle)
+        {
+            return _reportingEntityService.SaveChanges(saveBundle);
+        }
 
     }
 }
