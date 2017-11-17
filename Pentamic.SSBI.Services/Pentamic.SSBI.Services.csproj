@@ -220,6 +220,7 @@
     <Compile Include="DateTimeExtension.cs" />
     <Compile Include="DiscoverService.cs" />
     <Compile Include="EmailService.cs" />
+    <Compile Include="IUserResolver.cs" />
     <Compile Include="ListExtension.cs" />
     <Compile Include="ModelDiscoverRestriction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

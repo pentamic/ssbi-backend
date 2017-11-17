@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Breeze.Core;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
 using Pentamic.SSBI.Data;
+using Pentamic.SSBI.Services;
 using Pentamic.SSBI.Services.Breeze;
 using Pentamic.SSBI.Services.SSAS.Metadata;
 using Pentamic.SSBI.Services.SSAS.Query;
@@ -41,14 +43,16 @@ namespace Pentamic.SSBI.WebApi
                         builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
                     });
             });
-            services.AddScoped<AppDbContext>(_ => new AppDbContext(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped(_ => new AppDbContext(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<IUserResolver, UserResolver>();
             services.AddTransient<DbPersistenceManager<AppDbContext>>();
             services.AddTransient<MetadataService>();
             services.AddTransient<DataModelEntityService>();
             services.AddTransient<ReportingEntityService>();
             services.AddTransient<QueryService>();
             // Add framework services.
-            services.AddMvc().AddJsonOptions(opt => {
+            services.AddMvc().AddJsonOptions(opt =>
+            {
                 var ss = JsonSerializationFns.UpdateWithDefaults(opt.SerializerSettings);
                 var resolver = ss.ContractResolver;
                 if (resolver != null)
@@ -58,8 +62,8 @@ namespace Pentamic.SSBI.WebApi
                         res.NamingStrategy = null; // <<!-- this removes the camelcasing
                     }
                 }
-
-            }); ;
+            });
+            //services.AddAuthentication();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -69,6 +73,12 @@ namespace Pentamic.SSBI.WebApi
             loggerFactory.AddDebug();
             loggerFactory.AddFile("Logs/{Date}.txt");
             app.UseCors("AllowAll");
+            app.UseJwtBearerAuthentication(new JwtBearerOptions()
+            {
+                Authority = "http://pentamic.ddns.net:5000",
+                RequireHttpsMetadata = false,
+                Audience = "ssbi-api"
+            });
             app.UseMvc();
         }
     }

@@ -20,14 +20,18 @@ namespace Pentamic.SSBI.Services.Breeze
     {
         private readonly DbPersistenceManager<AppDbContext> _persistenceManager;
         private readonly MetadataService _metadataService;
+        private readonly IUserResolver _userResolver;
 
-        private string UserId { get; } = "";
-        private string UserName { get; } = "";
+        private string UserId => _userResolver.GetUserId();
+        private string UserName => _userResolver.GetUserName();
 
-        public DataModelEntityService(DbPersistenceManager<AppDbContext> persistenceManager, MetadataService metadataService)
+        public DataModelEntityService(DbPersistenceManager<AppDbContext> persistenceManager,
+            MetadataService metadataService,
+            IUserResolver userResolver)
         {
             _persistenceManager = persistenceManager;
             _metadataService = metadataService;
+            _userResolver = userResolver;
         }
 
         private AppDbContext Context => _persistenceManager.Context;
@@ -542,7 +546,7 @@ namespace Pentamic.SSBI.Services.Breeze
                     case EntityState.Deleted:
                         break;
                 }
-            }        
+            }
             if (info.Entity is IShareInfo)
             {
                 var entity = info.Entity as IShareInfo;
@@ -554,8 +558,6 @@ namespace Pentamic.SSBI.Services.Breeze
                         break;
                     case EntityState.Modified:
                         entity.SharedAt = DateTimeOffset.Now;
-                        break;
-                    default:
                         break;
                 }
             }

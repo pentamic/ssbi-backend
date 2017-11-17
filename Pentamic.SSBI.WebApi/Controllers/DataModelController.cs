@@ -2,6 +2,7 @@
 using System.Linq;
 using Breeze.AspNetCore;
 using Breeze.Persistence;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using Pentamic.SSBI.Entities;
@@ -11,6 +12,7 @@ namespace Pentamic.SSBI.WebApi.Controllers
 {
     [Route("breeze/[controller]/[action]")]
     [BreezeQueryFilter]
+    [Authorize]
     public class DataModelController : Controller
     {
         private readonly DataModelEntityService _dataModelEntityService;

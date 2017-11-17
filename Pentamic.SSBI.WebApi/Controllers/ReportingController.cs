@@ -14,6 +14,7 @@ namespace Pentamic.SSBI.WebApi.Controllers
 {
     [Route("breeze/[controller]/[action]")]
     [BreezeQueryFilter]
+    [Authorize]
     public class ReportingController : Controller
     {
         private readonly ReportingEntityService _reportingEntityService;

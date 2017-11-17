@@ -13,14 +13,15 @@ namespace Pentamic.SSBI.Services.Breeze
     public class ReportingEntityService
     {
         private readonly DbPersistenceManager<AppDbContext> _persistenceManager;
+        private readonly IUserResolver _userResolver;
 
-        private string UserId { get; }
+        private string UserId => _userResolver.GetUserId();
+        private string UserName => _userResolver.GetUserName();
 
-        private string UserName { get; }
-
-        public ReportingEntityService(DbPersistenceManager<AppDbContext> persistenceManager)
+        public ReportingEntityService(DbPersistenceManager<AppDbContext> persistenceManager, IUserResolver userResolver)
         {
             _persistenceManager = persistenceManager;
+            _userResolver = userResolver;
         }
 
         private AppDbContext Context => _persistenceManager.Context;
