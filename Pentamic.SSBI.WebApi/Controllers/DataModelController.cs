@@ -1,12 +1,17 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Breeze.AspNetCore;
 using Breeze.Persistence;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using Pentamic.SSBI.Entities;
 using Pentamic.SSBI.Services.Breeze;
+using Pentamic.SSBI.Services.SSAS.Metadata;
+using Pentamic.SSBI.Services.SSAS.Query;
 
 namespace Pentamic.SSBI.WebApi.Controllers
 {
@@ -16,10 +21,17 @@ namespace Pentamic.SSBI.WebApi.Controllers
     public class DataModelController : Controller
     {
         private readonly DataModelEntityService _dataModelEntityService;
+        private readonly MetadataService _metadataService;
+        private readonly QueryService _queryService;
+        private readonly IOptions<UploadSettings> _uploadSettings;
 
-        public DataModelController(DataModelEntityService dataModelEntityService)
+        public DataModelController(DataModelEntityService dataModelEntityService, MetadataService metadataService,
+            QueryService queryService, IOptions<UploadSettings> uploadSettings)
         {
             _dataModelEntityService = dataModelEntityService;
+            _metadataService = metadataService;
+            _queryService = queryService;
+            _uploadSettings = uploadSettings;
         }
 
         [HttpGet]
@@ -93,43 +105,45 @@ namespace Pentamic.SSBI.WebApi.Controllers
             return _dataModelEntityService.UserFavoriteModels;
         }
 
-
-        //[HttpPost]
-        //public IActionResult TableData(TableQueryModel queryModel)
-        //{
-        //    try
-        //    {
-        //        var res = _dataModelEntityService.GetTableData(queryModel);
-        //        return Ok(res);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        return BadRequest(e.Message);
-        //    }
-        //}
+        [HttpPost]
+        public IActionResult ModelMetadata([FromBody]ModelMetadataQueryModel model)
+        {
+            var result = _metadataService.GetModelMetadata(model.ModelId);
+            return Ok(result);
+        }
 
 
-        //[HttpPost]
-        //public async Task<IActionResult> Import()
-        //{
-        //    if (!Request.Content.IsMimeMultipartContent())
-        //    {
-        //        throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
-        //    }
-        //    var basePath = System.Configuration.ConfigurationManager.AppSettings["UploadBasePath"];
-        //    if (string.IsNullOrEmpty(basePath))
-        //    {
-        //        basePath = HttpContext.Current.Server.MapPath("~/Uploads");
-        //    }
-        //    if (!Directory.Exists(basePath))
-        //    {
-        //        Directory.CreateDirectory(basePath);
-        //    }
-        //    var provider = new MultipartFormDataStreamProvider(basePath);
-        //    await Request.Content.ReadAsMultipartAsync(provider);
-        //    var sourceFile = await _dataModelEntityService.HandleFileUpload(provider);
-        //    return Ok(sourceFile);
-        //}
+        [HttpPost]
+        public IActionResult TableData([FromBody]TableQueryModel queryModel)
+        {
+            try
+            {
+                var res = _queryService.GetTableData(queryModel);
+                return Ok(res);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Import()
+        {
+            var files = Request.Form.Files;
+            if (files.Count <= 0) return BadRequest("No files found");
+            var file = files[0];
+            var fileName = Path.GetFileName(file.FileName);
+            var storageFileName = Path.GetRandomFileName();
+            var baseUploadPath = _uploadSettings.Value.BaseUploadPath;
+            var filePath = Path.Combine(baseUploadPath, storageFileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            var sourceFile = await _dataModelEntityService.CreateSourceFile(fileName, storageFileName);
+            return Ok(sourceFile);
+        }
 
         //[HttpPost]
         //[Route("breeze/datamodel/deploy/{id}")]
@@ -147,38 +161,24 @@ namespace Pentamic.SSBI.WebApi.Controllers
         //    }
         //}
 
-        //[HttpPost]
-        //[Route("breeze/datamodel/{modelId}/refresh")]
-        //public async Task<IActionResult> RefreshModel(int modelId)
-        //{
-        //    try
-        //    {
-        //        _dataModelEntityService.RefreshModel(modelId);
-        //        return Ok();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Serilog.Log.Logger.Error(e, e.Message);
-        //        return BadRequest(e.Message);
-        //    }
-        //}
+        [HttpPost]
+        public IActionResult RefreshModel([FromBody]ModelRefreshModel model)
+        {
+            _metadataService.RefreshDatabase(model.ModelId.ToString());
+            return Ok();
+        }
 
-        //[HttpPost]
-        //[Route("breeze/datamodel/refreshtable/{tableId}")]
-        //public IActionResult RefreshTable(int tableId)
-        //{
-        //    try
-        //    {
-        //        _dataModelEntityService.RefreshTable(tableId);
-        //        return Ok();
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        Serilog.Log.Logger.Error(e, e.Message);
-        //        return BadRequest(e.Message);
-        //    }
-        //}
-
+        [HttpPost]
+        public IActionResult RefreshTable([FromBody]TableRefreshModel model)
+        {
+            var table = _dataModelEntityService.Tables.FirstOrDefault(x => x.Id == model.TableId);
+            if (table == null)
+            {
+                throw new ArgumentException("Table not found");
+            }
+            _metadataService.RefreshTable(table.ModelId.ToString(), table.Name);
+            return Ok();
+        }
 
         //[HttpPost]
         //[Route("breeze/datamodel/createdatetable")]
@@ -186,7 +186,7 @@ namespace Pentamic.SSBI.WebApi.Controllers
         //{
         //    try
         //    {
-        //        _dataModelEntityService.CreateDateTable(model);
+        //        _metadataService.CreateDateTable(model);
         //        return Ok();
         //    }
         //    catch (Exception e)
@@ -194,7 +194,6 @@ namespace Pentamic.SSBI.WebApi.Controllers
         //        Serilog.Log.Logger.Error(e, e.Message);
         //        return BadRequest(e.Message);
         //    }
-
         //}
 
         [HttpPost]

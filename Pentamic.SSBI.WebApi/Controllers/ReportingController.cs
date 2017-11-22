@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Breeze.AspNetCore;
 using Breeze.Persistence;
@@ -160,39 +159,17 @@ namespace Pentamic.SSBI.WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult Data(QueryModel queryModel)
+        public IActionResult Data([FromBody]QueryModel queryModel)
         {
             var result = _queryService.Query(queryModel);
             return Ok(result);
         }
 
         [HttpPost]
-        public IActionResult Data2(QueryModel2 queryModel)
+        public IActionResult Data2([FromBody]QueryModel2 queryModel)
         {
             var result = _queryService.QueryRowTile(new List<ReportTileRow>(), queryModel);
             return Ok(result);
-        }
-
-        [AllowAnonymous]
-        [HttpPost]
-        public IActionResult Query(QueryModel3 queryModel)
-        {
-            try
-            {
-                var result = _queryService.QueryCustom(queryModel);
-                return Ok(result);
-            }
-            catch (Exception e)
-            {
-                var message = e.Message;
-                Exception ie = e.InnerException;
-                while (ie != null)
-                {
-                    message += "-----" + ie.Message;
-                    ie = ie.InnerException;
-                }
-                return BadRequest(message);
-            }
         }
 
         [HttpPost]

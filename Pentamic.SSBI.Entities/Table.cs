@@ -12,6 +12,7 @@ namespace Pentamic.SSBI.Entities
         public string SourceTable { get; set; }
         public string SourceSchema { get; set; }
         public string DataCategory { get; set; }
+        public string Annotation { get; set; }
 
         public DateTimeOffset ProcessedAt { get; set; }
         public string ProcessedBy { get; set; }
@@ -22,7 +23,6 @@ namespace Pentamic.SSBI.Entities
         public List<Measure> Measures { get; set; }
         public List<Hierarchy> Hierarchies { get; set; }
         public Model Model { get; set; }
-
 
         public string CreatedBy { get; set; }
         public DateTimeOffset CreatedAt { get; set; }

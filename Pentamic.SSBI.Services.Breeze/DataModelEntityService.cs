@@ -6,11 +6,15 @@ using System.Data.OleDb;
 using System.IO;
 using System.Linq;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.IO.Compression;
+using System.Threading.Tasks;
 using Breeze.Persistence;
 using Newtonsoft.Json;
 using Pentamic.SSBI.Data;
 using Pentamic.SSBI.Entities;
+using Pentamic.SSBI.Services.SSAS.Dax;
+using Pentamic.SSBI.Services.SSAS.DaxHelper;
 using Pentamic.SSBI.Services.SSAS.Metadata;
 using EntityState = Breeze.Persistence.EntityState;
 
@@ -20,6 +24,8 @@ namespace Pentamic.SSBI.Services.Breeze
     {
         private readonly DbPersistenceManager<AppDbContext> _persistenceManager;
         private readonly MetadataService _metadataService;
+        private readonly DaxExpressionGenerator _daxExpressionGenerator;
+
         private readonly IUserResolver _userResolver;
 
         private string UserId => _userResolver.GetUserId();
@@ -27,11 +33,12 @@ namespace Pentamic.SSBI.Services.Breeze
 
         public DataModelEntityService(DbPersistenceManager<AppDbContext> persistenceManager,
             MetadataService metadataService,
-            IUserResolver userResolver)
+            IUserResolver userResolver, DaxExpressionGenerator daxExpressionGenerator)
         {
             _persistenceManager = persistenceManager;
             _metadataService = metadataService;
             _userResolver = userResolver;
+            _daxExpressionGenerator = daxExpressionGenerator;
         }
 
         private AppDbContext Context => _persistenceManager.Context;
@@ -90,18 +97,17 @@ namespace Pentamic.SSBI.Services.Breeze
         //    return dataSource;
         //}
 
-        //public async Task<SourceFile> HandleFileUpload(MultipartFormDataStreamProvider provider)
-        //{
-        //    var file = provider.FileData[0];
-        //    var sourceFile = new SourceFile
-        //    {
-        //        FileName = file.Headers.ContentDisposition.FileName.Replace("\"", ""),
-        //        FilePath = Path.GetFileName(file.LocalFileName)
-        //    };
-        //    Context.SourceFiles.Add(sourceFile);
-        //    await Context.SaveChangesAsync();
-        //    return sourceFile;
-        //}
+        public async Task<SourceFile> CreateSourceFile(string fileName, string filePath)
+        {
+            var sourceFile = new SourceFile
+            {
+                FileName = fileName,
+                FilePath = filePath,
+            };
+            Context.SourceFiles.Add(sourceFile);
+            await Context.SaveChangesAsync();
+            return sourceFile;
+        }
 
         //public Model ImportModel(MultipartFormDataStreamProvider provider)
         //{
@@ -571,7 +577,6 @@ namespace Pentamic.SSBI.Services.Breeze
             }
             return true;
         }
-
         protected Dictionary<Type, List<EntityInfo>> BeforeSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap)
         {
             List<EntityInfo> eis;
@@ -651,6 +656,32 @@ namespace Pentamic.SSBI.Services.Breeze
                         throw new Exception("Table name exist");
                     }
                 }
+                foreach (var ei in eis)
+                {
+                    if (ei.EntityState == EntityState.Added)
+                    {
+                        var e = ei.Entity as Table;
+                        if (e.DataCategory == "Time")
+                        {
+                            var annotations = e.Annotation.Split(':');
+                            var fromDate = DateTime.ParseExact(annotations[0], "yyyyMMdd", CultureInfo.InvariantCulture);
+                            var toDate = DateTime.ParseExact(annotations[0], "yyyyMMdd", CultureInfo.InvariantCulture);
+                            var partition = new Partition
+                            {
+                                Name = "Administrator",
+                                TableId = e.Id,
+                                SourceType = PartitionSourceType.Calculated,
+                                Expression = _daxExpressionGenerator.CreateDateTableExpression(fromDate, toDate)
+                            };
+                            var partitionEntity = _persistenceManager.CreateEntityInfo(partition);
+                            if (!saveMap.TryGetValue(typeof(Partition), out var partitions))
+                            {
+                                partitions = new List<EntityInfo>();
+                                saveMap.Add(typeof(Partition), partitions);
+                            }
+                        }
+                    }
+                }
             }
             if (saveMap.TryGetValue(typeof(Column), out eis))
             {
@@ -703,7 +734,6 @@ namespace Pentamic.SSBI.Services.Breeze
 
             return saveMap;
         }
-
         protected void AfterSaveEntities(Dictionary<Type, List<EntityInfo>> saveMap, List<KeyMapping> keyMappings)
         {
             List<EntityInfo> eis;
@@ -716,7 +746,7 @@ namespace Pentamic.SSBI.Services.Breeze
                     {
                         if (!string.IsNullOrEmpty(e.GenerateFromTemplate))
                         {
-                            //GenerateModelFromDatabase(e);
+                            //_metadataService.GenerateModelFromDatabase(e);
                         }
                         else if (e.CloneFromModelId != null)
                         {
@@ -724,12 +754,12 @@ namespace Pentamic.SSBI.Services.Breeze
                         }
                         else
                         {
-                            //CreateModel(e);
+                            _metadataService.CreateModel(e);
                         }
                     }
                     if (ei.EntityState == EntityState.Modified)
                     {
-                        //UpdateModel(e);
+                        _metadataService.UpdateModel(e);
                         if (ei.OriginalValuesMap.ContainsKey("RefreshSchedule"))
                         {
                             if (string.IsNullOrEmpty(e.RefreshSchedule))
@@ -760,7 +790,7 @@ namespace Pentamic.SSBI.Services.Breeze
                     }
                     if (ei.EntityState == EntityState.Deleted)
                     {
-                        //DeleteModel(e);
+                        _metadataService.DeleteModel(e);
                         if (!string.IsNullOrEmpty(e.RefreshJobId))
                         {
                             //RecurringJob.RemoveIfExists(e.RefreshJobId);
@@ -775,15 +805,23 @@ namespace Pentamic.SSBI.Services.Breeze
                     var e = ei.Entity as DataSource;
                     if (ei.EntityState == EntityState.Added)
                     {
-                        //CreateDataSource(e);
+                        if (e.SourceFileId != null && e.SourceFile == null)
+                        {
+                            Context.Entry(e).Reference(x => x.SourceFile).Load();
+                        }
+                        _metadataService.CreateDataSource(e, "");
                     }
                     if (ei.EntityState == EntityState.Modified)
                     {
-                        //UpdateDataSource(e);
+                        if (e.SourceFileId != null && e.SourceFile == null)
+                        {
+                            Context.Entry(e).Reference(x => x.SourceFile).Load();
+                        }
+                        _metadataService.UpdateDataSource(e);
                     }
                     if (ei.EntityState == EntityState.Deleted)
                     {
-                        //DeleteDataSource(e);
+                        _metadataService.DeleteDataSource(e);
                     }
                 }
             }
@@ -798,7 +836,7 @@ namespace Pentamic.SSBI.Services.Breeze
                     });
                 foreach (var group in newTables)
                 {
-                    //CreateTables(group.ModelId, group.Tables);
+                    _metadataService.CreateTables(group.ModelId, group.Tables);
                 }
                 foreach (var ei in eis)
                 {
@@ -807,13 +845,13 @@ namespace Pentamic.SSBI.Services.Breeze
                     {
                         if (ei.OriginalValuesMap.ContainsKey("Name"))
                         {
-                            //RenameTable(e, ei.OriginalValuesMap["Name"].ToString());
+                            _metadataService.RenameTable(e.ModelId.ToString(), ei.OriginalValuesMap["Name"].ToString(), e.Name);
                         }
-                        //UpdateTable(e);
+                        _metadataService.UpdateTable(e);
                     }
                     if (ei.EntityState == EntityState.Deleted)
                     {
-                        //DeleteTable(e);
+                        _metadataService.DeleteTable(e);
                     }
                 }
             }
@@ -824,15 +862,15 @@ namespace Pentamic.SSBI.Services.Breeze
                     var e = ei.Entity as Relationship;
                     if (ei.EntityState == EntityState.Added)
                     {
-                        //CreateRelationship(e);
+                        _metadataService.CreateRelationship(e.ModelId.ToString(), e);
                     }
                     if (ei.EntityState == EntityState.Modified)
                     {
-                        //UpdateRelationship(e);
+                        _metadataService.UpdateRelationship(e.ModelId.ToString(), e);
                     }
                     if (ei.EntityState == EntityState.Deleted)
                     {
-                        //DeleteRelationship(e);
+                        _metadataService.DeleteRelationship(e.ModelId.ToString(), e);
                     }
                 }
             }
@@ -841,21 +879,27 @@ namespace Pentamic.SSBI.Services.Breeze
                 foreach (var ei in eis)
                 {
                     var e = ei.Entity as Column;
+                    var info = Context.Tables.Where(x => x.Id == e.TableId).Select(x => new
+                    {
+                        x.Name,
+                        x.ModelId
+                    }).FirstOrDefault();
                     if (ei.EntityState == EntityState.Added)
                     {
-                        //CreateColumn(e);
+                        _metadataService.CreateColumn(info?.ModelId.ToString(), info?.Name, e);
                     }
                     if (ei.EntityState == EntityState.Modified)
                     {
+
                         if (ei.OriginalValuesMap.ContainsKey("Name"))
                         {
-                            //RenameColumn(e, ei.OriginalValuesMap["Name"].ToString());
+                            _metadataService.RenameColumn(info?.ModelId.ToString(), info?.Name, ei.OriginalValuesMap["Name"].ToString(), e.Name);
                         }
-                        //UpdateColumn(e);
+                        _metadataService.UpdateColumn(info?.ModelId.ToString(), info?.Name, e);
                     }
                     if (ei.EntityState == EntityState.Deleted)
                     {
-                        //DeleteColumn(e);
+                        _metadataService.DeleteColumn(info?.ModelId.ToString(), info?.Name, e);
                     }
                 }
             }
@@ -864,9 +908,14 @@ namespace Pentamic.SSBI.Services.Breeze
                 foreach (var ei in eis)
                 {
                     var e = ei.Entity as Partition;
+                    var info = Context.Tables.Where(x => x.Id == e.TableId).Select(x => new
+                    {
+                        x.Name,
+                        x.ModelId
+                    }).FirstOrDefault();
                     if (ei.EntityState == EntityState.Modified)
                     {
-                        //UpdatePartition(e);
+                        _metadataService.UpdatePartition(info?.ModelId.ToString(), info?.Name, e);
                     }
                 }
             }
@@ -875,21 +924,26 @@ namespace Pentamic.SSBI.Services.Breeze
                 foreach (var ei in eis)
                 {
                     var e = ei.Entity as Measure;
+                    var info = Context.Tables.Where(x => x.Id == e.TableId).Select(x => new
+                    {
+                        x.Name,
+                        x.ModelId
+                    }).FirstOrDefault();
                     if (ei.EntityState == EntityState.Added)
                     {
-                        //CreateMeasure(e);
+                        _metadataService.CreateMeasure(info?.ModelId.ToString(), info?.Name, e);
                     }
                     if (ei.EntityState == EntityState.Modified)
                     {
                         if (ei.OriginalValuesMap.ContainsKey("Name"))
                         {
-                            //RenameMeasure(e, ei.OriginalValuesMap["Name"].ToString());
+                            _metadataService.RenameMeasure(info?.ModelId.ToString(), info?.Name, ei.OriginalValuesMap["Name"].ToString(), e.Name);
                         }
-                        //UpdateMeasure(e);
+                        _metadataService.UpdateMeasure(info?.ModelId.ToString(), info?.Name, e);
                     }
                     if (ei.EntityState == EntityState.Deleted)
                     {
-                        //DeleteMeasure(e);
+                        _metadataService.DeleteMeasure(info?.ModelId.ToString(), info?.Name, e);
                     }
                 }
             }
@@ -900,15 +954,15 @@ namespace Pentamic.SSBI.Services.Breeze
                     var e = ei.Entity as ModelRole;
                     if (ei.EntityState == EntityState.Added)
                     {
-                        //CreateRole(e);
+                        _metadataService.CreateRole(e.ModelId.ToString(), e);
                     }
                     if (ei.EntityState == EntityState.Modified)
                     {
-                        //UpdateRole(e);
+                        _metadataService.UpdateRole(e.ModelId.ToString(), e);
                     }
                     if (ei.EntityState == EntityState.Deleted)
                     {
-                        //DeleteRole(e);
+                        _metadataService.DeleteRole(e.ModelId.ToString(), e);
                     }
                 }
             }
@@ -917,17 +971,24 @@ namespace Pentamic.SSBI.Services.Breeze
                 foreach (var ei in eis)
                 {
                     var e = ei.Entity as ModelRoleTablePermission;
+                    var info = Context.RoleTablePermissions.Where(x => x.RoleId == e.RoleId && x.TableId == e.TableId)
+                        .Select(x => new
+                        {
+                            RoleName = x.Role.Name,
+                            TableName = x.Table.Name,
+                            x.Role.ModelId
+                        }).FirstOrDefault();
                     if (ei.EntityState == EntityState.Added)
                     {
-                        //CreateRoleTablePermission(e);
+                        _metadataService.CreateRoleTablePermission(info.ModelId.ToString(), info.RoleName, info.TableName, e);
                     }
                     if (ei.EntityState == EntityState.Modified)
                     {
-                        //UpdateRoleTablePermission(e);
+                        _metadataService.UpdateRoleTablePermission(info.ModelId.ToString(), info.RoleName, info.TableName, e);
                     }
                     if (ei.EntityState == EntityState.Deleted)
                     {
-                        //DeleteRoleTablePermission(e);
+                        _metadataService.DeleteRoleTablePermission(info.ModelId.ToString(), info.RoleName, e);
                     }
                 }
             }
@@ -948,63 +1009,14 @@ namespace Pentamic.SSBI.Services.Breeze
                     });
                 foreach (var group in newTables)
                 {
-                    //CreateTables(group.ModelId, group.Tables);
+                    var calTables = _metadataService.CreateTables(group.ModelId, group.Tables);
+                    foreach (var calTable in calTables)
+                    {
+                        Context.Columns.AddRange(calTable.Columns);
+                    }
+                    Context.SaveChanges();
                 }
             }
-        }
-
-        public string GetDataSourceConnectionString(DataSource ds)
-        {
-            string cs;
-            switch (ds.Type)
-            {
-                case DataSourceType.SqlServer:
-                    if (ds.IntegratedSecurity)
-                    {
-                        cs = $"Provider=SQLNCLI11;Data Source={ds.Source};Initial Catalog={ds.Catalog};Integrated Security=SSPI;Persist Security Info=false";
-                    }
-                    else
-                    {
-                        cs = $"Provider=SQLNCLI11;Data Source={ds.Source};Initial Catalog={ds.Catalog};User ID={ds.User};Password={ds.Password};Persist Security Info=true";
-                    }
-                    break;
-                case DataSourceType.Excel:
-                    if (ds.SourceFileId != null && ds.SourceFile == null)
-                    {
-                        ds.SourceFile = Context.SourceFiles.Find(ds.SourceFileId);
-                    }
-                    var basePath = "";
-                    var builder = new OleDbConnectionStringBuilder()
-                    {
-                        Provider = "Microsoft.ACE.OLEDB.12.0",
-                        DataSource = Path.Combine(basePath, ds.SourceFile.FilePath),
-                        PersistSecurityInfo = false
-                    };
-                    builder["Mode"] = "Read";
-                    var extension = Path.GetExtension(ds.SourceFile.FileName).ToUpper();
-                    switch (extension)
-                    {
-                        case ".XLS":
-                            builder["Extended Properties"] = "Excel 8.0;HDR=Yes";
-                            break;
-                        case ".XLSB":
-                            builder["Extended Properties"] = "Excel 12.0;HDR=Yes";
-                            break;
-                        case ".XLSX":
-                            builder["Extended Properties"] = "Excel 12.0 Xml;HDR=Yes";
-                            break;
-                        case ".XLSM":
-                            builder["Extended Properties"] = "Excel 12.0 Macro;HDR=Yes";
-                            break;
-                        default:
-                            builder["Extended Properties"] = "Excel 12.0;HDR=Yes";
-                            break;
-                    }
-                    cs = builder.ToString();
-                    break;
-                default: return null;
-            }
-            return cs;
         }
 
         public bool CheckDataSourceNamesExist(int modelId, List<string> names)

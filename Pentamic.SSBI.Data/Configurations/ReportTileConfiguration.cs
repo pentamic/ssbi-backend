@@ -9,7 +9,7 @@ namespace Pentamic.SSBI.Data.Configurations
         public ReportTileConfiguration()
         {
             HasRequired(x => x.ReportPage).WithMany(x => x.ReportTiles);
-            HasRequired(x => x.DisplayType);
+            HasOptional(x => x.DisplayType);
         }
         //public int Id { get; set; }
         //public int ReportPageId { get; set; }

@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Pentamic.SSBI.Services.SSAS.Metadata
 {
-    public class ModelResult
+    public class MeasureMetadataResult
     {
         public string Name { get; set; }
-        public List<TableResult> Tables { get; set; }
     }
 }

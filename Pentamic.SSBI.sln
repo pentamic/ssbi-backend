@@ -16,7 +16,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pentamic.SSBI.Services.SSAS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pentamic.SSBI.Services.Breeze", "Pentamic.SSBI.Services.Breeze\Pentamic.SSBI.Services.Breeze.csproj", "{A254D3B0-7E9D-425B-839B-0474A75EDBE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pentamic.SSBI.WebApi", "Pentamic.SSBI.WebApi\Pentamic.SSBI.WebApi.csproj", "{E304B681-5E00-46E5-9F34-D16ACDFAD3A4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pentamic.SSBI.WebApi", "Pentamic.SSBI.WebApi\Pentamic.SSBI.WebApi.csproj", "{E304B681-5E00-46E5-9F34-D16ACDFAD3A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pentamic.SSBI.Services.Common", "Pentamic.SSBI.Services.Common\Pentamic.SSBI.Services.Common.csproj", "{CCF5AE91-B8D4-4790-AB27-9D783C357204}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pentamic.SSBI.Services.SSAS.Dax", "Pentamic.SSBI.Services.SSAS.DaxHelper\Pentamic.SSBI.Services.SSAS.Dax.csproj", "{B876FB80-6C3C-4D02-ACE9-1D8CD4D83A36}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,6 +60,14 @@ Global
 		{E304B681-5E00-46E5-9F34-D16ACDFAD3A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E304B681-5E00-46E5-9F34-D16ACDFAD3A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E304B681-5E00-46E5-9F34-D16ACDFAD3A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCF5AE91-B8D4-4790-AB27-9D783C357204}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCF5AE91-B8D4-4790-AB27-9D783C357204}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCF5AE91-B8D4-4790-AB27-9D783C357204}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCF5AE91-B8D4-4790-AB27-9D783C357204}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B876FB80-6C3C-4D02-ACE9-1D8CD4D83A36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B876FB80-6C3C-4D02-ACE9-1D8CD4D83A36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B876FB80-6C3C-4D02-ACE9-1D8CD4D83A36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B876FB80-6C3C-4D02-ACE9-1D8CD4D83A36}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

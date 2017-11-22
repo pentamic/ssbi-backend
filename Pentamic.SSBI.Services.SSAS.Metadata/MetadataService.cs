@@ -1,195 +1,264 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json.Linq;
 using AS = Microsoft.AnalysisServices.Tabular;
 using AN = Microsoft.AnalysisServices;
 using Pentamic.SSBI.Entities;
+using Pentamic.SSBI.Services.Common;
 
 namespace Pentamic.SSBI.Services.SSAS.Metadata
 {
     public class MetadataService
     {
-        private readonly string _asConnectionString = "";
+        private readonly string _connectionString;
+        private readonly DataSourceHelper _dataSourceHelper;
 
-        //public JArray GetModelMetadata(int modelId)
-        //{
-        //    using (var server = new AS.Server())
-        //    {
-        //        server.Connect(_asConnectionString);
-        //        var db = server.Databases.FindByName(modelId.ToString());
-        //        if (db == null)
-        //        {
-        //            throw new Exception("Database not found");
-        //        }
-        //        if (string.IsNullOrEmpty(perspective))
-        //        {
-        //            var tables = new JArray();
-        //            foreach (var tb in db.Model.Tables)
-        //            {
-        //                if (tb.IsHidden) continue;
-        //                var table = new JObject
-        //                {
-        //                    ["name"] = tb.Name
-        //                };
-        //                var fields = new JArray();
-        //                foreach (var co in tb.Columns)
-        //                {
-        //                    if (co.IsHidden) continue;
-        //                    var field = new JObject
-        //                    {
-        //                        ["tableName"] = tb.Name,
-        //                        ["name"] = co.Name,
-        //                        ["dataType"] = (int)co.DataType,
-        //                        ["displayFolder"] = co.DisplayFolder
-        //                    };
-        //                    fields.Add(field);
-        //                }
-        //                foreach (var me in tb.Measures)
-        //                {
-        //                    if (me.IsHidden) continue;
-        //                    var field = new JObject
-        //                    {
-        //                        ["tableName"] = tb.Name,
-        //                        ["name"] = me.Name,
-        //                        ["dataType"] = (int)me.DataType,
-        //                        ["displayFolder"] = me.DisplayFolder,
-        //                        ["isMeasure"] = true
-        //                    };
-        //                    fields.Add(field);
-        //                }
-        //                foreach (var hi in tb.Hierarchies)
-        //                {
-        //                    if (hi.IsHidden) continue;
-        //                    var field = new JObject
-        //                    {
-        //                        ["tableName"] = tb.Name,
-        //                        ["name"] = hi.Name,
-        //                        ["displayFolder"] = hi.DisplayFolder,
-        //                        ["isHierarchy"] = true
-        //                    };
-        //                    var levels = new JArray();
-        //                    foreach (var le in hi.Levels)
-        //                    {
-        //                        var level = new JObject
-        //                        {
-        //                            ["name"] = le.Name,
-        //                            ["ordinal"] = le.Ordinal
-        //                        };
-        //                        levels.Add(level);
-        //                    }
-        //                    field["levels"] = levels;
-        //                    fields.Add(field);
-        //                }
-        //                table["fields"] = fields;
-        //                tables.Add(table);
-        //            }
-        //            return tables;
-        //        }
-        //        else
-        //        {
-        //            var per = db.Model.Perspectives.Find(perspective);
-        //            var tables = new JArray();
-        //            foreach (var tb in per.PerspectiveTables)
-        //            {
-        //                if (tb.Table.IsHidden) continue;
-        //                var table = new JObject
-        //                {
-        //                    ["name"] = tb.Name
-        //                };
-        //                var fields = new JArray();
-        //                foreach (var co in tb.PerspectiveColumns)
-        //                {
-        //                    if (co.Column.IsHidden) continue;
-        //                    var field = new JObject
-        //                    {
-        //                        ["tableName"] = tb.Name,
-        //                        ["name"] = co.Name,
-        //                        ["dataType"] = (int)co.Column.DataType,
-        //                        ["displayFolder"] = co.Column.DisplayFolder
-        //                    };
-        //                    fields.Add(field);
-        //                }
-        //                foreach (var me in tb.PerspectiveMeasures)
-        //                {
-        //                    if (me.Measure.IsHidden) continue;
-        //                    var field = new JObject
-        //                    {
-        //                        ["tableName"] = tb.Name,
-        //                        ["name"] = me.Name,
-        //                        ["dataType"] = (int)me.Measure.DataType,
-        //                        ["displayFolder"] = me.Measure.DisplayFolder,
-        //                        ["isMeasure"] = true
-        //                    };
-        //                    fields.Add(field);
-        //                }
-        //                foreach (var hi in tb.PerspectiveHierarchies)
-        //                {
-        //                    if (hi.Hierarchy.IsHidden) continue;
-        //                    var field = new JObject
-        //                    {
-        //                        ["tableName"] = tb.Name,
-        //                        ["name"] = hi.Name,
-        //                        ["displayFolder"] = hi.Hierarchy.DisplayFolder,
-        //                        ["isHierarchy"] = true
-        //                    };
-        //                    var levels = new JArray();
-        //                    foreach (var le in hi.Hierarchy.Levels)
-        //                    {
-        //                        var level = new JObject
-        //                        {
-        //                            ["name"] = le.Name,
-        //                            ["ordinal"] = le.Ordinal
-        //                        };
-        //                        levels.Add(level);
-        //                    }
-        //                    field["levels"] = levels;
-        //                    fields.Add(field);
-        //                }
-        //                table["fields"] = fields;
-        //                tables.Add(table);
-        //            }
-        //            return tables;
-        //        }
-        //    }
-        //}
+        public MetadataService(string connectionString, DataSourceHelper dataSourceHelper)
+        {
+            _connectionString = connectionString;
+            _dataSourceHelper = dataSourceHelper;
+        }
 
-        public ModelResult GetModelMetadata(int modelId)
+        public List<TableMetadataResult> GetModelMetadata(int modelId)
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
-                var database = server.Databases.FindByName(modelId.ToString());
-                if (database == null)
+                server.Connect(_connectionString);
+                var db = server.Databases.FindByName(modelId.ToString());
+                if (db == null)
                 {
                     throw new Exception("Database not found");
                 }
-                var result = new ModelResult
+                var tables = new List<TableMetadataResult>();
+                foreach (var tb in db.Model.Tables)
                 {
-                    Name = database.Model.Name,
-                    Tables = database.Model.Tables.Where(x => !x.IsHidden).Select(table => new TableResult
+                    if (tb.IsHidden) continue;
+                    var table = new TableMetadataResult
                     {
-                        Name = table.Name,
-                        Columns = table.Columns.Select(column => new ColumnResult
+                        Name = tb.Name
+                    };
+                    var fields = new List<ColumnMetadataResult>();
+                    foreach (var co in tb.Columns)
+                    {
+                        if (co.IsHidden) continue;
+                        var field = new ColumnMetadataResult()
                         {
-                            Name = column.Name,
-                            DataType = (int)column.DataType
-                        }).ToList(),
-                        Measures = table.Measures.Select(measure => new MeasureResult
+                            TableName = tb.Name,
+                            Name = co.Name,
+                            DataType = (int)co.DataType,
+                            DisplayFolder = co.DisplayFolder,
+                            IsMeasure = false
+                        };
+                        fields.Add(field);
+                    }
+                    foreach (var me in tb.Measures)
+                    {
+                        if (me.IsHidden) continue;
+                        var field = new ColumnMetadataResult
                         {
-                            Name = measure.Name
-                        }).ToList()
-                    }).ToList()
-                };
-                return result;
+                            TableName = tb.Name,
+                            Name = me.Name,
+                            DataType = (int)me.DataType,
+                            DisplayFolder = me.DisplayFolder,
+                            IsMeasure = true
+                        };
+                        fields.Add(field);
+                    }
+                    //foreach (var hi in tb.Hierarchies)
+                    //{
+                    //    if (hi.IsHidden) continue;
+                    //    var field = new ColumnMetadataResult
+                    //    {
+                    //        TableName = tb.Name,
+                    //        Name = hi.Name,
+                    //        DisplayFolder = hi.DisplayFolder,
+                    //        IsHierarchy = true
+                    //    };
+                    //    var levels = new JArray();
+                    //    foreach (var le in hi.Levels)
+                    //    {
+                    //        var level = new JObject
+                    //        {
+                    //            ["name"] = le.Name,
+                    //            ["ordinal"] = le.Ordinal
+                    //        };
+                    //        levels.Add(level);
+                    //    }
+                    //    field["levels"] = levels;
+                    //    fields.Add(field);
+                    //}
+                    table.Fields = fields;
+                    tables.Add(table);
+                }
+                return tables;
+                //if (string.IsNullOrEmpty(perspective))
+                //{
+                //    var tables = new List<TableMetadataResult>();
+                //    foreach (var tb in db.Model.Tables)
+                //    {
+                //        if (tb.IsHidden) continue;
+                //        var table = new TableMetadataResult
+                //        {
+                //            Name = tb.Name
+                //        };
+                //        var fields = new List<ColumnMetadataResult>();
+                //        foreach (var co in tb.Columns)
+                //        {
+                //            if (co.IsHidden) continue;
+                //            var field = new ColumnMetadataResult()
+                //            {
+                //                TableName = tb.Name,
+                //                Name = co.Name,
+                //                DataType = (int)co.DataType,
+                //                DisplayFolder = co.DisplayFolder,
+                //                IsMeasure = false
+                //            };
+                //            fields.Add(field);
+                //        }
+                //        foreach (var me in tb.Measures)
+                //        {
+                //            if (me.IsHidden) continue;
+                //            var field = new ColumnMetadataResult
+                //            {
+                //                TableName = tb.Name,
+                //                Name = me.Name,
+                //                DataType = (int)me.DataType,
+                //                DisplayFolder = me.DisplayFolder,
+                //                IsMeasure = true
+                //            };
+                //            fields.Add(field);
+                //        }
+                //        //foreach (var hi in tb.Hierarchies)
+                //        //{
+                //        //    if (hi.IsHidden) continue;
+                //        //    var field = new ColumnMetadataResult
+                //        //    {
+                //        //        TableName = tb.Name,
+                //        //        Name = hi.Name,
+                //        //        DisplayFolder = hi.DisplayFolder,
+                //        //        IsHierarchy = true
+                //        //    };
+                //        //    var levels = new JArray();
+                //        //    foreach (var le in hi.Levels)
+                //        //    {
+                //        //        var level = new JObject
+                //        //        {
+                //        //            ["name"] = le.Name,
+                //        //            ["ordinal"] = le.Ordinal
+                //        //        };
+                //        //        levels.Add(level);
+                //        //    }
+                //        //    field["levels"] = levels;
+                //        //    fields.Add(field);
+                //        //}
+                //        table.Fields = fields;
+                //        tables.Add(table);
+                //    }
+                //    return tables;
+                //}
+                //else
+                //{
+                //    var per = db.Model.Perspectives.Find(perspective);
+                //    var tables = new JArray();
+                //    foreach (var tb in per.PerspectiveTables)
+                //    {
+                //        if (tb.Table.IsHidden) continue;
+                //        var table = new JObject
+                //        {
+                //            ["name"] = tb.Name
+                //        };
+                //        var fields = new JArray();
+                //        foreach (var co in tb.PerspectiveColumns)
+                //        {
+                //            if (co.Column.IsHidden) continue;
+                //            var field = new JObject
+                //            {
+                //                ["tableName"] = tb.Name,
+                //                ["name"] = co.Name,
+                //                ["dataType"] = (int)co.Column.DataType,
+                //                ["displayFolder"] = co.Column.DisplayFolder
+                //            };
+                //            fields.Add(field);
+                //        }
+                //        foreach (var me in tb.PerspectiveMeasures)
+                //        {
+                //            if (me.Measure.IsHidden) continue;
+                //            var field = new JObject
+                //            {
+                //                ["tableName"] = tb.Name,
+                //                ["name"] = me.Name,
+                //                ["dataType"] = (int)me.Measure.DataType,
+                //                ["displayFolder"] = me.Measure.DisplayFolder,
+                //                ["isMeasure"] = true
+                //            };
+                //            fields.Add(field);
+                //        }
+                //        foreach (var hi in tb.PerspectiveHierarchies)
+                //        {
+                //            if (hi.Hierarchy.IsHidden) continue;
+                //            var field = new JObject
+                //            {
+                //                ["tableName"] = tb.Name,
+                //                ["name"] = hi.Name,
+                //                ["displayFolder"] = hi.Hierarchy.DisplayFolder,
+                //                ["isHierarchy"] = true
+                //            };
+                //            var levels = new JArray();
+                //            foreach (var le in hi.Hierarchy.Levels)
+                //            {
+                //                var level = new JObject
+                //                {
+                //                    ["name"] = le.Name,
+                //                    ["ordinal"] = le.Ordinal
+                //                };
+                //                levels.Add(level);
+                //            }
+                //            field["levels"] = levels;
+                //            fields.Add(field);
+                //        }
+                //        table["fields"] = fields;
+                //        tables.Add(table);
+                //    }
+                //    return tables;
+                //}
             }
         }
+
+        //public ModelResult GetModelMetadata(int modelId)
+        //{
+        //    using (var server = new AS.Server())
+        //    {
+        //        server.Connect(_connectionString);
+        //        var database = server.Databases.FindByName(modelId.ToString());
+        //        if (database == null)
+        //        {
+        //            throw new Exception("Database not found");
+        //        }
+        //        var result = new ModelResult
+        //        {
+        //            Name = database.Model.Name,
+        //            Tables = database.Model.Tables.Where(x => !x.IsHidden).Select(table => new TableResult
+        //            {
+        //                Name = table.Name,
+        //                Columns = table.Columns.Select(column => new ColumnResult
+        //                {
+        //                    Name = column.Name,
+        //                    DataType = (int)column.DataType
+        //                }).ToList(),
+        //                Measures = table.Measures.Select(measure => new MeasureResult
+        //                {
+        //                    Name = measure.Name
+        //                }).ToList()
+        //            }).ToList()
+        //        };
+        //        return result;
+        //    }
+        //}
 
         public void RefreshDatabase(string databaseName)
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -204,7 +273,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -224,7 +293,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -537,7 +606,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -557,7 +626,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -582,7 +651,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -610,7 +679,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = new AS.Database
                 {
                     Name = modelInfo.Id.ToString(),
@@ -633,7 +702,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(modelInfo.Id.ToString());
                 if (database == null)
                 {
@@ -649,7 +718,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(modelInfo.Id.ToString());
                 database?.Drop();
             }
@@ -661,7 +730,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(dataSourceInfo.ModelId.ToString());
                 if (database == null)
                 {
@@ -671,7 +740,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
                 {
                     Name = dataSourceInfo.Id.ToString(),
                     Description = dataSourceInfo.Description,
-                    ConnectionString = dataSourceInfo.ConnectionString,
+                    ConnectionString = _dataSourceHelper.GetDataSourceConnectionString(dataSourceInfo),
                     ImpersonationMode = AS.ImpersonationMode.ImpersonateServiceAccount
                 });
                 database.Update(AN.UpdateOptions.ExpandFull);
@@ -684,7 +753,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
             {
                 Name = dataSourceInfo.Id.ToString(),
                 Description = dataSourceInfo.Description,
-                ConnectionString = dataSourceInfo.ConnectionString,
+                ConnectionString = _dataSourceHelper.GetDataSourceConnectionString(dataSourceInfo),
                 ImpersonationMode = AS.ImpersonationMode.ImpersonateServiceAccount
             });
         }
@@ -693,7 +762,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(dataSourceInfo.ModelId.ToString());
                 if (database == null)
                 {
@@ -705,7 +774,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
                 }
                 ds.Description = dataSourceInfo.Description;
                 ds.ImpersonationMode = AS.ImpersonationMode.ImpersonateServiceAccount;
-                ds.ConnectionString = dataSourceInfo.ConnectionString;
+                ds.ConnectionString = _dataSourceHelper.GetDataSourceConnectionString(dataSourceInfo);
                 database.Update(AN.UpdateOptions.ExpandFull);
             }
         }
@@ -714,7 +783,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(dataSource.ModelId.ToString());
                 if (database == null)
                 {
@@ -735,7 +804,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -842,30 +911,31 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
 
         }
 
-        public void CreateTables(int modelId, List<Table> tables)
+        public List<Table> CreateTables(int modelId, List<Table> tablesInfo)
         {
+            var calculatedTables = new List<Table>();
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(modelId.ToString());
                 if (database == null)
                 {
                     throw new ArgumentException("Database not found");
                 }
-                foreach (var table in tables)
+                foreach (var tableInfo in tablesInfo)
                 {
-                    var tb = new AS.Table
+                    var table = new AS.Table
                     {
-                        Name = table.Name,
-                        Description = table.Description
+                        Name = tableInfo.Name,
+                        Description = tableInfo.Description
                     };
-                    if (table.Columns != null)
+                    if (tableInfo.Columns != null)
                     {
-                        foreach (var col in table.Columns)
+                        foreach (var col in tableInfo.Columns)
                         {
                             if (col.ColumnType == ColumnType.Data)
                             {
-                                tb.Columns.Add(new AS.DataColumn
+                                table.Columns.Add(new AS.DataColumn
                                 {
                                     Name = col.Name,
                                     DataType = col.DataType.ToDataType(),
@@ -877,7 +947,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
                             }
                             if (col.ColumnType == ColumnType.Calculated)
                             {
-                                tb.Columns.Add(new AS.CalculatedColumn
+                                table.Columns.Add(new AS.CalculatedColumn
                                 {
                                     Name = col.Name,
                                     DataType = col.DataType.ToDataType(),
@@ -889,9 +959,9 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
                             }
                         }
                     }
-                    if (table.Partitions != null)
+                    if (tableInfo.Partitions != null)
                     {
-                        foreach (var par in table.Partitions)
+                        foreach (var par in tableInfo.Partitions)
                         {
                             if (par.SourceType == PartitionSourceType.Query)
                             {
@@ -900,7 +970,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
                                 {
                                     throw new Exception("Data source not found");
                                 }
-                                tb.Partitions.Add(new AS.Partition
+                                table.Partitions.Add(new AS.Partition
                                 {
                                     Name = par.Id.ToString(),
                                     Source = new AS.QueryPartitionSource()
@@ -912,7 +982,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
                             }
                             if (par.SourceType == PartitionSourceType.Calculated)
                             {
-                                tb.Partitions.Add(new AS.Partition
+                                table.Partitions.Add(new AS.Partition
                                 {
                                     Name = par.Id.ToString(),
                                     Source = new AS.CalculatedPartitionSource()
@@ -920,14 +990,15 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
                                         Expression = par.Expression
                                     }
                                 });
+                                calculatedTables.Add(tableInfo);
                             }
                         }
                     }
-                    if (table.Measures != null)
+                    if (tableInfo.Measures != null)
                     {
-                        foreach (var mes in table.Measures)
+                        foreach (var mes in tableInfo.Measures)
                         {
-                            tb.Measures.Add(new AS.Measure
+                            table.Measures.Add(new AS.Measure
                             {
                                 Name = mes.Name,
                                 Expression = mes.Expression,
@@ -937,11 +1008,33 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
                             });
                         }
                     }
-                    database.Model.Tables.Add(tb);
+                    database.Model.Tables.Add(table);
                 }
                 database.Update(AN.UpdateOptions.ExpandFull);
+                foreach (var calculatedTable in calculatedTables)
+                {
+                    var table = database.Model.Tables.Find(calculatedTable.Name);
+                    foreach (var column in table.Columns)
+                    {
+                        if (column is AS.CalculatedTableColumn col)
+                        {
+                            var c = new Column()
+                            {
+                                Name = col.Name,
+                                DataType = (ColumnDataType)col.DataType,
+                                SourceColumn = col.SourceColumn,
+                                ColumnType = ColumnType.CalculatedTableColumn
+                            };
+                            if (c.Name == "Date")
+                            {
+                                c.IsKey = true;
+                            }
+                            calculatedTable.Columns.Add(c);
+                        }
+                    }
+                }
             }
-
+            return calculatedTables;
         }
 
         public void AddTables(AS.Database database, int modelId, List<Table> tables)
@@ -1104,7 +1197,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(table.ModelId.ToString());
                 if (database == null)
                 {
@@ -1120,7 +1213,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(table.ModelId.ToString());
                 if (database == null)
                 {
@@ -1142,7 +1235,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1187,7 +1280,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1235,7 +1328,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1264,7 +1357,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
             }
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1296,7 +1389,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1327,7 +1420,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1346,7 +1439,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1372,7 +1465,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1397,7 +1490,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1417,7 +1510,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1477,7 +1570,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1535,7 +1628,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1559,7 +1652,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1591,7 +1684,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1608,7 +1701,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(modelRoleInfo.ModelId.ToString());
                 if (database == null)
                 {
@@ -1627,7 +1720,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1656,7 +1749,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1681,7 +1774,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         {
             using (var server = new AS.Server())
             {
-                server.Connect(_asConnectionString);
+                server.Connect(_connectionString);
                 var database = server.Databases.FindByName(databaseName);
                 if (database == null)
                 {
@@ -1928,7 +2021,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
         //        Context.SaveChanges();
         //    }
 
-        ////}
+        //}
 
         //public string BuildDateTableExpression(DateTime fromDate, DateTime toDate)
         //{

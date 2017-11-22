@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Breeze.Core;
@@ -13,6 +14,7 @@ using Newtonsoft.Json.Serialization;
 using Pentamic.SSBI.Data;
 using Pentamic.SSBI.Services;
 using Pentamic.SSBI.Services.Breeze;
+using Pentamic.SSBI.Services.Common;
 using Pentamic.SSBI.Services.SSAS.Metadata;
 using Pentamic.SSBI.Services.SSAS.Query;
 
@@ -20,8 +22,10 @@ namespace Pentamic.SSBI.WebApi
 {
     public class Startup
     {
+        private readonly IHostingEnvironment _env;
         public Startup(IHostingEnvironment env)
         {
+            _env = env;
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -43,13 +47,22 @@ namespace Pentamic.SSBI.WebApi
                         builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
                     });
             });
-            services.AddScoped(_ => new AppDbContext(Configuration.GetConnectionString("DefaultConnection")));
+            var appConStr = Configuration.GetConnectionString("Application");
+            var asConStr = Configuration.GetConnectionString("AnalysisService");
+            var baseUploadPath = InitBaseUploadDirectory();
+            services.Configure<UploadSettings>(Configuration.GetSection("UploadSettings"));
+            services.AddSingleton<IConfiguration>(Configuration);
+            services.AddScoped(_ => new AppDbContext(appConStr));
             services.AddScoped<IUserResolver, UserResolver>();
             services.AddTransient<DbPersistenceManager<AppDbContext>>();
-            services.AddTransient<MetadataService>();
             services.AddTransient<DataModelEntityService>();
             services.AddTransient<ReportingEntityService>();
-            services.AddTransient<QueryService>();
+            var serviceCollection = services.AddTransient(_ => new DataSourceHelper(baseUploadPath));
+            var dsHelper = (DataSourceHelper)serviceCollection.BuildServiceProvider().GetService(typeof(DataSourceHelper));
+            services.AddTransient(_ => new MetadataService(asConStr, dsHelper));
+            services.AddTransient(_ => new QueryService(asConStr));
+            services.AddTransient<DiscoverService>();
+
             // Add framework services.
             services.AddMvc().AddJsonOptions(opt =>
             {
@@ -80,6 +93,22 @@ namespace Pentamic.SSBI.WebApi
                 Audience = "ssbi-api"
             });
             app.UseMvc();
+        }
+
+        public string InitBaseUploadDirectory()
+        {
+            var uploadSettings = Configuration.GetSection("UploadSettings");
+            var baseUploadPath = uploadSettings["BaseUploadPath"];
+            if (string.IsNullOrEmpty(baseUploadPath))
+            {
+                baseUploadPath = Path.Combine(_env.WebRootPath, "uploads");
+                uploadSettings["BaseUploadPath"] = baseUploadPath;
+            }
+            if (!Directory.Exists(baseUploadPath))
+            {
+                Directory.CreateDirectory(baseUploadPath);
+            }
+            return baseUploadPath;
         }
     }
 }

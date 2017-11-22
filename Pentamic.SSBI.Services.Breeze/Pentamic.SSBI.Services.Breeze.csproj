@@ -77,6 +77,10 @@
       <Project>{48491A02-164D-418F-8DE6-EE307F5414E0}</Project>
       <Name>Pentamic.SSBI.Entities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Pentamic.SSBI.Services.SSAS.DaxHelper\Pentamic.SSBI.Services.SSAS.Dax.csproj">
+      <Project>{B876FB80-6C3C-4D02-ACE9-1D8CD4D83A36}</Project>
+      <Name>Pentamic.SSBI.Services.SSAS.Dax</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Pentamic.SSBI.Services.SSAS.Metadata\Pentamic.SSBI.Services.SSAS.Metadata.csproj">
       <Project>{ACFB9296-BD7D-41BB-91FC-59A2E9D2C7DA}</Project>
       <Name>Pentamic.SSBI.Services.SSAS.Metadata</Name>

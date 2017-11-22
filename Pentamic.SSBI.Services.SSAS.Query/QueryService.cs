@@ -13,10 +13,11 @@ namespace Pentamic.SSBI.Services.SSAS.Query
 {
     public class QueryService
     {
-        private readonly string _asConnectionString = "";
+        private readonly string _connectionString;
 
-        public QueryService()
+        public QueryService(string connectionString)
         {
+            _connectionString = connectionString;
         }
 
         //public List<Dictionary<string, object>> GetReportTileData(int reportTileId)
@@ -387,10 +388,10 @@ namespace Pentamic.SSBI.Services.SSAS.Query
                         {
                             if (result[i].Id == id)
                             {
-                                result[i].MTD = (decimal?) mtdVal ?? 0;
-                                result[i].YTD = (decimal?) ytdVal ?? 0;
-                                result[i].PMTD = (decimal?) pmtdVal ?? 0;
-                                result[i].PYTD = (decimal?) pytdVal ?? 0;
+                                result[i].MTD = (decimal?)mtdVal ?? 0;
+                                result[i].YTD = (decimal?)ytdVal ?? 0;
+                                result[i].PMTD = (decimal?)pmtdVal ?? 0;
+                                result[i].PYTD = (decimal?)pytdVal ?? 0;
                                 result[i].MTDRate = result[i].PMTD == 0 ? 0 : result[i].MTD / result[i].PMTD;
                                 result[i].YTDRate = result[i].PYTD == 0 ? 0 : result[i].YTD / result[i].PYTD;
                                 result[i].IsCalculated = true;
@@ -646,7 +647,7 @@ namespace Pentamic.SSBI.Services.SSAS.Query
 
         public string GetAnalysisServiceConnectionString(int modelId, List<string> roles = null)
         {
-            var conStrBuilder = new OleDbConnectionStringBuilder(_asConnectionString)
+            var conStrBuilder = new OleDbConnectionStringBuilder(_connectionString)
             {
                 ["Catalog"] = modelId.ToString()
             };
@@ -656,5 +657,54 @@ namespace Pentamic.SSBI.Services.SSAS.Query
             }
             return conStrBuilder.ConnectionString;
         }
+
+        public List<Dictionary<string, object>> GetTableData(TableQueryModel queryModel)
+        {
+            var query = $" EVALUATE TOPN(50,'{queryModel.TableName}' ";
+            if (!string.IsNullOrEmpty(queryModel.OrderBy))
+            {
+                query += $",[{queryModel.OrderBy}]";
+                if (queryModel.OrderDesc)
+                {
+                    query += ", 0";
+                }
+                else
+                {
+                    query += ", 1";
+                }
+            }
+            query += ")";
+
+            using (var conn = new AdomdConnection(GetAnalysisServiceConnectionString(queryModel.ModelId)))
+            {
+                conn.Open();
+                var command = conn.CreateCommand();
+                command.CommandText = query;
+                using (var reader = command.ExecuteReader())
+                {
+                    var result = new List<Dictionary<string, object>>();
+                    while (reader.Read())
+                    {
+                        var row = new Dictionary<string, object>();
+                        var columns = new List<string>();
+                        for (var i = 0; i < reader.FieldCount; ++i)
+                        {
+                            var name = reader.GetName(i);
+                            var si = name.IndexOf("[", StringComparison.Ordinal) + 1;
+                            var ei = name.IndexOf("]", StringComparison.Ordinal);
+                            columns.Add(name.Substring(si, ei - si));
+                        }
+                        for (var i = 0; i < reader.FieldCount; ++i)
+                        {
+                            row[columns[i]] = reader.GetValue(i);
+                        }
+                        result.Add(row);
+                    }
+                    return result;
+                }
+            }
+
+        }
+
     }
 }

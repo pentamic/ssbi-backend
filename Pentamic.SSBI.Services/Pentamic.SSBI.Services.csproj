@@ -216,10 +216,9 @@
     <Compile Include="ColumnDiscoverResult.cs" />
     <Compile Include="DataDiscoverModel.cs" />
     <Compile Include="DataModelBackgroundService.cs" />
-    <Compile Include="DateData.cs" />
-    <Compile Include="DateTimeExtension.cs" />
     <Compile Include="DiscoverService.cs" />
     <Compile Include="EmailService.cs" />
+    <Compile Include="FileService.cs" />
     <Compile Include="IUserResolver.cs" />
     <Compile Include="ListExtension.cs" />
     <Compile Include="ModelDiscoverRestriction.cs" />
@@ -238,6 +237,10 @@
     <ProjectReference Include="..\Pentamic.SSBI.Entities\Pentamic.SSBI.Entities.csproj">
       <Project>{48491A02-164D-418F-8DE6-EE307F5414E0}</Project>
       <Name>Pentamic.SSBI.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Pentamic.SSBI.Services.Common\Pentamic.SSBI.Services.Common.csproj">
+      <Project>{CCF5AE91-B8D4-4790-AB27-9D783C357204}</Project>
+      <Name>Pentamic.SSBI.Services.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Pentamic.SSBI.Services.SSAS.Metadata\Pentamic.SSBI.Services.SSAS.Metadata.csproj">
       <Project>{ACFB9296-BD7D-41BB-91FC-59A2E9D2C7DA}</Project>
