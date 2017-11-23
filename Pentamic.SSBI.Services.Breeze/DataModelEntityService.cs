@@ -2,10 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.OleDb;
 using System.IO;
 using System.Linq;
-using System.Data.SqlClient;
 using System.Globalization;
 using System.IO.Compression;
 using System.Threading.Tasks;
@@ -14,7 +12,6 @@ using Newtonsoft.Json;
 using Pentamic.SSBI.Data;
 using Pentamic.SSBI.Entities;
 using Pentamic.SSBI.Services.SSAS.Dax;
-using Pentamic.SSBI.Services.SSAS.DaxHelper;
 using Pentamic.SSBI.Services.SSAS.Metadata;
 using EntityState = Breeze.Persistence.EntityState;
 
@@ -665,13 +662,18 @@ namespace Pentamic.SSBI.Services.Breeze
                         {
                             var annotations = e.Annotation.Split(':');
                             var fromDate = DateTime.ParseExact(annotations[0], "yyyyMMdd", CultureInfo.InvariantCulture);
-                            var toDate = DateTime.ParseExact(annotations[0], "yyyyMMdd", CultureInfo.InvariantCulture);
+                            var toDate = DateTime.ParseExact(annotations[1], "yyyyMMdd", CultureInfo.InvariantCulture);
                             var partition = new Partition
                             {
                                 Name = "Administrator",
+                                Table = e,
                                 TableId = e.Id,
                                 SourceType = PartitionSourceType.Calculated,
                                 Expression = _daxExpressionGenerator.CreateDateTableExpression(fromDate, toDate)
+                            };
+                            e.Partitions = new List<Partition>
+                            {
+                                partition
                             };
                             var partitionEntity = _persistenceManager.CreateEntityInfo(partition);
                             if (!saveMap.TryGetValue(typeof(Partition), out var partitions))
@@ -1145,92 +1147,7 @@ namespace Pentamic.SSBI.Services.Breeze
         //        }
         //        Context.SaveChanges();
         //    }
-
         ////}
-
-        public string BuildDateTableExpression(DateTime fromDate, DateTime toDate)
-        {
-            var dataExpr = new List<string>();
-            var i = 0;
-            var sdn = 0;
-            var smn = 0; var cm = 0;
-            var sqn = 0; var cq = 0;
-            while (true)
-            {
-                var currentDate = fromDate.AddDays(i);
-                if (currentDate > toDate) { break; }
-                if (!(currentDate.Month == 2 && currentDate.Day == 29))
-                {
-                    sdn++;
-                }
-                if (currentDate.Month != cm)
-                {
-                    smn++;
-                    cm = currentDate.Month;
-                }
-                if (currentDate.Quarter() != cq)
-                {
-                    sqn++;
-                    cq = currentDate.Quarter();
-                }
-                var date = new DateData(currentDate)
-                {
-                    SequentialDayNumber = sdn
-                };
-                var tmp = new[]
-                {
-                    date.DateKey.ToString(),
-                    "\"" + date.Date.ToString("yyyy-MM-dd") + "\"",
-                    "\"" + date.DateName + "\"",
-                    "\"" + date.PreviousMonthDate.ToString("yyyy-MM-dd") + "\"",
-                    "\"" + date.PreviousQuarterDate.ToString("yyyy-MM-dd") + "\"",
-                    "\"" + date.PreviousYearDate.ToString("yyyy-MM-dd") + "\"",
-                    date.SequentialDayNumber.ToString(),
-                    date.Year.ToString(),
-                    "\"" +date.YearName + "\"",
-                    date.Month.ToString(),
-                    "\"" +date.MonthName + "\"",
-                    date.Quarter.ToString(),
-                    "\"" +date.QuarterName + "\"",
-                    date.HalfYear.ToString(),
-                    "\"" +date.HalfYearName + "\"",
-                    date.DayOfMonth.ToString(),
-                    "\"" +date.DayOfMonthName + "\"",
-                    date.DayOfWeek.ToString(),
-                    "\"" +date.DayOfWeekName + "\"",
-                    date.DayOfYear.ToString(),
-                    date.DayOfQuarter.ToString(),
-                    date.MonthOfYear.ToString(),
-                    "\"" +date.MonthOfYearName + "\"",
-                    date.MonthTotalDays.ToString(),
-                    date.QuarterOfYear.ToString(),
-                    "\"" +date.QuarterOfYearName + "\"",
-                    date.QuarterTotalDays.ToString(),
-                    date.HalfYearOfYear.ToString(),
-                    "\"" +date.HalfYearOfYearName + "\"",
-                    date.LunarDate.ToString(),
-                    "\"" +date.LunarDateName + "\"",
-                    date.LunarMonth.ToString(),
-                    "\"" +date.LunarMonthName + "\"",
-                    date.LunarQuarter.ToString(),
-                    "\"" +date.LunarQuarterName + "\"",
-                    date.LunarYear.ToString(),
-                    "\"" +date.LunarYearName + "\"",
-                    date.LunarDayOfWeek.ToString(),
-                    "\"" +date.LunarDayOfWeekName + "\"",
-                    date.LunarDayOfMonth.ToString(),
-                    "\"" +date.LunarDayOfMonthName + "\"",
-                    date.LunarMonthOfYear.ToString(),
-                    "\"" +date.LunarMonthOfYearName + "\"",
-                    date.LunarQuarterOfYear.ToString(),
-                    "\"" +date.LunarQuarterOfYearName + "\"",
-                    "\"" +date.EventName + "\""
-                };
-                dataExpr.Add(" { " + string.Join(", ", tmp) + " } ");
-                i++;
-            }
-            return "{" + string.Join(", ", dataExpr) + "}";
-        }
 
         public string ExportModelTemplate(int modelId, string exportPath)
         {

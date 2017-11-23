@@ -1014,6 +1014,7 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
                 foreach (var calculatedTable in calculatedTables)
                 {
                     var table = database.Model.Tables.Find(calculatedTable.Name);
+                    calculatedTable.Columns = new List<Column>();
                     foreach (var column in table.Columns)
                     {
                         if (column is AS.CalculatedTableColumn col)
@@ -1192,6 +1193,35 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
             database.Model.Tables.Add(tb);
             return tb;
         }
+
+        public AS.Table AddCalculatedTable(AS.Database database, int modelId, Table tableInfo)
+        {
+            var table = new AS.Table
+            {
+                Name = tableInfo.Name,
+                Description = tableInfo.Description,
+            };
+            if (tableInfo.Partitions != null)
+            {
+                foreach (var par in tableInfo.Partitions)
+                {
+                    if (par.SourceType == PartitionSourceType.Calculated)
+                    {
+                        table.Partitions.Add(new AS.Partition
+                        {
+                            Name = par.Name,
+                            Source = new AS.CalculatedPartitionSource()
+                            {
+                                Expression = par.Expression
+                            }
+                        });
+                    }
+                }
+            }
+            database.Model.Tables.Add(table);
+            return table;
+        }
+
 
         public void UpdateTable(Table table)
         {
@@ -1790,34 +1820,6 @@ namespace Pentamic.SSBI.Services.SSAS.Metadata
                 modelRole.TablePermissions.Remove(tablePermission);
                 database.Update(AN.UpdateOptions.ExpandFull);
             }
-        }
-
-        public AS.Table AddCalculatedTable(AS.Database database, int modelId, Table tableInfo)
-        {
-            var table = new AS.Table
-            {
-                Name = tableInfo.Name,
-                Description = tableInfo.Description,
-            };
-            if (tableInfo.Partitions != null)
-            {
-                foreach (var par in tableInfo.Partitions)
-                {
-                    if (par.SourceType == PartitionSourceType.Calculated)
-                    {
-                        table.Partitions.Add(new AS.Partition
-                        {
-                            Name = par.Name,
-                            Source = new AS.CalculatedPartitionSource()
-                            {
-                                Expression = par.Expression
-                            }
-                        });
-                    }
-                }
-            }
-            database.Model.Tables.Add(table);
-            return table;
         }
 
         //public void FixModelColumns(int modelId)

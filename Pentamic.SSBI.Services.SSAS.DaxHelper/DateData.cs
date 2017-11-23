@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Globalization;
+using Pentamic.SSBI.Services.Common;
 
-namespace Pentamic.SSBI.Services.SSAS.DaxHelper
+namespace Pentamic.SSBI.Services.SSAS.Dax
 {
     public class DateData
     {
@@ -94,7 +95,6 @@ namespace Pentamic.SSBI.Services.SSAS.DaxHelper
                 case 4: DayOfWeekName = "Thứ 5"; break;
                 case 5: DayOfWeekName = "Thứ 6"; break;
                 case 6: DayOfWeekName = "Thứ 7"; break;
-                default: break;
             }
             var lunarCalendar = new ChineseLunisolarCalendar();
             LunarYear = lunarCalendar.GetYear(Date);
@@ -137,7 +137,6 @@ namespace Pentamic.SSBI.Services.SSAS.DaxHelper
                 case 4: LunarDayOfWeekName = "Thứ 5"; break;
                 case 5: LunarDayOfWeekName = "Thứ 6"; break;
                 case 6: LunarDayOfWeekName = "Thứ 7"; break;
-                default: break;
             }
         }
     }

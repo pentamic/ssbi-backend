@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Breeze.Core;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +10,7 @@ using Pentamic.SSBI.Data;
 using Pentamic.SSBI.Services;
 using Pentamic.SSBI.Services.Breeze;
 using Pentamic.SSBI.Services.Common;
+using Pentamic.SSBI.Services.SSAS.Dax;
 using Pentamic.SSBI.Services.SSAS.Metadata;
 using Pentamic.SSBI.Services.SSAS.Query;
 
@@ -57,6 +53,7 @@ namespace Pentamic.SSBI.WebApi
             services.AddTransient<DbPersistenceManager<AppDbContext>>();
             services.AddTransient<DataModelEntityService>();
             services.AddTransient<ReportingEntityService>();
+            services.AddTransient<DaxExpressionGenerator>();
             var serviceCollection = services.AddTransient(_ => new DataSourceHelper(baseUploadPath));
             var dsHelper = (DataSourceHelper)serviceCollection.BuildServiceProvider().GetService(typeof(DataSourceHelper));
             services.AddTransient(_ => new MetadataService(asConStr, dsHelper));
