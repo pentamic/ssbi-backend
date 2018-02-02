@@ -145,7 +145,7 @@ namespace Pentamic.SSBI.WebApi.Controllers
         }
 
         [HttpPost]
-        public IActionResult FieldValues(FieldQueryModel queryModel)
+        public IActionResult FieldValues([FromBody]FieldQueryModel queryModel)
         {
             var result = _queryService.GetFieldValues(queryModel);
             return Ok(result);

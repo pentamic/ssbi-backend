@@ -6,7 +6,7 @@ namespace Pentamic.SSBI.Data
     {
         public AppDbContext Create()
         {
-            return new AppDbContext("Server=.;Database=SSBI_APP_DEV2;Trusted_Connection=True;MultipleActiveResultSets=true");
+            return new AppDbContext("NULL");
         }
     }
 }

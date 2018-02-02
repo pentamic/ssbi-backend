@@ -1,4 +1,8 @@
-﻿using System.IO;
+﻿using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Migrations;
+using System.Data.Entity.Migrations.Infrastructure;
+using System.IO;
+using System.Linq;
 using Breeze.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -82,6 +86,7 @@ namespace Pentamic.SSBI.WebApi
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
             loggerFactory.AddFile("Logs/{Date}.txt");
+            InitializeDatabase(app);
             app.UseCors("AllowAll");
             app.UseJwtBearerAuthentication(new JwtBearerOptions()
             {
@@ -106,6 +111,16 @@ namespace Pentamic.SSBI.WebApi
                 Directory.CreateDirectory(baseUploadPath);
             }
             return baseUploadPath;
+        }
+
+        public void InitializeDatabase(IApplicationBuilder app)
+        {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+                context.Database.Initialize(false);
+            }
+
         }
     }
 }

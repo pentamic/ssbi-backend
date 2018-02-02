@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data.OleDb;
 using System.Linq;
-using System.Runtime.Remoting.Contexts;
-using System.Security.Claims;
 using System.Text.RegularExpressions;
 using Ciloci.Flee;
 using Microsoft.AnalysisServices.AdomdClient;

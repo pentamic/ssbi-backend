@@ -1,5 +1,9 @@
 ﻿using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Migrations;
+using System.Data.Entity.Migrations.Infrastructure;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Linq;
 using Pentamic.SSBI.Entities;
 
 namespace Pentamic.SSBI.Data
@@ -8,8 +12,10 @@ namespace Pentamic.SSBI.Data
     {
         public AppDbContext(string connString) : base(connString)
         {
+            Database.SetInitializer(
+                new MigrateDatabaseToLatestVersion<AppDbContext, Migrations.Configuration>(true));
         }
-        public AppDbContext() : base("Server=.;Database=SSBI_APP_DEV2;Trusted_Connection=True;MultipleActiveResultSets=true")
+        public AppDbContext() : base("NULL")
         {
         }
         public DbSet<Model> Models { get; set; }
@@ -61,5 +67,26 @@ namespace Pentamic.SSBI.Data
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             modelBuilder.Configurations.AddFromAssembly(typeof(AppDbContext).Assembly);
         }
+
+        //public void Migrate()
+        //{
+        //    if (!Database.Exists() || !Database.CompatibleWithModel(false))
+        //    {
+        //        var configuration = new DbMigrationsConfiguration<AppDbContext>();
+        //        var migrator = new DbMigrator(configuration);
+        //        migrator.Configuration.TargetDatabase = new DbConnectionInfo(Database.Connection.ConnectionString, "System.Data.SqlClient");
+        //        var migrations = migrator.GetPendingMigrations();
+        //        if (migrations.Any())
+        //        {
+        //            var scriptor = new MigratorScriptingDecorator(migrator);
+        //            var script = scriptor.ScriptUpdate(null, migrations.Last());
+
+        //            if (!string.IsNullOrEmpty(script))
+        //            {
+        //                Database.ExecuteSqlCommand(script);
+        //            }
+        //        }
+        //    }
+        //}
     }
 }
