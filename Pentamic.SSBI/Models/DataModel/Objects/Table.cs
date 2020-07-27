@@ -9,9 +9,9 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public int ModelId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public string OriginalName { get; set; }
         public string SourceTable { get; set; }
         public string SourceSchema { get; set; }
+        public string DataCategory { get; set; }
 
         public DateTimeOffset ProcessedAt { get; set; }
         public string ProcessedBy { get; set; }

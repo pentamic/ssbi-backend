@@ -22,6 +22,7 @@ namespace Pentamic.SSBI.Models.DataModel
                 case OleDbType.BigInt:
                 case OleDbType.Integer:
                 case OleDbType.SmallInt:
+                case OleDbType.TinyInt:
                 case OleDbType.UnsignedTinyInt:
                 case OleDbType.UnsignedSmallInt:
                 case OleDbType.UnsignedInt:

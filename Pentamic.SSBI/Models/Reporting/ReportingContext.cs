@@ -26,6 +26,23 @@ namespace Pentamic.SSBI.Models.Reporting
         public DbSet<DashboardView> DashboardViews { get; set; }
         public DbSet<ReportView> ReportViews { get; set; }
 
+        public DbSet<ReportFilter> ReportFilters { get; set; }
+        public DbSet<DashboardFilter> DashboardFilters { get; set; }
+
+        public DbSet<UserReportActivity> UserReportActivities { get; set; }
+        public DbSet<UserDashboardActivity> UserDashboardActivities { get; set; }
+
+        public DbSet<UserFavoriteReport> UserFavoriteReports { get; set; }
+        public DbSet<UserFavoriteDashboard> UserFavoriteDashboards { get; set; }
+
+        public DbSet<ReportTileRow> ReportTileRows { get; set; }
+
+        public DbSet<Alert> Alerts { get; set; }
+
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<NotificationSubscription> NotificationSubscriptions { get; set; }
+        public DbSet<UserNotification> UserNotifications { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

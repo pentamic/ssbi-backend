@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Pentamic.SSBI.Models.Reporting
@@ -15,6 +16,7 @@ namespace Pentamic.SSBI.Models.Reporting
         public string DisplayConfig { get; set; }
         public string DataConfig { get; set; }
         public string DisplayTypeId { get; set; }
+        public int SourceType { get; set; } //0-Drag&drop.1-BuildRow
 
         public string CreatedBy { get; set; }
         public DateTimeOffset CreatedAt { get; set; }

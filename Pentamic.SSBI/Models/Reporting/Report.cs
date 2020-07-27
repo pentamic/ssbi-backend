@@ -21,5 +21,6 @@ namespace Pentamic.SSBI.Models.Reporting
         public List<ReportSharing> ReportSharings { get; set; }
         public List<ReportComment> ReportComments { get; set; }
         public List<ReportView> ReportViews { get; set; }
+        public List<ReportFilter> ReportFilters { get; set; }
     }
 }

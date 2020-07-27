@@ -16,6 +16,7 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         [Column(Order = 2)]
         public int TableId { get; set; }
         public string FilterExpression { get; set; }
+        public bool MetadataPermission { get; set; }
 
         public Role Role { get; set; }
         public Table Table { get; set; }

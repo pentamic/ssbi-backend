@@ -8,9 +8,13 @@ namespace Pentamic.SSBI.Models.DataModel.Objects
         public int Id { get; set; }
         public int ModelId { get; set; }
         public string Name { get; set; }
-        public string OriginalName { get; set; }
         public int FromColumnId { get; set; }
         public int ToColumnId { get; set; }
+        public bool IsActive { get; set; }
+        public CrossFilteringBehavior CrossFilteringBehavior { get; set; }
+        public RelationshipCardinality Cardinality { get; set; }
+        public RelationshipDateBehavior? DateBehavior { get; set; }
+        public SecurityFilteringBehavior SecurityFilteringBehavior { get; set; }
         //public string FromTableName { get; set; }
         //public string FromColumnName { get; set; }
         //public string ToTableName { get; set; }

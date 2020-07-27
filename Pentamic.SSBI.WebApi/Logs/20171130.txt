@@ -1,0 +1,815 @@
+2017-11-30T09:17:29.4387964+07:00 0HL9NJ20S79M0 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/UserFavoriteDashboards?%7B%22expand%22%3A%5B%22Dashboard%22%5D%7D   (e5be5b71)
+2017-11-30T09:17:29.4147974+07:00 0HL9NJ20S79LT [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/UserRecentReports?%7B%7D   (e5be5b71)
+2017-11-30T09:17:29.4177966+07:00 0HL9NJ20S79M1 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/UserRecentDashboards?%7B%7D   (e5be5b71)
+2017-11-30T09:17:29.4177966+07:00 0HL9NJ20S79LU [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/UserFavoriteModels?%7B%22expand%22%3A%5B%22Model%22%5D%7D   (e5be5b71)
+2017-11-30T09:17:29.4182991+07:00 0HL9NJ20S79LV [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/UserFavoriteReports?%7B%22expand%22%3A%5B%22Report%22%5D%7D   (e5be5b71)
+2017-11-30T09:17:30.8277964+07:00 0HL9NJ20S79LT [INF] Request finished in 1489.3972ms 204  (15c52c40)
+2017-11-30T09:17:30.8327959+07:00 0HL9NJ20S79LU [INF] Request finished in 1489.0929ms 204  (15c52c40)
+2017-11-30T09:17:30.8362944+07:00 0HL9NJ20S79M1 [INF] Request finished in 1495.7057ms 204  (15c52c40)
+2017-11-30T09:17:30.8402958+07:00 0HL9NJ20S79M0 [INF] Request finished in 1533.2976ms 204  (15c52c40)
+2017-11-30T09:17:30.8422979+07:00 0HL9NJ20S79LV [INF] Request finished in 1492.3297ms 204  (15c52c40)
+2017-11-30T09:17:30.8882972+07:00 0HL9NJ20S79M2 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserRecentDashboards?%7B%7D   (e5be5b71)
+2017-11-30T09:17:30.8942989+07:00 0HL9NJ20S79M3 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserFavoriteDashboards?%7B%22expand%22%3A%5B%22Dashboard%22%5D%7D   (e5be5b71)
+2017-11-30T09:17:30.9007991+07:00 0HL9NJ20S79M4 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserRecentReports?%7B%7D   (e5be5b71)
+2017-11-30T09:17:30.9042972+07:00 0HL9NJ20S79M5 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserFavoriteReports?%7B%22expand%22%3A%5B%22Report%22%5D%7D   (e5be5b71)
+2017-11-30T09:17:30.9042972+07:00 0HL9NJ20S79M6 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/UserFavoriteModels?%7B%22expand%22%3A%5B%22Model%22%5D%7D   (e5be5b71)
+2017-11-30T09:17:30.9528024+07:00 0HL9NJ20S79M7 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/UserRecentModels?%7B%7D   (e5be5b71)
+2017-11-30T09:17:30.9797984+07:00 0HL9NJ20S79M7 [INF] Request finished in 26.1343ms 204  (15c52c40)
+2017-11-30T09:17:30.9837958+07:00 0HL9NJ20S79M8 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/UserRecentModels?%7B%7D   (e5be5b71)
+2017-11-30T09:17:31.6874250+07:00 0HL9NJ20S79M3 [INF] Successfully validated the token. (60169667)
+2017-11-30T09:17:31.7024254+07:00 0HL9NJ20S79M5 [INF] Successfully validated the token. (60169667)
+2017-11-30T09:17:31.7124255+07:00 0HL9NJ20S79M6 [INF] Successfully validated the token. (60169667)
+2017-11-30T09:17:31.7144269+07:00 0HL9NJ20S79M4 [INF] Successfully validated the token. (60169667)
+2017-11-30T09:17:31.7189257+07:00 0HL9NJ20S79M5 [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:17:31.7244252+07:00 0HL9NJ20S79M6 [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:17:31.7269252+07:00 0HL9NJ20S79M3 [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:17:31.7334265+07:00 0HL9NJ20S79M4 [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:17:32.3834616+07:00 0HL9NJ20S79M4 [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:17:32.3874615+07:00 0HL9NJ20S79M6 [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:17:32.3914625+07:00 0HL9NJ20S79M5 [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:17:32.3934610+07:00 0HL9NJ20S79M3 [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:17:32.4809619+07:00 0HL9NJ20S79M6 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserFavoriteModels (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:17:32.4839637+07:00 0HL9NJ20S79M3 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteDashboards (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:17:32.4869640+07:00 0HL9NJ20S79M4 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserRecentReports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:17:32.5509651+07:00 0HL9NJ20S79M5 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteReports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:17:32.6919604+07:00 0HL9NJ20S79M4 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:17:33.1750638+07:00 0HL9NJ20S79M5 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:17:33.1750638+07:00 0HL9NJ20S79M6 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:17:33.2063267+07:00 0HL9NJ20S79M3 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:17:33.2585223+07:00 0HL9NJ20S79M5 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteReports (Pentamic.SSBI.WebApi)" in 908.9569ms (afa2e885)
+2017-11-30T09:17:33.2745333+07:00 0HL9NJ20S79M6 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserFavoriteModels (Pentamic.SSBI.WebApi)" in 932.5675ms (afa2e885)
+2017-11-30T09:17:33.3025334+07:00 0HL9NJ20S79M4 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserRecentReports (Pentamic.SSBI.WebApi)" in 935.0058ms (afa2e885)
+2017-11-30T09:17:33.3085336+07:00 0HL9NJ20S79M3 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteDashboards (Pentamic.SSBI.WebApi)" in 903.9105ms (afa2e885)
+2017-11-30T09:17:33.3165371+07:00 0HL9NJ20S79M6 [INF] Request finished in 2417.4314ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:17:33.3210319+07:00 0HL9NJ20S79M4 [INF] Request finished in 2428.4462ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:17:33.3260318+07:00 0HL9NJ20S79M5 [INF] Request finished in 2405.784ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:17:33.3390337+07:00 0HL9NJ20S79M3 [INF] Request finished in 2447.5583ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:17:33.3520316+07:00 0HL9NJ20S79M9 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-30T09:17:33.3580358+07:00 0HL9NJ20S79M2 [INF] Successfully validated the token. (60169667)
+2017-11-30T09:17:33.3680341+07:00 0HL9NJ20S79M2 [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:17:33.3715318+07:00 0HL9NJ20S79M9 [INF] Request finished in 22.2788ms 204  (15c52c40)
+2017-11-30T09:17:35.7960768+07:00 0HL9NJ20S79MA [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-30T09:17:35.7995749+07:00 0HL9NJ20S79M8 [INF] Successfully validated the token. (60169667)
+2017-11-30T09:17:35.8050744+07:00 0HL9NJ20S79M2 [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:17:35.8095769+07:00 0HL9NJ20S79M8 [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:17:35.8170749+07:00 0HL9NJ20S79MA [INF] Successfully validated the token. (60169667)
+2017-11-30T09:17:35.8225740+07:00 0HL9NJ20S79M2 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserRecentDashboards (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:17:35.8290753+07:00 0HL9NJ20S79MA [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:17:35.8320745+07:00 0HL9NJ20S79M8 [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:17:35.8615746+07:00 0HL9NJ20S79M8 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserRecentModels (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:17:35.8735758+07:00 0HL9NJ20S79M2 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:17:35.8750747+07:00 0HL9NJ20S79MA [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:17:35.8800756+07:00 0HL9NJ20S79MA [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:17:35.8905758+07:00 0HL9NJ20S79M8 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:17:35.8980745+07:00 0HL9NJ20S79MA [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:17:35.9575783+07:00 0HL9NJ20S79M2 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserRecentDashboards (Pentamic.SSBI.WebApi)" in 2563.3497ms (afa2e885)
+2017-11-30T09:17:35.9870765+07:00 0HL9NJ20S79M8 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserRecentModels (Pentamic.SSBI.WebApi)" in 145.5392ms (afa2e885)
+2017-11-30T09:17:36.0000733+07:00 0HL9NJ20S79M2 [INF] Request finished in 5097.9515ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:17:36.0075753+07:00 0HL9NJ20S79M8 [INF] Request finished in 5017.1ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:17:36.0555753+07:00 0HL9NJ20S79MA [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" in 183.7403ms (afa2e885)
+2017-11-30T09:17:36.0730742+07:00 0HL9NJ20S79MA [INF] Request finished in 2704.3523ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:17:38.4901593+07:00 0HL9NJ20S79MB [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-30T09:17:38.5716560+07:00 0HL9NJ20S79MC [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-30T09:17:38.5736574+07:00 0HL9NJ20S79MB [INF] Request finished in 81.6356ms 204  (15c52c40)
+2017-11-30T09:17:38.5781569+07:00 0HL9NJ20S79MC [INF] Successfully validated the token. (60169667)
+2017-11-30T09:17:38.5976579+07:00 0HL9NJ20S79MC [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:17:38.7641571+07:00 0HL9NJ20S79MC [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:17:38.7686581+07:00 0HL9NJ20S79MC [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:17:38.8286567+07:00 0HL9NJ20S79MC [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:17:38.9061575+07:00 0HL9NJ20S79MC [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 228.119ms (afa2e885)
+2017-11-30T09:17:38.9246593+07:00 0HL9NJ20S79MC [INF] Request finished in 373.4555ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:17:50.8419599+07:00 0HL9NJ20S79MD [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/SaveChanges   (e5be5b71)
+2017-11-30T09:17:50.8554780+07:00 0HL9NJ20S79MD [INF] Request finished in 10.8358ms 204  (15c52c40)
+2017-11-30T09:17:50.8684722+07:00 0HL9NJ20S79ME [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/datamodel/SaveChanges application/json 599 (e5be5b71)
+2017-11-30T09:17:50.8724732+07:00 0HL9NJ20S79ME [INF] Successfully validated the token. (60169667)
+2017-11-30T09:17:50.8754746+07:00 0HL9NJ20S79ME [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:17:50.8814733+07:00 0HL9NJ20S79ME [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:17:50.9714867+07:00 0HL9NJ20S79ME [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" with arguments (["{
+  \"entities\": [
+    {
+      \"Id\": -1,
+      \"Name\": \"test\",
+      \"Description\": null,
+      \"DefaultMode\": \"Import\",
+      \"GenerateFromTemplate\": null,
+      \"CloneFromModelId\": null,
+      \"RefreshSchedule\": null,
+      \"RefreshJobId\": null,
+      \"CreatedBy\": null,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"RefreshedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"Model\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"Model:#Pentamic.SSBI.Entities\",
+        \"defaultResourceName\": \"Models\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    }
+  ],
+  \"saveOptions\": {}
+}"]) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:17:53.2744061+07:00 0HL9NJ20S79ME [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:17:53.3124093+07:00 0HL9NJ20S79ME [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" in 2428.7871ms (afa2e885)
+2017-11-30T09:17:53.3434199+07:00 0HL9NJ20S79ME [INF] Request finished in 2486.236ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:17:58.1588472+07:00 0HL9NJ20S79MF [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Models?%7B%22where%22%3A%7B%22Id%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:17:58.1918442+07:00 0HL9NJ20S79MG [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/ModelSharings?%7B%22where%22%3A%7B%22ModelId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:17:58.2118449+07:00 0HL9NJ20S79MH [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/UserFavoriteModels?%7B%22where%22%3A%7B%22ModelId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:17:58.2443573+07:00 0HL9NJ20S79MI [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models?%7B%22where%22%3A%7B%22Id%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:17:58.2678634+07:00 0HL9NJ20S79MG [INF] Request finished in 52.299ms 204  (15c52c40)
+2017-11-30T09:17:58.2708637+07:00 0HL9NJ20S79MI [INF] Successfully validated the token. (60169667)
+2017-11-30T09:17:58.3036969+07:00 0HL9NJ20S79MF [INF] Request finished in 56.032ms 204  (15c52c40)
+2017-11-30T09:17:58.3349502+07:00 0HL9NJ20S79MJ [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/ModelSharings?%7B%22where%22%3A%7B%22ModelId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:17:58.3349502+07:00 0HL9NJ20S79MI [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:17:58.3596109+07:00 0HL9NJ20S79MH [INF] Request finished in 83.3302ms 204  (15c52c40)
+2017-11-30T09:17:58.3606094+07:00 0HL9NJ20S79MJ [INF] Successfully validated the token. (60169667)
+2017-11-30T09:17:58.3856503+07:00 0HL9NJ20S79MK [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/UserFavoriteModels?%7B%22where%22%3A%7B%22ModelId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:17:58.3876521+07:00 0HL9NJ20S79MJ [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:17:58.3956515+07:00 0HL9NJ20S79MI [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:17:58.4208020+07:00 0HL9NJ20S79MK [INF] Successfully validated the token. (60169667)
+2017-11-30T09:17:58.4237935+07:00 0HL9NJ20S79MI [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:17:58.4267912+07:00 0HL9NJ20S79MJ [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:17:58.4287890+07:00 0HL9NJ20S79MK [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:17:58.4317915+07:00 0HL9NJ20S79MJ [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.ModelSharings (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:17:58.4361587+07:00 0HL9NJ20S79MK [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:17:58.4396700+07:00 0HL9NJ20S79MK [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserFavoriteModels (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:17:58.5151847+07:00 0HL9NJ20S79MK [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:17:58.5241853+07:00 0HL9NJ20S79MK [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.UserFavoriteModels (Pentamic.SSBI.WebApi)" in 82.3038ms (afa2e885)
+2017-11-30T09:17:58.5422094+07:00 0HL9NJ20S79MI [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:17:58.5842224+07:00 0HL9NJ20S79MI [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 161.3929ms (afa2e885)
+2017-11-30T09:17:58.6062241+07:00 0HL9NJ20S79MJ [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:17:58.6072233+07:00 0HL9NJ20S79MK [INF] Request finished in 267.0591ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:17:58.6572523+07:00 0HL9NJ20S79MI [INF] Request finished in 417.8651ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:17:58.6612485+07:00 0HL9NJ20S79MJ [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.ModelSharings (Pentamic.SSBI.WebApi)" in 189.0191ms (afa2e885)
+2017-11-30T09:17:58.6952499+07:00 0HL9NJ20S79MJ [INF] Request finished in 420.7422ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:17:58.7452774+07:00 0HL9NJ20S79ML [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/SaveChanges   (e5be5b71)
+2017-11-30T09:17:58.7642883+07:00 0HL9NJ20S79ML [INF] Request finished in 11.8234ms 204  (15c52c40)
+2017-11-30T09:17:58.7692882+07:00 0HL9NJ20S79MM [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/datamodel/SaveChanges application/json 470 (e5be5b71)
+2017-11-30T09:17:58.7742874+07:00 0HL9NJ20S79MM [INF] Successfully validated the token. (60169667)
+2017-11-30T09:17:58.7782880+07:00 0HL9NJ20S79MM [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:17:58.7852875+07:00 0HL9NJ20S79MM [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:17:58.7932880+07:00 0HL9NJ20S79MM [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" with arguments (["{
+  \"entities\": [
+    {
+      \"Id\": -2,
+      \"UserId\": null,
+      \"ModelId\": 1,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"CreatedBy\": null,
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"UserModelActivity\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"UserModelActivity:#Pentamic.SSBI.Entities\",
+        \"defaultResourceName\": \"UserModelActivities\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    }
+  ],
+  \"saveOptions\": {}
+}"]) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:17:58.9046785+07:00 0HL9NJ20S79MM [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:17:58.9116988+07:00 0HL9NJ20S79MM [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" in 126.6404ms (afa2e885)
+2017-11-30T09:17:58.9306966+07:00 0HL9NJ20S79MM [INF] Request finished in 159.8816ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:18:09.7928932+07:00 0HL9NJ20S79MN [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/import   (e5be5b71)
+2017-11-30T09:18:09.8389014+07:00 0HL9NJ20S79MO [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/datamodel/import multipart/form-data; boundary=----WebKitFormBoundaryv6huPUxZuJ16vMAk 82847 (e5be5b71)
+2017-11-30T09:18:09.8458935+07:00 0HL9NJ20S79MN [INF] Request finished in 54.5057ms 204  (15c52c40)
+2017-11-30T09:18:09.8594053+07:00 0HL9NJ20S79MO [INF] Successfully validated the token. (60169667)
+2017-11-30T09:18:09.8629063+07:00 0HL9NJ20S79MO [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:18:09.8794041+07:00 0HL9NJ20S79MO [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:18:09.8834047+07:00 0HL9NJ20S79MO [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Import (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:18:10.2050448+07:00 0HL9NJ20S79MO [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:18:10.2110461+07:00 0HL9NJ20S79MO [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Import (Pentamic.SSBI.WebApi)" in 332.1647ms (afa2e885)
+2017-11-30T09:18:10.2260472+07:00 0HL9NJ20S79MO [INF] Request finished in 395.7061ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:18:12.5198862+07:00 0HL9NJ20S79MP [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/SaveChanges   (e5be5b71)
+2017-11-30T09:18:12.5923864+07:00 0HL9NJ20S79MQ [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/datamodel/SaveChanges application/json 596 (e5be5b71)
+2017-11-30T09:18:12.5958874+07:00 0HL9NJ20S79MP [INF] Request finished in 74.392ms 204  (15c52c40)
+2017-11-30T09:18:12.6023884+07:00 0HL9NJ20S79MQ [INF] Successfully validated the token. (60169667)
+2017-11-30T09:18:12.6058891+07:00 0HL9NJ20S79MQ [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:18:12.6113878+07:00 0HL9NJ20S79MQ [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:18:12.6198898+07:00 0HL9NJ20S79MQ [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" with arguments (["{
+  \"entities\": [
+    {
+      \"Id\": -3,
+      \"ModelId\": 1,
+      \"Name\": \"test\",
+      \"Description\": \"\",
+      \"Type\": \"Excel\",
+      \"ConnectionString\": null,
+      \"Source\": \"\",
+      \"Catalog\": \"\",
+      \"User\": \"\",
+      \"Password\": \"\",
+      \"IntegratedSecurity\": true,
+      \"SourceFileId\": 1,
+      \"CreatedBy\": null,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"DataSource\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"DataSource:#Pentamic.SSBI.Entities\",
+        \"defaultResourceName\": \"DataSources\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    }
+  ],
+  \"saveOptions\": {}
+}"]) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:18:13.5967907+07:00 0HL9NJ20S79MQ [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:18:13.6264267+07:00 0HL9NJ20S79MQ [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveChanges (Pentamic.SSBI.WebApi)" in 1012.6738ms (afa2e885)
+2017-11-30T09:18:13.6554257+07:00 0HL9NJ20S79MQ [INF] Request finished in 1122.8788ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:18:13.6894561+07:00 0HL9NJ20S79MR [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/DataSources?%7B%22where%22%3A%7B%22ModelId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:18:13.7144540+07:00 0HL9NJ20S79MS [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/DataSources?%7B%22where%22%3A%7B%22ModelId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:18:13.7214539+07:00 0HL9NJ20S79MR [INF] Request finished in 24.3359ms 204  (15c52c40)
+2017-11-30T09:18:13.7254523+07:00 0HL9NJ20S79MS [INF] Successfully validated the token. (60169667)
+2017-11-30T09:18:13.7294537+07:00 0HL9NJ20S79MS [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:18:13.7404531+07:00 0HL9NJ20S79MS [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:18:13.7434504+07:00 0HL9NJ20S79MS [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.DataSources (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:18:13.7814624+07:00 0HL9NJ20S79MS [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:18:13.7864773+07:00 0HL9NJ20S79MS [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.DataSources (Pentamic.SSBI.WebApi)" in 45.9157ms (afa2e885)
+2017-11-30T09:18:13.7944738+07:00 0HL9NJ20S79MS [INF] Request finished in 88.3649ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:18:17.5805465+07:00 0HL9NJ20S79MT [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/discover/tables   (e5be5b71)
+2017-11-30T09:18:17.5930451+07:00 0HL9NJ20S79MT [INF] Request finished in 13.8636ms 204  (15c52c40)
+2017-11-30T09:18:17.6330571+07:00 0HL9NJ20S79MU [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/discover/tables application/json 23 (e5be5b71)
+2017-11-30T09:18:17.6430689+07:00 0HL9NJ20S79MU [INF] Successfully validated the token. (60169667)
+2017-11-30T09:18:17.6510578+07:00 0HL9NJ20S79MU [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:18:17.6650589+07:00 0HL9NJ20S79MU [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:18:17.7140834+07:00 0HL9NJ20S79MU [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DiscoverController.Tables (Pentamic.SSBI.WebApi)" with arguments (["Pentamic.SSBI.Services.TableDiscoverModel"]) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:18:18.4062536+07:00 0HL9NJ20S79MU [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:18:18.4142523+07:00 0HL9NJ20S79MU [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DiscoverController.Tables (Pentamic.SSBI.WebApi)" in 753.5352ms (afa2e885)
+2017-11-30T09:18:18.4282531+07:00 0HL9NJ20S79MU [INF] Request finished in 796.2612ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:18:18.4562524+07:00 0HL9NJ20S79MV [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/discover/tables   (e5be5b71)
+2017-11-30T09:18:18.4632534+07:00 0HL9NJ20S79MV [INF] Request finished in 3.9775ms 204  (15c52c40)
+2017-11-30T09:18:18.4662603+07:00 0HL9NJ20S79N0 [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/discover/tables application/json 23 (e5be5b71)
+2017-11-30T09:18:18.4712539+07:00 0HL9NJ20S79N0 [INF] Successfully validated the token. (60169667)
+2017-11-30T09:18:18.4742517+07:00 0HL9NJ20S79N0 [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:18:18.4812662+07:00 0HL9NJ20S79N0 [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:18:18.4867668+07:00 0HL9NJ20S79N0 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DiscoverController.Tables (Pentamic.SSBI.WebApi)" with arguments (["Pentamic.SSBI.Services.TableDiscoverModel"]) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:18:18.6526340+07:00 0HL9NJ20S79N0 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:18:18.6576368+07:00 0HL9NJ20S79N0 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DiscoverController.Tables (Pentamic.SSBI.WebApi)" in 175.4446ms (afa2e885)
+2017-11-30T09:18:18.6806557+07:00 0HL9NJ20S79N0 [INF] Request finished in 212.2638ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:12.6744663+07:00 0HL9NJ20S79N1 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/discover/data   (e5be5b71)
+2017-11-30T09:19:12.6964654+07:00 0HL9NJ20S79N2 [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/discover/data application/json 71 (e5be5b71)
+2017-11-30T09:19:12.6984661+07:00 0HL9NJ20S79N1 [INF] Request finished in 27.2574ms 204  (15c52c40)
+2017-11-30T09:19:12.7064648+07:00 0HL9NJ20S79N2 [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:12.7109801+07:00 0HL9NJ20S79N2 [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:12.7174771+07:00 0HL9NJ20S79N2 [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:12.7294874+07:00 0HL9NJ20S79N2 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DiscoverController.Data (Pentamic.SSBI.WebApi)" with arguments (["Pentamic.SSBI.Services.DataDiscoverModel"]) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:13.1839489+07:00 0HL9NJ20S79N2 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:13.2258808+07:00 0HL9NJ20S79N2 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DiscoverController.Data (Pentamic.SSBI.WebApi)" in 490.5302ms (afa2e885)
+2017-11-30T09:19:13.2588790+07:00 0HL9NJ20S79N2 [INF] Request finished in 558.4433ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:15.1520779+07:00 0HL9NJ20S79N3 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/saveImport   (e5be5b71)
+2017-11-30T09:19:15.2800951+07:00 0HL9NJ20S79N4 [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/datamodel/saveImport application/json 3655 (e5be5b71)
+2017-11-30T09:19:15.2805948+07:00 0HL9NJ20S79N3 [INF] Request finished in 151.2813ms 204  (15c52c40)
+2017-11-30T09:19:15.2830951+07:00 0HL9NJ20S79N4 [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:15.2855943+07:00 0HL9NJ20S79N4 [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:15.2895953+07:00 0HL9NJ20S79N4 [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:15.3325961+07:00 0HL9NJ20S79N4 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveImport (Pentamic.SSBI.WebApi)" with arguments (["{
+  \"entities\": [
+    {
+      \"Id\": -4,
+      \"ModelId\": 1,
+      \"Name\": \"Customer\",
+      \"Description\": null,
+      \"SourceTable\": \"Customer\",
+      \"SourceSchema\": \"\",
+      \"DataCategory\": null,
+      \"Annotation\": null,
+      \"ProcessedAt\": \"1899-12-31T17:00:00Z\",
+      \"ProcessedBy\": null,
+      \"IsProcessing\": false,
+      \"CreatedBy\": null,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"Table\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"Table:#Pentamic.SSBI.Entities\",
+        \"defaultResourceName\": \"Tables\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    },
+    {
+      \"Id\": -5,
+      \"TableId\": -4,
+      \"DataSourceId\": 1,
+      \"Name\": \"DefaultPartition\",
+      \"Description\": null,
+      \"Query\": \"SELECT [Id],[Name],[Gender],[Age] FROM [Customer]\",
+      \"Expression\": null,
+      \"SourceType\": \"Query\",
+      \"ProcessedAt\": \"1899-12-31T17:00:00Z\",
+      \"ProcessedBy\": null,
+      \"IsProcessing\": false,
+      \"CreatedBy\": null,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"Partition\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"Partition:#Pentamic.SSBI.Entities\",
+        \"defaultResourceName\": \"Partitions\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    },
+    {
+      \"Id\": -6,
+      \"TableId\": -4,
+      \"Name\": \"Id\",
+      \"Description\": null,
+      \"SourceColumn\": \"Id\",
+      \"DisplayFolder\": null,
+      \"FormatString\": null,
+      \"SortByColumnId\": null,
+      \"IsHidden\": false,
+      \"Expression\": null,
+      \"DataType\": \"String\",
+      \"ColumnType\": \"Data\",
+      \"IsKey\": false,
+      \"CreatedBy\": null,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"Column\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"Column:#Pentamic.SSBI.Entities\",
+        \"defaultResourceName\": \"Columns\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    },
+    {
+      \"Id\": -7,
+      \"TableId\": -4,
+      \"Name\": \"Name\",
+      \"Description\": null,
+      \"SourceColumn\": \"Name\",
+      \"DisplayFolder\": null,
+      \"FormatString\": null,
+      \"SortByColumnId\": null,
+      \"IsHidden\": false,
+      \"Expression\": null,
+      \"DataType\": \"String\",
+      \"ColumnType\": \"Data\",
+      \"IsKey\": false,
+      \"CreatedBy\": null,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"Column\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"Column:#Pentamic.SSBI.Entities\",
+        \"defaultResourceName\": \"Columns\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    },
+    {
+      \"Id\": -8,
+      \"TableId\": -4,
+      \"Name\": \"Gender\",
+      \"Description\": null,
+      \"SourceColumn\": \"Gender\",
+      \"DisplayFolder\": null,
+      \"FormatString\": null,
+      \"SortByColumnId\": null,
+      \"IsHidden\": false,
+      \"Expression\": null,
+      \"DataType\": \"String\",
+      \"ColumnType\": \"Data\",
+      \"IsKey\": false,
+      \"CreatedBy\": null,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"Column\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"Column:#Pentamic.SSBI.Entities\",
+        \"defaultResourceName\": \"Columns\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    },
+    {
+      \"Id\": -9,
+      \"TableId\": -4,
+      \"Name\": \"Age\",
+      \"Description\": null,
+      \"SourceColumn\": \"Age\",
+      \"DisplayFolder\": null,
+      \"FormatString\": null,
+      \"SortByColumnId\": null,
+      \"IsHidden\": false,
+      \"Expression\": null,
+      \"DataType\": \"String\",
+      \"ColumnType\": \"Data\",
+      \"IsKey\": false,
+      \"CreatedBy\": null,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"Column\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"Column:#Pentamic.SSBI.Entities\",
+        \"defaultResourceName\": \"Columns\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    }
+  ],
+  \"saveOptions\": {}
+}"]) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:16.0086105+07:00 0HL9NJ20S79N4 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:16.0761038+07:00 0HL9NJ20S79N4 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.SaveImport (Pentamic.SSBI.WebApi)" in 776.2217ms (afa2e885)
+2017-11-30T09:19:16.0821033+07:00 0HL9NJ20S79N4 [INF] Request finished in 844.8448ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:21.7370298+07:00 0HL9NJ20S79N5 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Tables?%7B%22where%22%3A%7B%22ModelId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:19:21.7610329+07:00 0HL9NJ20S79N5 [INF] Request finished in 25.7475ms 204  (15c52c40)
+2017-11-30T09:19:21.8135394+07:00 0HL9NJ20S79N6 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Tables?%7B%22where%22%3A%7B%22ModelId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:19:21.8240428+07:00 0HL9NJ20S79N6 [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:21.8265384+07:00 0HL9NJ20S79N6 [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:21.8320511+07:00 0HL9NJ20S79N6 [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:21.8390516+07:00 0HL9NJ20S79N6 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Tables (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:21.8750490+07:00 0HL9NJ20S79N6 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:21.8860506+07:00 0HL9NJ20S79N6 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Tables (Pentamic.SSBI.WebApi)" in 45.5528ms (afa2e885)
+2017-11-30T09:19:21.8970514+07:00 0HL9NJ20S79N6 [INF] Request finished in 78.4069ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:22.9545809+07:00 0HL9NJ20S79N7 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Columns?%7B%22where%22%3A%7B%22TableId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:19:22.9725765+07:00 0HL9NJ20S79N8 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Partitions?%7B%22where%22%3A%7B%22TableId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:19:22.9775771+07:00 0HL9NJ20S79N9 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Measures?%7B%22where%22%3A%7B%22TableId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:19:22.9925804+07:00 0HL9NJ20S79N8 [INF] Request finished in 53.1758ms 204  (15c52c40)
+2017-11-30T09:19:23.0085760+07:00 0HL9NJ20S79N7 [INF] Request finished in 36.8466ms 204  (15c52c40)
+2017-11-30T09:19:23.0160894+07:00 0HL9NJ20S79N9 [INF] Request finished in 33.0036ms 204  (15c52c40)
+2017-11-30T09:19:23.0975887+07:00 0HL9NJ20S79NA [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Columns?%7B%22where%22%3A%7B%22TableId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:19:23.1015882+07:00 0HL9NJ20S79NB [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Measures?%7B%22where%22%3A%7B%22TableId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:19:23.1030889+07:00 0HL9NJ20S79NC [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Partitions?%7B%22where%22%3A%7B%22TableId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:19:23.1280872+07:00 0HL9NJ20S79NA [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:23.1485989+07:00 0HL9NJ20S79NC [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:23.1546017+07:00 0HL9NJ20S79NB [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:23.1555983+07:00 0HL9NJ20S79NA [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:23.1615993+07:00 0HL9NJ20S79NC [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:23.1676021+07:00 0HL9NJ20S79NB [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:23.1745986+07:00 0HL9NJ20S79NA [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:23.1756004+07:00 0HL9NJ20S79NB [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:23.1765982+07:00 0HL9NJ20S79NC [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:23.1805985+07:00 0HL9NJ20S79NA [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Columns (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:23.1825992+07:00 0HL9NJ20S79NC [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Partitions (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:23.1865984+07:00 0HL9NJ20S79NB [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Measures (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:23.2954434+07:00 0HL9NJ20S79NC [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:23.2954434+07:00 0HL9NJ20S79NB [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:23.3445783+07:00 0HL9NJ20S79NA [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:23.3765816+07:00 0HL9NJ20S79NC [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Partitions (Pentamic.SSBI.WebApi)" in 133.6597ms (afa2e885)
+2017-11-30T09:19:23.3925783+07:00 0HL9NJ20S79NB [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Measures (Pentamic.SSBI.WebApi)" in 151.7876ms (afa2e885)
+2017-11-30T09:19:23.3955760+07:00 0HL9NJ20S79NA [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Columns (Pentamic.SSBI.WebApi)" in 182.7737ms (afa2e885)
+2017-11-30T09:19:23.4015784+07:00 0HL9NJ20S79NC [INF] Request finished in 297.2091ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:23.4145921+07:00 0HL9NJ20S79NB [INF] Request finished in 315.3868ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:23.4235897+07:00 0HL9NJ20S79NA [INF] Request finished in 324.6568ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:24.0518848+07:00 0HL9NJ20S79ND [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/refreshtable   (e5be5b71)
+2017-11-30T09:19:24.1088747+07:00 0HL9NJ20S79ND [INF] Request finished in 12.507ms 204  (15c52c40)
+2017-11-30T09:19:24.1108750+07:00 0HL9NJ20S79NE [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/datamodel/refreshtable application/json 18 (e5be5b71)
+2017-11-30T09:19:24.1148889+07:00 0HL9NJ20S79NE [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:24.1203876+07:00 0HL9NJ20S79NE [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:24.1253871+07:00 0HL9NJ20S79NE [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:24.1549191+07:00 0HL9NJ20S79NE [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.RefreshTable (Pentamic.SSBI.WebApi)" with arguments (["Pentamic.SSBI.Services.SSAS.Metadata.TableRefreshModel"]) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:24.8752433+07:00 0HL9NJ20S79NE [INF] Executing HttpStatusCodeResult, setting HTTP status code 200 (e28ccfae)
+2017-11-30T09:19:24.8782436+07:00 0HL9NJ20S79NE [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.RefreshTable (Pentamic.SSBI.WebApi)" in 752.9084ms (afa2e885)
+2017-11-30T09:19:24.8852471+07:00 0HL9NJ20S79NE [INF] Request finished in 791.269ms 200  (15c52c40)
+2017-11-30T09:19:26.9048284+07:00 0HL9NJ20S79NF [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-30T09:19:26.9218397+07:00 0HL9NJ20S79NF [INF] Request finished in 16.2195ms 204  (15c52c40)
+2017-11-30T09:19:26.9228503+07:00 0HL9NJ20S79NG [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Reports?%7B%7D   (e5be5b71)
+2017-11-30T09:19:26.9268517+07:00 0HL9NJ20S79NG [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:26.9298513+07:00 0HL9NJ20S79NG [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:26.9358500+07:00 0HL9NJ20S79NG [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:26.9388507+07:00 0HL9NJ20S79NG [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:26.9508508+07:00 0HL9NJ20S79NG [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:26.9588513+07:00 0HL9NJ20S79NG [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" in 22.5445ms (afa2e885)
+2017-11-30T09:19:26.9638509+07:00 0HL9NJ20S79NG [INF] Request finished in 41.7417ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:28.6089227+07:00 0HL9NJ20S79NH [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-30T09:19:28.6414359+07:00 0HL9NJ20S79NH [INF] Request finished in 39.37ms 204  (15c52c40)
+2017-11-30T09:19:28.6424344+07:00 0HL9NJ20S79NI [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/datamodel/Models?%7B%7D   (e5be5b71)
+2017-11-30T09:19:28.6454343+07:00 0HL9NJ20S79NI [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:28.6514375+07:00 0HL9NJ20S79NI [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:28.6564359+07:00 0HL9NJ20S79NI [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:28.6604373+07:00 0HL9NJ20S79NI [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:28.6704363+07:00 0HL9NJ20S79NI [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:28.7054355+07:00 0HL9NJ20S79NI [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.Models (Pentamic.SSBI.WebApi)" in 44.4011ms (afa2e885)
+2017-11-30T09:19:28.7244619+07:00 0HL9NJ20S79NI [INF] Request finished in 74.6504ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:33.3880150+07:00 0HL9NJ20S79NJ [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/SaveChanges   (e5be5b71)
+2017-11-30T09:19:33.4045282+07:00 0HL9NJ20S79NJ [INF] Request finished in 10.3043ms 204  (15c52c40)
+2017-11-30T09:19:33.4065318+07:00 0HL9NJ20S79NK [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/reporting/SaveChanges application/json 468 (e5be5b71)
+2017-11-30T09:19:33.4115262+07:00 0HL9NJ20S79NK [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:33.4175271+07:00 0HL9NJ20S79NK [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:33.4255325+07:00 0HL9NJ20S79NK [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:33.4345271+07:00 0HL9NJ20S79NK [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.SaveChanges (Pentamic.SSBI.WebApi)" with arguments (["{
+  \"entities\": [
+    {
+      \"Id\": -10,
+      \"ModelId\": 1,
+      \"Name\": \"Test\",
+      \"Description\": null,
+      \"Ordinal\": 0,
+      \"CreatedBy\": null,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"Report\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"Report:#Pentamic.SSBI.Entities\",
+        \"defaultResourceName\": \"Reports\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    }
+  ],
+  \"saveOptions\": {}
+}"]) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:33.5115360+07:00 0HL9NJ20S79NK [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:33.5285393+07:00 0HL9NJ20S79NK [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.SaveChanges (Pentamic.SSBI.WebApi)" in 103.3114ms (afa2e885)
+2017-11-30T09:19:33.5445411+07:00 0HL9NJ20S79NK [INF] Request finished in 141.5616ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:35.7424681+07:00 0HL9NJ20S79NL [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Reports?%7B%22where%22%3A%7B%22Id%22%3A1%7D%2C%22expand%22%3A%5B%22ReportPages%22%2C%22ReportViews%22%2C%22ReportFilters%22%5D%7D   (e5be5b71)
+2017-11-30T09:19:35.7534689+07:00 0HL9NJ20S79NM [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/ReportSharings?%7B%22where%22%3A%7B%22ReportId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:19:35.7754655+07:00 0HL9NJ20S79NN [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/UserFavoriteReports?%7B%22where%22%3A%7B%22ReportId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:19:35.7934801+07:00 0HL9NJ20S79NL [INF] Request finished in 20.1073ms 204  (15c52c40)
+2017-11-30T09:19:35.8024920+07:00 0HL9NJ20S79NO [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Reports?%7B%22where%22%3A%7B%22Id%22%3A1%7D%2C%22expand%22%3A%5B%22ReportPages%22%2C%22ReportViews%22%2C%22ReportFilters%22%5D%7D   (e5be5b71)
+2017-11-30T09:19:35.8074856+07:00 0HL9NJ20S79NN [INF] Request finished in 65.0076ms 204  (15c52c40)
+2017-11-30T09:19:35.8224901+07:00 0HL9NJ20S79NM [INF] Request finished in 25.1361ms 204  (15c52c40)
+2017-11-30T09:19:35.8244864+07:00 0HL9NJ20S79NO [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:35.8344902+07:00 0HL9NJ20S79NP [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/ReportSharings?%7B%22where%22%3A%7B%22ReportId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:19:35.8364868+07:00 0HL9NJ20S79NO [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:35.8444866+07:00 0HL9NJ20S79NQ [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserFavoriteReports?%7B%22where%22%3A%7B%22ReportId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:19:35.8494876+07:00 0HL9NJ20S79NP [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:35.8554868+07:00 0HL9NJ20S79NO [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:35.8584871+07:00 0HL9NJ20S79NQ [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:35.8890010+07:00 0HL9NJ20S79NP [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:35.8915021+07:00 0HL9NJ20S79NO [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:35.9055010+07:00 0HL9NJ20S79NQ [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:35.9080017+07:00 0HL9NJ20S79NP [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:35.9255006+07:00 0HL9NJ20S79NP [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.ReportSharings (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:35.9550003+07:00 0HL9NJ20S79NQ [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:35.9690007+07:00 0HL9NJ20S79NQ [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteReports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:35.9875010+07:00 0HL9NJ20S79NP [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:36.2265043+07:00 0HL9NJ20S79NP [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.ReportSharings (Pentamic.SSBI.WebApi)" in 89.5104ms (afa2e885)
+2017-11-30T09:19:36.3175015+07:00 0HL9NJ20S79NP [INF] Request finished in 505.8129ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:36.3225014+07:00 0HL9NJ20S79NQ [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:36.4075010+07:00 0HL9NJ20S79NQ [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteReports (Pentamic.SSBI.WebApi)" in 375.6538ms (afa2e885)
+2017-11-30T09:19:36.4605005+07:00 0HL9NJ20S79NQ [INF] Request finished in 628.6979ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:36.4885039+07:00 0HL9NJ20S79NO [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:36.5340021+07:00 0HL9NJ20S79NO [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" in 654.7857ms (afa2e885)
+2017-11-30T09:19:36.5785022+07:00 0HL9NJ20S79NO [INF] Request finished in 781.3341ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:36.6215207+07:00 0HL9NJ20S79NR [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/SaveChanges   (e5be5b71)
+2017-11-30T09:19:36.6395166+07:00 0HL9NJ20S79NR [INF] Request finished in 11.441ms 204  (15c52c40)
+2017-11-30T09:19:36.6425173+07:00 0HL9NJ20S79NS [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/reporting/SaveChanges application/json 475 (e5be5b71)
+2017-11-30T09:19:36.6485193+07:00 0HL9NJ20S79NS [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:36.6515178+07:00 0HL9NJ20S79NS [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:36.6605179+07:00 0HL9NJ20S79NS [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:36.6665171+07:00 0HL9NJ20S79NS [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.SaveChanges (Pentamic.SSBI.WebApi)" with arguments (["{
+  \"entities\": [
+    {
+      \"Id\": -11,
+      \"UserId\": null,
+      \"ReportId\": 1,
+      \"CreatedAt\": \"1899-12-31T17:00:00Z\",
+      \"CreatedBy\": null,
+      \"ModifiedBy\": null,
+      \"ModifiedAt\": \"1899-12-31T17:00:00Z\",
+      \"__unmapped\": {
+        \"$typeName\": \"UserReportActivity\"
+      },
+      \"entityAspect\": {
+        \"entityTypeName\": \"UserReportActivity:#Pentamic.SSBI.Entities\",
+        \"defaultResourceName\": \"UserReportActivities\",
+        \"entityState\": \"Added\",
+        \"originalValuesMap\": {},
+        \"autoGeneratedKey\": {
+          \"propertyName\": \"Id\",
+          \"autoGeneratedKeyType\": \"Identity\"
+        }
+      }
+    }
+  ],
+  \"saveOptions\": {}
+}"]) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:36.7558728+07:00 0HL9NJ20S79NS [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:36.7668762+07:00 0HL9NJ20S79NS [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.SaveChanges (Pentamic.SSBI.WebApi)" in 101.1732ms (afa2e885)
+2017-11-30T09:19:36.7938771+07:00 0HL9NJ20S79NS [INF] Request finished in 141.702ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:40.9152940+07:00 0HL9NJ20S79NT [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/Reports?%7B%22where%22%3A%7B%22Id%22%3A1%7D%2C%22expand%22%3A%5B%22ReportPages%22%2C%22ReportViews%22%2C%22ReportFilters%22%5D%7D   (e5be5b71)
+2017-11-30T09:19:40.9283047+07:00 0HL9NJ20S79NU [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/UserFavoriteReports?%7B%22where%22%3A%7B%22ReportId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:19:40.9468267+07:00 0HL9NJ20S79NV [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/ReportSharings?%7B%22where%22%3A%7B%22ReportId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:19:40.9848222+07:00 0HL9NJ20S79NT [INF] Request finished in 37.2062ms 204  (15c52c40)
+2017-11-30T09:19:41.0203287+07:00 0HL9NJ20S79NU [INF] Request finished in 56.8685ms 204  (15c52c40)
+2017-11-30T09:19:41.0238301+07:00 0HL9NJ20S79O0 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/Reports?%7B%22where%22%3A%7B%22Id%22%3A1%7D%2C%22expand%22%3A%5B%22ReportPages%22%2C%22ReportViews%22%2C%22ReportFilters%22%5D%7D   (e5be5b71)
+2017-11-30T09:19:41.0353280+07:00 0HL9NJ20S79NV [INF] Request finished in 76.5803ms 204  (15c52c40)
+2017-11-30T09:19:41.0368272+07:00 0HL9NJ20S79O1 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/UserFavoriteReports?%7B%22where%22%3A%7B%22ReportId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:19:41.0423282+07:00 0HL9NJ20S79O0 [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:41.0433282+07:00 0HL9NJ20S79O2 [INF] Request starting HTTP/1.1 GET http://localhost:5001/breeze/reporting/ReportSharings?%7B%22where%22%3A%7B%22ReportId%22%3A1%7D%7D   (e5be5b71)
+2017-11-30T09:19:41.0503280+07:00 0HL9NJ20S79O1 [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:41.0513276+07:00 0HL9NJ20S79O2 [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:41.0523291+07:00 0HL9NJ20S79O0 [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:41.0593304+07:00 0HL9NJ20S79O1 [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:41.0688312+07:00 0HL9NJ20S79O2 [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:41.0693290+07:00 0HL9NJ20S79O1 [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:41.0718282+07:00 0HL9NJ20S79O0 [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:41.0763292+07:00 0HL9NJ20S79O1 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteReports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:41.0818302+07:00 0HL9NJ20S79O2 [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:41.0853312+07:00 0HL9NJ20S79O0 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:41.0938281+07:00 0HL9NJ20S79O2 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.ReportSharings (Pentamic.SSBI.WebApi)" with arguments (null) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:41.0978280+07:00 0HL9NJ20S79O1 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:41.1343283+07:00 0HL9NJ20S79O1 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.UserFavoriteReports (Pentamic.SSBI.WebApi)" in 36.1443ms (afa2e885)
+2017-11-30T09:19:41.1638298+07:00 0HL9NJ20S79O2 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:41.1723289+07:00 0HL9NJ20S79O1 [INF] Request finished in 152.87ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:41.1733289+07:00 0HL9NJ20S79O2 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.ReportSharings (Pentamic.SSBI.WebApi)" in 91.44ms (afa2e885)
+2017-11-30T09:19:41.1848286+07:00 0HL9NJ20S79O0 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:41.1948298+07:00 0HL9NJ20S79O0 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.Reports (Pentamic.SSBI.WebApi)" in 121.4836ms (afa2e885)
+2017-11-30T09:19:41.2343293+07:00 0HL9NJ20S79O2 [INF] Request finished in 163.2976ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:41.2378292+07:00 0HL9NJ20S79O0 [INF] Request finished in 296.2854ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:41.2693318+07:00 0HL9NJ20S79O3 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/datamodel/modelmetadata   (e5be5b71)
+2017-11-30T09:19:41.2928306+07:00 0HL9NJ20S79O4 [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/datamodel/modelmetadata application/json 18 (e5be5b71)
+2017-11-30T09:19:41.2973294+07:00 0HL9NJ20S79O3 [INF] Request finished in 34.4226ms 204  (15c52c40)
+2017-11-30T09:19:41.3008289+07:00 0HL9NJ20S79O4 [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:41.3048295+07:00 0HL9NJ20S79O4 [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:41.3153315+07:00 0HL9NJ20S79O4 [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:41.3258291+07:00 0HL9NJ20S79O4 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.DataModelController.ModelMetadata (Pentamic.SSBI.WebApi)" with arguments (["Pentamic.SSBI.Services.SSAS.Metadata.ModelMetadataQueryModel"]) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:41.4116801+07:00 0HL9NJ20S79O4 [INF] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext". (4e968210)
+2017-11-30T09:19:41.4236810+07:00 0HL9NJ20S79O4 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.DataModelController.ModelMetadata (Pentamic.SSBI.WebApi)" in 111.0323ms (afa2e885)
+2017-11-30T09:19:41.4356807+07:00 0HL9NJ20S79O4 [INF] Request finished in 145.3016ms 200 application/json; charset=utf-8 (15c52c40)
+2017-11-30T09:19:49.3175389+07:00 0HL9NJ20S79O5 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/fieldvalues   (e5be5b71)
+2017-11-30T09:19:49.3515382+07:00 0HL9NJ20S79O6 [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/reporting/fieldvalues application/json 53 (e5be5b71)
+2017-11-30T09:19:49.3585391+07:00 0HL9NJ20S79O6 [INF] Successfully validated the token. (60169667)
+2017-11-30T09:19:49.3625383+07:00 0HL9NJ20S79O5 [INF] Request finished in 26.8337ms 204  (15c52c40)
+2017-11-30T09:19:49.3645397+07:00 0HL9NJ20S79O6 [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:19:49.3895589+07:00 0HL9NJ20S79O6 [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:19:49.4185700+07:00 0HL9NJ20S79O6 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.FieldValues (Pentamic.SSBI.WebApi)" with arguments (["Pentamic.SSBI.Services.SSAS.Query.FieldQueryModel"]) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:19:49.6839419+07:00 0HL9NJ20S79O6 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.FieldValues (Pentamic.SSBI.WebApi)" in 292.446ms (afa2e885)
+2017-11-30T09:19:49.8453121+07:00 0HL9NJ20S79O6 [ERR] Connection id ""0HL9NJ1E1BQP3"": An unhandled exception was thrown by the application. (8c14976b)
+Microsoft.AnalysisServices.AdomdClient.AdomdErrorResponseException: The end of the input was reached.
+   at Microsoft.AnalysisServices.AdomdClient.AdomdConnection.XmlaClientProvider.Microsoft.AnalysisServices.AdomdClient.IExecuteProvider.ExecuteTabular(CommandBehavior behavior, ICommandContentProvider contentProvider, AdomdPropertyCollection commandProperties, IDataParameterCollection parameters)
+   at Microsoft.AnalysisServices.AdomdClient.AdomdCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.AnalysisServices.AdomdClient.AdomdCommand.ExecuteReader()
+   at Pentamic.SSBI.Services.SSAS.Query.QueryService.GetFieldValues(FieldQueryModel queryModel) in C:\Repositories\ssbi-backend\Pentamic.SSBI.Services.SSAS.Query\QueryService.cs:line 531
+   at Pentamic.SSBI.WebApi.Controllers.ReportingController.FieldValues(FieldQueryModel queryModel) in C:\Repositories\ssbi-backend\Pentamic.SSBI.WebApi\Controllers\ReportingController.cs:line 150
+   at lambda_method(Closure , Object , Object[] )
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.Execute(Object target, Object[] parameters)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__27.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__25.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__20.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware`1.<Invoke>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware`1.<Invoke>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsMiddleware.<Invoke>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISMiddleware.<Invoke>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Hosting.Internal.RequestServicesContainerMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.ValidateEnd(Task task)
+   at Microsoft.AspNetCore.Server.Kestrel.Internal.Http.Frame`1.<RequestProcessingAsync>d__2.MoveNext()
+2017-11-30T09:19:49.8663106+07:00 0HL9NJ20S79O6 [INF] Request finished in 519.6344ms 500  (15c52c40)
+2017-11-30T09:20:07.4063228+07:00 0HL9NJ20S79O7 [INF] Request starting HTTP/1.1 OPTIONS http://localhost:5001/breeze/reporting/fieldvalues   (e5be5b71)
+2017-11-30T09:20:07.4573569+07:00 0HL9NJ20S79O8 [INF] Request starting HTTP/1.1 POST http://localhost:5001/breeze/reporting/fieldvalues application/json 55 (e5be5b71)
+2017-11-30T09:20:07.4583565+07:00 0HL9NJ20S79O7 [INF] Request finished in 54.8653ms 204  (15c52c40)
+2017-11-30T09:20:07.4623564+07:00 0HL9NJ20S79O8 [INF] Successfully validated the token. (60169667)
+2017-11-30T09:20:07.4643574+07:00 0HL9NJ20S79O8 [INF] HttpContext.User merged via AutomaticAuthentication from authenticationScheme: "Bearer". (bdba1d38)
+2017-11-30T09:20:07.4693566+07:00 0HL9NJ20S79O8 [INF] Authorization was successful for user: "8d513346-7b56-4009-8e5b-3104622fd968". (d7eb274a)
+2017-11-30T09:20:07.4733587+07:00 0HL9NJ20S79O8 [INF] Executing action method "Pentamic.SSBI.WebApi.Controllers.ReportingController.FieldValues (Pentamic.SSBI.WebApi)" with arguments (["Pentamic.SSBI.Services.SSAS.Query.FieldQueryModel"]) - ModelState is Valid (ba7f4ac2)
+2017-11-30T09:20:15.6987619+07:00 0HL9NJ20S79O8 [INF] Executed action "Pentamic.SSBI.WebApi.Controllers.ReportingController.FieldValues (Pentamic.SSBI.WebApi)" in 8230.248ms (afa2e885)
+2017-11-30T09:20:15.7617623+07:00 0HL9NJ20S79O8 [ERR] Connection id ""0HL9NJ1E1BQOV"": An unhandled exception was thrown by the application. (8c14976b)
+Microsoft.AnalysisServices.AdomdClient.AdomdErrorResponseException: The end of the input was reached.
+   at Microsoft.AnalysisServices.AdomdClient.AdomdConnection.XmlaClientProvider.Microsoft.AnalysisServices.AdomdClient.IExecuteProvider.ExecuteTabular(CommandBehavior behavior, ICommandContentProvider contentProvider, AdomdPropertyCollection commandProperties, IDataParameterCollection parameters)
+   at Microsoft.AnalysisServices.AdomdClient.AdomdCommand.ExecuteReader(CommandBehavior behavior)
+   at Microsoft.AnalysisServices.AdomdClient.AdomdCommand.ExecuteReader()
+   at Pentamic.SSBI.Services.SSAS.Query.QueryService.GetFieldValues(FieldQueryModel queryModel) in C:\Repositories\ssbi-backend\Pentamic.SSBI.Services.SSAS.Query\QueryService.cs:line 531
+   at Pentamic.SSBI.WebApi.Controllers.ReportingController.FieldValues(FieldQueryModel queryModel) in C:\Repositories\ssbi-backend\Pentamic.SSBI.WebApi\Controllers\ReportingController.cs:line 150
+   at lambda_method(Closure , Object , Object[] )
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.Execute(Object target, Object[] parameters)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionMethodAsync>d__27.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextActionFilterAsync>d__25.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ActionExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeNextResourceFilter>d__22.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Rethrow(ResourceExecutedContext context)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__20.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware`1.<Invoke>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware`1.<Invoke>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Cors.Infrastructure.CorsMiddleware.<Invoke>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Server.IISIntegration.IISMiddleware.<Invoke>d__8.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at Microsoft.AspNetCore.Hosting.Internal.RequestServicesContainerMiddleware.<Invoke>d__3.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.ValidateEnd(Task task)
+   at Microsoft.AspNetCore.Server.Kestrel.Internal.Http.Frame`1.<RequestProcessingAsync>d__2.MoveNext()
+2017-11-30T09:20:15.7907870+07:00 0HL9NJ20S79O8 [INF] Request finished in 8327.7209ms 500  (15c52c40)
